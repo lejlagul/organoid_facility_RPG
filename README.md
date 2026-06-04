@@ -1,86 +1,46 @@
-# Organoid Quest: From Cells to Cure
+# Organoid Quest: Platform RPG
 
-A small browser-based RPG designed for an Imperial College Organoid Facility exhibition stand.
+A QR-ready, mobile-friendly browser RPG for the Imperial College Organoid Facility stand.
 
-Visitors scan a QR code, open the game in their phone browser, walk through a cartoon facility, talk to experts, make organoid workflow decisions, and finish with a score for:
+## What is new in this version
 
-- Organoid health
-- Reproducibility
-- Translation potential
+- Building-based RPG layout: the player walks into the Hospital, Platform Hall, Culture Lab, Incubator Suite, Imaging/QC, Data Room and Translation Hub.
+- Hospital colonoscopy sample-collection mini-game.
+- Gut-on-chip platform choice system with scoring for Emulate, CN-BIO, BiomimX, MEPSGEN, HuMiX, Dynamic42 and Mimetas.
+- Quick stand demo mode and optional Extended RPG mode with five client platform scenarios and less obvious trade-offs.
+- Mobile-first controls: tap-to-walk, D-pad, large Talk / Use button and touch-safe canvas.
+- No external game libraries or build step; the game runs as a single static `index.html` file.
 
-## Important QR note
+## How to publish on GitHub Pages
 
-The QR code must point to a **public web URL** or to a **temporary local server URL** on your laptop.
+1. Replace the files in your GitHub repository with the contents of this folder.
+2. Make sure `index.html` is in the repository root.
+3. Commit the changes.
+4. GitHub Pages should update the existing public URL:
 
-A QR code cannot reliably open a file stored only on your computer, and it cannot open ChatGPT sandbox links from visitors' phones. The original placeholder QR pointed to `https://example.org/organoid-quest/`, so it was not expected to launch the game.
+   `https://lejlagul.github.io/organoid_facility_RPG/`
 
-## What is included
+5. The QR code remains valid as long as the URL stays the same.
 
-- `index.html` — the full game. No build step needed.
-- `stand_sign.html` — printable stand sign template.
-- `qr_placeholder.png` — non-scannable placeholder image for the sign.
-- `make_final_qr_and_sign.py` — creates the real QR and a ready-to-print stand sign after hosting.
-- `make_qr.py` — simple QR generator if you only need the QR image.
-- `start_local_server.py` — temporary local testing option from your laptop.
-
-## Fastest reliable option: Netlify Drop
-
-1. Unzip this folder.
-2. Go to Netlify Drop in a browser.
-3. Drag the whole `organoid_quest_qr_game` folder into the page.
-4. Copy the public URL Netlify gives you.
-5. Run:
+## Generate or regenerate the QR code
 
 ```bash
-python3 make_final_qr_and_sign.py "https://YOUR-NETLIFY-URL.netlify.app/index.html"
+python3 make_final_qr_and_sign.py "https://lejlagul.github.io/organoid_facility_RPG/"
 ```
 
 This creates:
 
-```bash
-organoid_quest_start_qr.png
-stand_sign_ready.html
-```
+- `organoid_facility_RPG_QR.png`
+- `stand_sign_ready.html`
 
-Print `stand_sign_ready.html` or place `organoid_quest_start_qr.png` on your own poster.
-
-## Temporary local test from your laptop
-
-This is useful for checking the game with your phone before hosting.
+## Local testing
 
 ```bash
 python3 start_local_server.py
 ```
 
-The script will:
+Then open the local URL shown in the terminal. For testing on a phone, the phone and computer need to be on the same Wi-Fi.
 
-- start a temporary web server from this folder,
-- print a local network URL,
-- create `qr_local_network.png`.
+## Scientific note
 
-Open `qr_local_network.png` and scan it with a phone connected to the **same Wi-Fi** as the laptop.
-
-Important: some university/guest Wi-Fi networks block phone-to-laptop connections. For the actual stand, public hosting is more reliable.
-
-## How to test locally without QR
-
-Open `index.html` directly in a browser.
-
-Desktop controls:
-
-- Move: arrow keys or WASD
-- Talk/use: Space, Enter, or click the canvas
-
-Phone controls:
-
-- Use the on-screen D-pad and Talk / Use button
-
-## Suggested stand wording
-
-**Can you build a human organoid model in 3 minutes?**
-
-Scan the QR code, become a new recruit in the Organoid Facility, and guide a model from clinical sample to translational decision.
-
-## Suggested facilitation line
-
-“Your score is not just about growing the organoid — it is about whether the model is reproducible, well-characterised, and useful for translation.”
+The platform scoring is intentionally simplified for an educational stand game. It is based on public feature summaries and should not be treated as procurement advice, an experimental protocol, or a formal platform recommendation. Real platform selection should also consider access, cost, cell source, biological validation, staff training, sample constraints, timeline, IP/data requirements and the exact assay endpoint.

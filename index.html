@@ -3,91 +3,114 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Organoid Quest: From Cells to Cure</title>
+  <title>Organoid Quest: Platform RPG</title>
   <style>
     :root {
       --bg: #071421;
-      --panel: rgba(255,255,255,0.92);
+      --panel: rgba(255,255,255,.94);
       --ink: #10202d;
-      --muted: #5c6b76;
+      --muted: #64748b;
       --brand: #7c3aed;
       --brand2: #06b6d4;
-      --good: #16a34a;
-      --warn: #f59e0b;
-      --bad: #dc2626;
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
-      --radius: 18px;
+      --green: #16a34a;
+      --yellow: #f59e0b;
+      --red: #dc2626;
+      --shadow: 0 18px 55px rgba(0,0,0,.35);
+      --radius: 20px;
     }
     * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; background: radial-gradient(circle at 20% 0%, #18385c 0, #071421 48%, #030712 100%); color: white; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { display: flex; justify-content: center; padding: 14px; }
-    .app { width: min(1120px, 100%); display: grid; gap: 12px; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      background: radial-gradient(circle at 15% 0%, #193a60 0, #071421 48%, #030712 100%);
+      color: white;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body { display: flex; justify-content: center; padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); }
+    button { font-family: inherit; }
+    .app { width: min(1220px, 100%); display: grid; gap: 12px; }
     header { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .title-block h1 { margin: 0; font-size: clamp(22px, 4.5vw, 42px); line-height: 1.02; letter-spacing: -0.04em; }
-    .title-block p { margin: 6px 0 0; color: #bdd2e4; font-size: 14px; }
-    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: #e5f5ff; font-weight: 700; font-size: 13px; }
-    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 12px; align-items: start; }
+    .title-block h1 { margin: 0; font-size: clamp(24px, 4.2vw, 44px); line-height: 1.02; letter-spacing: -0.045em; }
+    .title-block p { margin: 6px 0 0; color: #c3d9ed; font-size: 14px; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: #e5f5ff; font-weight: 800; font-size: 13px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 12px; align-items: start; }
     .game-card, .side-card { border-radius: var(--radius); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); box-shadow: var(--shadow); overflow: hidden; backdrop-filter: blur(8px); }
     .canvas-wrap { position: relative; background: #0b1220; }
-    canvas { display: block; width: 100%; aspect-ratio: 900 / 560; image-rendering: auto; touch-action: none; background: #0b1220; }
+    canvas { display: block; width: 100%; aspect-ratio: 960 / 600; image-rendering: auto; touch-action: none; background: #0b1220; }
     .top-hud { position: absolute; left: 12px; right: 12px; top: 12px; display: flex; gap: 8px; flex-wrap: wrap; pointer-events: none; }
-    .hud-chip { padding: 7px 10px; background: rgba(5,13,23,.72); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; font-size: 12px; font-weight: 800; box-shadow: 0 8px 24px rgba(0,0,0,.22); }
+    .hud-chip { padding: 7px 10px; background: rgba(5,13,23,.76); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; font-size: 12px; font-weight: 900; box-shadow: 0 8px 24px rgba(0,0,0,.22); }
     .mobile-controls { display: none; padding: 10px; gap: 10px; justify-content: space-between; align-items: center; background: rgba(255,255,255,.06); border-top: 1px solid rgba(255,255,255,.12); }
-    .dpad { display: grid; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(3, 48px); gap: 5px; }
-    .dpad button, .interact-btn, .small-btn, .choice, .primary-btn { border: 0; border-radius: 14px; cursor: pointer; font-weight: 900; font-family: inherit; }
-    .dpad button { background: rgba(255,255,255,.16); color: white; font-size: 20px; border: 1px solid rgba(255,255,255,.14); }
-    .dpad button:active, .interact-btn:active, .small-btn:active, .choice:active, .primary-btn:active { transform: translateY(1px); }
-    .interact-btn { min-width: 110px; height: 68px; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: white; box-shadow: 0 12px 28px rgba(6,182,212,.25); }
+    .dpad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); gap: 6px; }
+    .dpad button, .interact-btn, .small-btn, .choice, .primary-btn, .ghost-btn { border-radius: 15px; cursor: pointer; font-weight: 900; }
+    .dpad button { background: rgba(255,255,255,.16); color: white; font-size: 21px; border: 1px solid rgba(255,255,255,.15); touch-action: none; }
+    .dpad span { display: block; }
+    .dpad button:active, .interact-btn:active, .small-btn:active, .choice:active, .primary-btn:active, .ghost-btn:active { transform: translateY(1px); }
+    .interact-btn { min-width: 126px; height: 72px; border: 0; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: white; box-shadow: 0 12px 28px rgba(6,182,212,.25); }
+    .mobile-actions { display: grid; gap: 8px; }
     .side-card { padding: 14px; color: #ecfeff; }
     .side-card h2 { margin: 0 0 8px; font-size: 18px; }
-    .objective { padding: 12px; border-radius: 15px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); margin-bottom: 12px; }
+    .objective { padding: 12px; border-radius: 16px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); margin-bottom: 12px; }
     .objective strong { display: block; margin-bottom: 4px; color: white; }
-    .objective span { color: #c8dcec; font-size: 14px; }
-    .bar-group { display: grid; gap: 10px; margin: 12px 0; }
+    .objective span { color: #c8dcec; font-size: 14px; line-height: 1.35; }
+    .bar-group { display: grid; gap: 9px; margin: 12px 0; }
     .bar-row { display: grid; gap: 5px; }
-    .bar-label { display: flex; justify-content: space-between; color: #dbeafe; font-size: 13px; font-weight: 800; }
+    .bar-label { display: flex; justify-content: space-between; color: #dbeafe; font-size: 12.5px; font-weight: 850; }
     .bar { height: 11px; background: rgba(255,255,255,.16); border-radius: 999px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); }
     .bar > i { display: block; height: 100%; width: 0%; border-radius: inherit; background: linear-gradient(90deg, var(--brand2), var(--brand)); transition: width .25s ease; }
     .inventory { display: flex; flex-wrap: wrap; gap: 7px; min-height: 32px; }
-    .item { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.16); padding: 7px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; }
-    .journal { margin: 12px 0 0; display: grid; gap: 7px; max-height: 190px; overflow: auto; padding-right: 3px; }
-    .log { font-size: 12px; color: #c8dcec; background: rgba(255,255,255,.07); border-left: 3px solid rgba(6,182,212,.9); padding: 8px; border-radius: 10px; }
+    .item { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.16); padding: 7px 9px; border-radius: 999px; font-size: 12px; font-weight: 850; }
+    .journal { margin: 12px 0 0; display: grid; gap: 7px; max-height: 176px; overflow: auto; padding-right: 3px; }
+    .log { font-size: 12px; color: #c8dcec; background: rgba(255,255,255,.07); border-left: 3px solid rgba(6,182,212,.9); padding: 8px; border-radius: 10px; line-height: 1.35; }
+    .side-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .small-btn, .ghost-btn { padding: 9px 11px; background: rgba(255,255,255,.14); color: white; border: 1px solid rgba(255,255,255,.15); }
+    .ghost-btn { background: rgba(15,23,42,.34); }
     .footer-note { color: #a9c0d3; font-size: 12px; line-height: 1.4; margin-top: 12px; }
-    .overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(2,6,23,.7); z-index: 20; }
+    .overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(2,6,23,.72); z-index: 20; }
     .overlay.show { display: flex; }
-    .modal { width: min(620px, 100%); max-height: min(86vh, 820px); overflow: auto; color: var(--ink); background: var(--panel); border-radius: 24px; padding: 22px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.75); }
-    .modal h2 { margin: 0 0 8px; font-size: clamp(22px, 5vw, 34px); color: #0f172a; letter-spacing: -0.04em; }
+    .modal { width: min(760px, 100%); max-height: min(88vh, 900px); overflow: auto; color: var(--ink); background: var(--panel); border-radius: 24px; padding: clamp(16px, 3.4vw, 24px); box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.78); }
+    .modal.wide { width: min(960px, 100%); }
+    .modal h2 { margin: 0 0 8px; font-size: clamp(22px, 5vw, 34px); color: #0f172a; letter-spacing: -0.04em; line-height: 1.05; }
+    .modal h3 { margin: 14px 0 6px; color: #172554; font-size: 17px; }
     .modal p { color: #334155; line-height: 1.45; margin: 8px 0; }
-    .modal .speaker { display: inline-flex; gap: 8px; align-items: center; padding: 6px 10px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-weight: 900; font-size: 13px; margin-bottom: 10px; }
+    .modal .speaker { display: inline-flex; gap: 8px; align-items: center; padding: 6px 10px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-weight: 950; font-size: 13px; margin-bottom: 10px; }
+    .mode-grid, .platform-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .choices { display: grid; gap: 9px; margin-top: 14px; }
     .choice { text-align: left; padding: 13px 14px; background: white; color: #111827; border: 1px solid #dbe3ef; box-shadow: 0 6px 14px rgba(15,23,42,.08); }
-    .choice:hover { border-color: #7c3aed; }
-    .choice small { display: block; color: #64748b; margin-top: 3px; font-weight: 700; }
-    .primary-btn { padding: 13px 16px; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: white; box-shadow: 0 10px 24px rgba(124,58,237,.24); }
-    .small-btn { padding: 8px 10px; background: rgba(255,255,255,.14); color: white; border: 1px solid rgba(255,255,255,.14); }
-    .modal .primary-btn { margin-top: 12px; }
-    .kbd { color: #bdd2e4; font-size: 13px; }
-    .complete-card { display: grid; gap: 10px; }
-    .score-big { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+    .choice:hover, .choice:focus { border-color: #7c3aed; outline: none; }
+    .choice small { display: block; color: #64748b; margin-top: 3px; font-weight: 750; line-height: 1.35; }
+    .primary-btn { padding: 13px 16px; border: 0; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: white; box-shadow: 0 10px 24px rgba(124,58,237,.24); }
+    .modal .primary-btn, .modal .ghost-btn { margin-top: 12px; }
+    .kbd { color: #475569; font-size: 13px; }
+    .score-big { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 12px 0; }
     .score-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 10px; text-align: center; }
     .score-box strong { display: block; font-size: 24px; color: #111827; }
-    .score-box span { font-size: 12px; color: #64748b; font-weight: 800; }
-    @media (max-width: 940px) {
-      body { padding: 10px; }
+    .score-box span { font-size: 12px; color: #64748b; font-weight: 850; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tag { display: inline-block; background: #eef2ff; color: #3730a3; padding: 4px 7px; border-radius: 999px; font-size: 11px; font-weight: 900; }
+    .result-note { padding: 10px 12px; border-radius: 14px; background: #f8fafc; border-left: 4px solid #7c3aed; margin-top: 10px; }
+    @media (max-width: 980px) {
+      body { padding: 8px; }
       .layout { grid-template-columns: 1fr; }
       .side-card { order: -1; }
       .mobile-controls { display: flex; }
-      .side-card .journal { max-height: 110px; }
+      .side-card .journal { max-height: 120px; }
+      .score-big { grid-template-columns: repeat(2, 1fr); }
     }
-    @media (max-width: 540px) {
+    @media (max-width: 610px) {
       header { align-items: flex-start; }
       .pill { width: 100%; justify-content: center; }
-      .canvas-wrap { border-radius: 0; }
+      .title-block p { font-size: 12.5px; }
       .top-hud { top: 8px; left: 8px; right: 8px; }
       .hud-chip { font-size: 11px; padding: 6px 8px; }
-      .dpad { grid-template-columns: repeat(3, 43px); grid-template-rows: repeat(3, 43px); }
-      .interact-btn { min-width: 96px; height: 62px; }
+      .dpad { grid-template-columns: repeat(3, 45px); grid-template-rows: repeat(3, 45px); gap: 5px; }
+      .interact-btn { min-width: 104px; height: 64px; }
+      .mode-grid, .platform-grid { grid-template-columns: 1fr; }
       .score-big { grid-template-columns: 1fr; }
+      .side-card { padding: 12px; }
+      .modal { border-radius: 19px; }
     }
   </style>
 </head>
@@ -95,67 +118,68 @@
   <main class="app" aria-label="Organoid Quest game">
     <header>
       <div class="title-block">
-        <h1>Organoid Quest</h1>
-        <p>From Cells to Cure · A 2–3 minute mini RPG for the Imperial Organoid Facility stand</p>
+        <h1>Organoid Quest: Platform RPG</h1>
+        <p>Walk into buildings, collect a sample, choose a gut-on-chip platform, and translate the model.</p>
       </div>
-      <div class="pill">🎮 Scan · Play · Learn</div>
+      <div class="pill" id="modePill">🎮 QR-ready · mobile friendly</div>
     </header>
 
     <section class="layout">
       <div class="game-card">
         <div class="canvas-wrap">
-          <canvas id="game" width="900" height="560" aria-label="Playable RPG map"></canvas>
+          <canvas id="game" width="960" height="600" aria-label="Playable RPG map"></canvas>
           <div class="top-hud">
-            <div class="hud-chip" id="hudStage">Stage 1/6</div>
-            <div class="hud-chip" id="hudHint">Walk to the glowing scientist</div>
-            <div class="hud-chip">Move: WASD / arrows</div>
+            <div class="hud-chip" id="hudScene">Campus Courtyard</div>
+            <div class="hud-chip" id="hudStage">Stage 1/7</div>
+            <div class="hud-chip" id="hudHint">Go to the Hospital</div>
           </div>
         </div>
-        <div class="mobile-controls" aria-label="Mobile movement controls">
+        <div class="mobile-controls" aria-label="Mobile controls">
           <div class="dpad">
             <span></span><button data-dir="up" aria-label="Move up">▲</button><span></span>
             <button data-dir="left" aria-label="Move left">◀</button><span></span><button data-dir="right" aria-label="Move right">▶</button>
             <span></span><button data-dir="down" aria-label="Move down">▼</button><span></span>
           </div>
-          <button class="interact-btn" id="touchInteract">Talk / Use</button>
+          <div class="mobile-actions">
+            <button class="interact-btn" id="touchInteract">Talk / Use</button>
+            <button class="small-btn" id="touchCodex">Platform codex</button>
+          </div>
         </div>
       </div>
 
       <aside class="side-card">
         <h2>Mission control</h2>
         <div class="objective">
-          <strong id="objectiveTitle">Collect the clinical context</strong>
-          <span id="objectiveText">Find the clinician in the hospital room and collect a sample with consent and metadata.</span>
+          <strong id="objectiveTitle">Clinical intake</strong>
+          <span id="objectiveText">Enter the Hospital and complete a simplified colonoscopy sample-collection mini-game.</span>
         </div>
-        <div class="bar-group">
-          <div class="bar-row">
-            <div class="bar-label"><span>Organoid health</span><span id="healthText">55%</span></div>
-            <div class="bar"><i id="healthBar"></i></div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label"><span>Reproducibility</span><span id="repText">45%</span></div>
-            <div class="bar"><i id="repBar"></i></div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label"><span>Translation score</span><span id="transText">35%</span></div>
-            <div class="bar"><i id="transBar"></i></div>
-          </div>
-        </div>
+        <div class="bar-group" id="scoreBars"></div>
         <h2>Collected items</h2>
         <div class="inventory" id="inventory"></div>
+        <div class="side-actions">
+          <button class="small-btn" id="codexBtn">Platform codex</button>
+          <button class="small-btn" id="restartBtn">Restart</button>
+        </div>
         <div class="journal" id="journal"></div>
-        <p class="footer-note">Stand prompt: “Can you build a patient-relevant organoid model before contamination catches you?”</p>
+        <p class="footer-note">Tip for visitors: on mobile, tap the canvas to walk and use the big Talk / Use button near doors and NPCs.</p>
       </aside>
     </section>
   </main>
 
   <div class="overlay show" id="startOverlay">
-    <div class="modal">
-      <h2>Can you build a human organoid model?</h2>
-      <p>You are a new recruit at the Organoid Facility. Walk through the lab, talk to experts, make experimental decisions, and turn a clinical sample into a useful model.</p>
-      <p><strong>Goal:</strong> maximise organoid health, reproducibility, and translation score.</p>
-      <p class="kbd">Desktop: WASD / arrow keys + Space or Enter. Phone: use the on-screen controls.</p>
-      <button class="primary-btn" id="startBtn">Start the quest</button>
+    <div class="modal wide">
+      <span class="speaker">🧫 Organoid Facility briefing</span>
+      <h2>Can you match a biological question to the right gut-on-chip platform?</h2>
+      <p>You are the Facility recruit. A client brings a biological question. Walk into buildings, collect a gut sample, choose a platform, build the model, analyse it, and make a translational recommendation.</p>
+      <p class="kbd"><strong>Desktop:</strong> WASD / arrow keys + E, Space or Enter. <strong>Mobile:</strong> tap-to-walk or use the D-pad, then press Talk / Use.</p>
+      <div class="mode-grid">
+        <button class="choice" id="quickBtn">Quick stand demo
+          <small>One client case, one platform choice, shorter minigames. Best for busy exhibition traffic.</small>
+        </button>
+        <button class="choice" id="extendedBtn">Extended RPG
+          <small>Five client cases, harder platform trade-offs, more scoring feedback. Best on an iPad or when visitors have more time.</small>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -174,620 +198,1320 @@
 
       const ui = {
         startOverlay: document.getElementById('startOverlay'),
-        startBtn: document.getElementById('startBtn'),
+        quickBtn: document.getElementById('quickBtn'),
+        extendedBtn: document.getElementById('extendedBtn'),
         dialogOverlay: document.getElementById('dialogOverlay'),
         dialogBox: document.getElementById('dialogBox'),
         objectiveTitle: document.getElementById('objectiveTitle'),
         objectiveText: document.getElementById('objectiveText'),
+        scoreBars: document.getElementById('scoreBars'),
         inventory: document.getElementById('inventory'),
         journal: document.getElementById('journal'),
-        healthBar: document.getElementById('healthBar'),
-        repBar: document.getElementById('repBar'),
-        transBar: document.getElementById('transBar'),
-        healthText: document.getElementById('healthText'),
-        repText: document.getElementById('repText'),
-        transText: document.getElementById('transText'),
+        hudScene: document.getElementById('hudScene'),
         hudStage: document.getElementById('hudStage'),
         hudHint: document.getElementById('hudHint'),
-        touchInteract: document.getElementById('touchInteract')
+        modePill: document.getElementById('modePill'),
+        touchInteract: document.getElementById('touchInteract'),
+        codexBtn: document.getElementById('codexBtn'),
+        touchCodex: document.getElementById('touchCodex'),
+        restartBtn: document.getElementById('restartBtn')
       };
+
+      const STAGES = [
+        { id: 'hospital', label: 'Clinical intake', objective: 'Enter the Hospital and complete a simplified colonoscopy sample-collection mini-game.' },
+        { id: 'platform', label: 'Platform triage', objective: 'Meet the client liaison and select the gut-on-chip platform that best matches the biological question.' },
+        { id: 'culture', label: 'Model build', objective: 'Choose a practical culture strategy for the selected biological question.' },
+        { id: 'incubator', label: 'Incubator run', objective: 'Feed the developing organoid and avoid contamination in the incubator mini-game.' },
+        { id: 'imaging', label: 'Readouts and QC', objective: 'Choose assays that prove the model is healthy, reproducible, and relevant.' },
+        { id: 'data', label: 'Data interpretation', objective: 'Choose a reproducible analysis plan and avoid over-claiming.' },
+        { id: 'translation', label: 'Translation handoff', objective: 'Make the final recommendation for the client.' }
+      ];
+
+      const PLATFORMS = [
+        {
+          id: 'emulate',
+          name: 'Emulate',
+          subtitle: 'Colon Intestine-Chip',
+          icon: '🟣',
+          summary: 'Dynamic colon model using biopsy-derived colonoids, endothelial co-culture, mechanical forces, barrier function, inflammation and drug-response applications.',
+          strengths: ['mechanical forces', 'colonoids + endothelium', 'barrier and inflammation', 'drug response'],
+          tags: { organoid: 3, mechanical: 3, peristalsis: 2, endothelial: 3, barrier: 3, inflammation: 3, drug_response: 3, immune: 2, microbiome: 2, throughput: 1, gut_liver: 0, metabolism: 0, oxygen: 1, anaerobic: 1, compartmental: 2, omics: 2, mucus: 1, automation: 1, reproducibility: 2, custom: 2, multi_organ: 1, vascular: 2, stable_long: 2, imaging: 2, sampling: 2, membrane_free: 0, patient_faeces: 1, immune_oncology: 1, screen: 1 }
+        },
+        {
+          id: 'cnbio',
+          name: 'CN-BIO',
+          subtitle: 'PhysioMimix Gut/Liver',
+          icon: '🟢',
+          summary: 'Single- and dual-organ MPS with gut-liver crosstalk, oral bioavailability, absorption, metabolism, repeated sampling and ADME workflows.',
+          strengths: ['gut-liver crosstalk', 'oral bioavailability', 'metabolism', 'reproducible ADME'],
+          tags: { organoid: 1, mechanical: 2, peristalsis: 1, endothelial: 1, barrier: 3, inflammation: 2, drug_response: 3, immune: 1, microbiome: 1, throughput: 2, gut_liver: 3, metabolism: 3, oxygen: 2, anaerobic: 0, compartmental: 2, omics: 1, mucus: 2, automation: 2, reproducibility: 3, custom: 2, multi_organ: 3, vascular: 1, stable_long: 2, imaging: 1, sampling: 3, membrane_free: 0, patient_faeces: 0, immune_oncology: 0, screen: 2 }
+        },
+        {
+          id: 'biomimx',
+          name: 'BiomimX',
+          subtitle: 'uGut / uBeat',
+          icon: '🔵',
+          summary: 'Mechanically active 3D gut model with epithelial and endothelial barriers, peristaltic-like stimulation, and patient-specific faecal microbiome applications.',
+          strengths: ['peristaltic-like motion', 'faecal microbiome', '3D epithelial/endothelial barriers', 'patient-specific microbiome'],
+          tags: { organoid: 2, mechanical: 3, peristalsis: 3, endothelial: 3, barrier: 3, inflammation: 2, drug_response: 2, immune: 2, microbiome: 3, throughput: 1, gut_liver: 0, metabolism: 1, oxygen: 1, anaerobic: 2, compartmental: 2, omics: 2, mucus: 2, automation: 1, reproducibility: 2, custom: 2, multi_organ: 1, vascular: 2, stable_long: 2, imaging: 2, sampling: 2, membrane_free: 0, patient_faeces: 3, immune_oncology: 3, screen: 1 }
+        },
+        {
+          id: 'mepsgen',
+          name: 'MEPSGEN',
+          subtitle: 'MEPS-X / ProMEPS',
+          icon: '🟠',
+          summary: 'Manufactured MPS chips and automated robotic ProMEPS workflows for reproducible, high-precision, customizable, high-throughput organ-level models.',
+          strengths: ['automation', 'reproducibility', 'customizable flow/configuration', 'scalable MPS workflows'],
+          tags: { organoid: 2, mechanical: 2, peristalsis: 1, endothelial: 2, barrier: 3, inflammation: 1, drug_response: 3, immune: 1, microbiome: 1, throughput: 3, gut_liver: 1, metabolism: 1, oxygen: 1, anaerobic: 0, compartmental: 2, omics: 1, mucus: 1, automation: 3, reproducibility: 3, custom: 3, multi_organ: 3, vascular: 2, stable_long: 2, imaging: 1, sampling: 2, membrane_free: 0, patient_faeces: 0, immune_oncology: 0, screen: 3 }
+        },
+        {
+          id: 'humix',
+          name: 'HuMiX',
+          subtitle: 'Human–microbial crosstalk',
+          icon: '🟡',
+          summary: 'Modular host-microbe gut-on-chip with separate host and microbial microchannels, porous membranes, oxygen-gradient control and omics sampling.',
+          strengths: ['host-microbe crosstalk', 'oxygen gradient', 'anaerobic microbes', 'separate downstream analyses'],
+          tags: { organoid: 1, mechanical: 1, peristalsis: 0, endothelial: 0, barrier: 2, inflammation: 2, drug_response: 1, immune: 2, microbiome: 3, throughput: 1, gut_liver: 1, metabolism: 1, oxygen: 3, anaerobic: 3, compartmental: 3, omics: 3, mucus: 1, automation: 1, reproducibility: 2, custom: 2, multi_organ: 2, vascular: 0, stable_long: 2, imaging: 1, sampling: 3, membrane_free: 0, patient_faeces: 2, immune_oncology: 1, screen: 1 }
+        },
+        {
+          id: 'dynamic42',
+          name: 'Dynamic42',
+          subtitle: 'DynamicOrgan Intestine-on-Chip',
+          icon: '🔴',
+          summary: 'Immunocompetent gut-on-chip with vascular and intestinal compartments, endothelial lining, macrophages/monocytes, flow, barrier function and longer stable culture.',
+          strengths: ['immune + vascular compartment', 'macrophages/monocytes', 'flow and biomechanics', '14-day stable barrier'],
+          tags: { organoid: 2, mechanical: 3, peristalsis: 2, endothelial: 3, barrier: 3, inflammation: 3, drug_response: 2, immune: 3, microbiome: 2, throughput: 1, gut_liver: 1, metabolism: 1, oxygen: 2, anaerobic: 1, compartmental: 3, omics: 2, mucus: 2, automation: 1, reproducibility: 2, custom: 3, multi_organ: 2, vascular: 3, stable_long: 3, imaging: 2, sampling: 2, membrane_free: 0, patient_faeces: 1, immune_oncology: 1, screen: 1 }
+        },
+        {
+          id: 'mimetas',
+          name: 'Mimetas',
+          subtitle: 'OrganoPlate',
+          icon: '🟤',
+          summary: 'Membrane-free OrganoPlate microfluidics in a microplate format for perfused 3D tubules, imaging, TEER, co-cultures, mucus models and scalable screening.',
+          strengths: ['membrane-free 3D tubules', '40–96 chips/plate', 'high-content imaging', 'mucus and immune co-cultures'],
+          tags: { organoid: 3, mechanical: 2, peristalsis: 0, endothelial: 2, barrier: 3, inflammation: 2, drug_response: 3, immune: 3, microbiome: 2, throughput: 3, gut_liver: 1, metabolism: 1, oxygen: 1, anaerobic: 1, compartmental: 2, omics: 2, mucus: 3, automation: 2, reproducibility: 3, custom: 2, multi_organ: 2, vascular: 2, stable_long: 2, imaging: 3, sampling: 2, membrane_free: 3, patient_faeces: 1, immune_oncology: 1, screen: 3 }
+        }
+      ];
+
+      const PLATFORM_MAP = Object.fromEntries(PLATFORMS.map(p => [p.id, p]));
+
+      const SCENARIOS = [
+        {
+          id: 'colon-inflammation',
+          difficulty: 'clear',
+          client: 'IBD clinician',
+          title: 'Patient-derived inflamed colon barrier',
+          question: 'Can we test whether a candidate anti-inflammatory restores barrier function in a colon organoid-derived model under flow and stretch?',
+          weights: { organoid: 3, mechanical: 3, endothelial: 2, barrier: 3, inflammation: 3, drug_response: 2 },
+          teaching: 'Best fit tends to prioritise a mature colonic barrier, biopsy-derived organoids/colonoids, endothelial interface, mechanical forces and inflammatory readouts.',
+          best: ['emulate', 'dynamic42']
+        },
+        {
+          id: 'oral-adme',
+          difficulty: 'clear',
+          client: 'Pharma ADME team',
+          title: 'Oral bioavailability and first-pass metabolism',
+          question: 'The compound crosses the intestinal barrier, then may be metabolised by liver. Which platform gives the best gut-to-liver prediction strategy?',
+          weights: { gut_liver: 4, metabolism: 4, barrier: 2, sampling: 3, reproducibility: 2, multi_organ: 3, drug_response: 2 },
+          teaching: 'A gut-liver linked system is strongest when the question is absorption plus hepatic metabolism and oral bioavailability.',
+          best: ['cnbio']
+        },
+        {
+          id: 'ici-microbiome',
+          difficulty: 'clear',
+          client: 'Oncology microbiome group',
+          title: 'Faecal microbiome and immunotherapy response',
+          question: 'Can patient faecal microbiomes from immune-checkpoint inhibitor responders and non-responders change gut epithelial state under peristaltic-like cues?',
+          weights: { microbiome: 4, patient_faeces: 4, peristalsis: 4, mechanical: 2, immune_oncology: 3, omics: 2, barrier: 2 },
+          teaching: 'A model built around faecal microbiome exposure plus peristaltic-like mechanical stimulation is the key clue.',
+          best: ['biomimx']
+        },
+        {
+          id: 'anaerobe-crosstalk',
+          difficulty: 'tricky',
+          client: 'Microbiome mechanisms lab',
+          title: 'Anaerobe-host molecular crosstalk',
+          question: 'We need to keep an anaerobic microbe close to intestinal epithelium but analyse host cells and microbial cells separately, with an oxygen gradient.',
+          weights: { microbiome: 4, anaerobic: 4, oxygen: 4, compartmental: 3, omics: 3, sampling: 2, barrier: 1 },
+          teaching: 'For mechanistic host-microbe crosstalk with compartmental separation and oxygen-gradient logic, HuMiX is a strong conceptual fit.',
+          best: ['humix']
+        },
+        {
+          id: 'immune-vascular',
+          difficulty: 'tricky',
+          client: 'Mucosal immunology team',
+          title: 'Immune-cell recruitment across a vascular gut interface',
+          question: 'The main endpoint is immune trafficking through an endothelial compartment into gut tissue during inflammation. We want macrophages/monocytes and stable barrier readouts over time.',
+          weights: { immune: 4, vascular: 4, endothelial: 4, inflammation: 3, barrier: 2, stable_long: 3, mechanical: 2 },
+          teaching: 'The immune and vascular compartments are the deciding features; long stable barrier culture also matters.',
+          best: ['dynamic42']
+        },
+        {
+          id: 'screening-tubules',
+          difficulty: 'clear',
+          client: 'Screening consortium',
+          title: 'Scalable 3D gut tubule screen',
+          question: 'We need many replicated 3D gut tubules, high-content imaging, TEER or barrier endpoints, and a format compatible with plate workflows.',
+          weights: { throughput: 4, membrane_free: 4, imaging: 3, barrier: 2, reproducibility: 2, screen: 3, organoid: 2 },
+          teaching: 'High-throughput microplate format, membrane-free 3D tubules and imaging/TEER compatibility point strongly to OrganoPlate-style workflows.',
+          best: ['mimetas']
+        },
+        {
+          id: 'automation-core',
+          difficulty: 'clear',
+          client: 'Core facility manager',
+          title: 'Automated reproducible MPS build',
+          question: 'We need scalable automated model construction, high precision, custom tissue configuration and reproducible workflows across multiple organ models.',
+          weights: { automation: 4, reproducibility: 4, custom: 3, throughput: 3, multi_organ: 3, screen: 2 },
+          teaching: 'When the biological question is also an operational core-facility problem, automation and reproducible MPS construction become the deciding features.',
+          best: ['mepsgen']
+        },
+        {
+          id: 'mucus-microbial-screen',
+          difficulty: 'tricky',
+          client: 'Nutrition company',
+          title: 'Mucus-layer response to microbial metabolites',
+          question: 'We want a scalable barrier assay with mucus-producing cells, microbial-compound exposure, imaging and simple repeated endpoints. We do not need live anaerobes or peristalsis for the first pass.',
+          weights: { mucus: 4, throughput: 3, barrier: 3, imaging: 3, microbiome: 2, screen: 3, reproducibility: 2 },
+          teaching: 'This is deliberately less obvious: microbiome appears in the question, but the first-pass need is scalable mucus/barrier screening rather than live anaerobic crosstalk.',
+          best: ['mimetas']
+        },
+        {
+          id: 'stable-host-microbe-ibd',
+          difficulty: 'tricky',
+          client: 'IBD discovery group',
+          title: 'Inflamed host-microbe barrier under dynamic conditions',
+          question: 'We want a human-relevant gut barrier with microbes, inflammatory readouts, flow, and enough tissue complexity to discuss translation. Throughput is secondary.',
+          weights: { microbiome: 3, inflammation: 3, barrier: 3, mechanical: 2, immune: 2, endothelial: 2, drug_response: 2 },
+          teaching: 'Several platforms can be defensible. Highest scores depend on whether the team prioritises immune/vascular complexity, organoid-derived colon physiology, or peristaltic microbiome exposure.',
+          best: ['emulate', 'dynamic42', 'biomimx']
+        }
+      ];
+
+      const BUILDINGS = [
+        { id: 'hospital', name: 'Hospital', short: 'Hospital', x: 54, y: 72, w: 188, h: 142, color: '#dbeafe', roof: '#60a5fa', door: { x: 128, y: 186, w: 42, h: 34 } },
+        { id: 'platform', name: 'Platform Hall', short: 'Platform', x: 360, y: 52, w: 240, h: 158, color: '#ede9fe', roof: '#8b5cf6', door: { x: 459, y: 178, w: 42, h: 36 } },
+        { id: 'culture', name: 'Culture Lab', short: 'Culture', x: 704, y: 76, w: 198, h: 138, color: '#dcfce7', roof: '#22c55e', door: { x: 782, y: 186, w: 42, h: 34 } },
+        { id: 'incubator', name: 'Incubator Suite', short: 'Incubator', x: 72, y: 372, w: 218, h: 148, color: '#ffedd5', roof: '#f97316', door: { x: 162, y: 370, w: 42, h: 36 } },
+        { id: 'imaging', name: 'Imaging & QC', short: 'Imaging', x: 365, y: 364, w: 210, h: 154, color: '#cffafe', roof: '#06b6d4', door: { x: 449, y: 362, w: 42, h: 36 } },
+        { id: 'data', name: 'Data Room', short: 'Data', x: 628, y: 374, w: 135, h: 140, color: '#e0e7ff', roof: '#6366f1', door: { x: 674, y: 372, w: 42, h: 36 } },
+        { id: 'translation', name: 'Translation Hub', short: 'Translate', x: 805, y: 374, w: 120, h: 140, color: '#fce7f3', roof: '#ec4899', door: { x: 844, y: 372, w: 42, h: 36 } }
+      ];
+
+      const ROOM_INFO = {
+        hospital: { title: 'Hospital: clinical intake', npc: { x: 250, y: 280, name: 'Clinical Lead', emoji: '🩺' }, theme: '#1d4ed8' },
+        platform: { title: 'Platform Hall: client triage', npc: { x: 240, y: 280, name: 'Client Liaison', emoji: '🤝' }, theme: '#7c3aed' },
+        culture: { title: 'Culture Lab: model build', npc: { x: 240, y: 270, name: 'Organoid Scientist', emoji: '🧫' }, theme: '#16a34a' },
+        incubator: { title: 'Incubator Suite: maintenance', npc: { x: 250, y: 270, name: 'Incubator Guardian', emoji: '🧤' }, theme: '#ea580c' },
+        imaging: { title: 'Imaging & QC Room', npc: { x: 245, y: 278, name: 'QC Lead', emoji: '🔬' }, theme: '#0891b2' },
+        data: { title: 'Data Room', npc: { x: 250, y: 280, name: 'Data Scientist', emoji: '📊' }, theme: '#4f46e5' },
+        translation: { title: 'Translation Hub', npc: { x: 250, y: 280, name: 'Translation Lead', emoji: '🚀' }, theme: '#db2777' }
+      };
+
+      const player = { x: 468, y: 514, w: 28, h: 34, speed: 3.05, dir: 'down', target: null, step: 0 };
+      const keys = { up: false, down: false, left: false, right: false };
 
       const state = {
         running: false,
         dialogOpen: false,
-        stage: 0,
-        health: 55,
-        reproducibility: 45,
-        translation: 35,
+        scene: 'overworld',
+        mode: 'quick',
+        stageIndex: 0,
+        scores: { sample: 45, viability: 55, reproducibility: 50, platform: 0, translation: 35 },
         inventory: [],
         journal: [],
-        incubatorChallenge: false,
-        mediumCollected: 0,
-        bugCooldown: 0,
+        completed: {},
+        platformQueue: [],
+        platformNeeded: 1,
+        platformRound: 0,
+        platformResults: [],
+        selectedPlatforms: [],
+        focusWeights: {},
+        mini: null,
+        pulse: 0,
         gameComplete: false,
-        pulse: 0
+        lastHint: ''
       };
 
-      const player = { x: 76, y: 456, w: 26, h: 31, speed: 3.15, dir: 'down', step: 0 };
-      const keys = { up: false, down: false, left: false, right: false };
-
-      const objectives = [
-        ['Collect the clinical context', 'Find the clinician in the hospital room and collect a sample with consent and metadata.'],
-        ['Set up the culture', 'Visit the culture lab and choose conditions that help organoids self-organise.'],
-        ['Protect the growing model', 'Start the incubator challenge. Collect three medium drops and avoid contamination.'],
-        ['Characterise the model', 'Visit imaging and quality control to check whether the model is healthy and informative.'],
-        ['Interpret the readouts', 'Visit the data room and choose a reproducible analysis strategy.'],
-        ['Translate the model', 'Visit the translation hub and decide how the model should be used next.'],
-        ['Quest complete', 'Show your result to the stand team and ask how the real facility supports organoid projects.']
+      const scoreDefs = [
+        { key: 'sample', label: 'Sample quality' },
+        { key: 'viability', label: 'Model viability' },
+        { key: 'reproducibility', label: 'Reproducibility' },
+        { key: 'platform', label: 'Platform match' },
+        { key: 'translation', label: 'Translation' }
       ];
 
-      const rooms = [
-        { id: 'hospital', label: 'Hospital / sample room', x: 24, y: 72, w: 266, h: 198, bg: '#dbeafe', edge: '#60a5fa' },
-        { id: 'culture', label: 'Culture lab', x: 317, y: 72, w: 266, h: 198, bg: '#ede9fe', edge: '#a78bfa' },
-        { id: 'imaging', label: 'Imaging + QC', x: 610, y: 72, w: 266, h: 198, bg: '#cffafe', edge: '#22d3ee' },
-        { id: 'incubator', label: 'Incubator bay', x: 24, y: 324, w: 266, h: 198, bg: '#dcfce7', edge: '#4ade80' },
-        { id: 'data', label: 'Data room', x: 317, y: 324, w: 266, h: 198, bg: '#fef3c7', edge: '#fbbf24' },
-        { id: 'translation', label: 'Translation hub', x: 610, y: 324, w: 266, h: 198, bg: '#fee2e2', edge: '#fb7185' }
-      ];
+      function clamp(n, min = 0, max = 100) { return Math.max(min, Math.min(max, n)); }
+      function rectsOverlap(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
+      function dist(a, b) { const dx = a.x - b.x; const dy = a.y - b.y; return Math.hypot(dx, dy); }
+      function centerOf(obj) { return { x: obj.x + obj.w / 2, y: obj.y + obj.h / 2 }; }
+      function playerRectAt(x, y) { return { x: x - player.w / 2, y: y - player.h / 2, w: player.w, h: player.h }; }
+      function sample(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+      function shuffle(arr) { return arr.map(v => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(v => v[1]); }
+      function platformById(id) { return PLATFORM_MAP[id]; }
 
-      const obstacles = [
-        { x: 50, y: 138, w: 78, h: 34 }, { x: 164, y: 138, w: 86, h: 34 },
-        { x: 354, y: 138, w: 188, h: 32 }, { x: 424, y: 190, w: 42, h: 44 },
-        { x: 652, y: 134, w: 82, h: 38 }, { x: 762, y: 134, w: 72, h: 38 },
-        { x: 52, y: 388, w: 190, h: 40 }, { x: 105, y: 457, w: 86, h: 22 },
-        { x: 352, y: 386, w: 72, h: 72 }, { x: 468, y: 386, w: 72, h: 72 },
-        { x: 650, y: 388, w: 78, h: 34 }, { x: 766, y: 388, w: 70, h: 34 }
-      ];
-
-      const npcs = [
-        {
-          id: 'clinician', stage: 0, name: 'Clinical collaborator', icon: '🩺', x: 242, y: 230,
-          intro: 'A patient sample has arrived. The science starts before the cells reach the lab: consent, disease context, and clean metadata matter.',
-          question: 'What should you collect with the sample?',
-          choices: [
-            { text: 'Sample + consent + diagnosis + metadata', note: 'Best choice: makes the model interpretable.', dH: 4, dR: 12, dT: 12, item: '🧾 Consent + metadata', log: 'Collected a clinically annotated sample.', next: 1 },
-            { text: 'Sample only', note: 'You can grow it, but interpretation becomes weaker.', dH: 3, dR: 3, dT: 1, item: '🧫 Sample only', log: 'Collected the sample, but metadata is limited.', next: 1 },
-            { text: 'Unlabelled tube from the bench', note: 'Fast is not reproducible.', dH: -8, dR: -12, dT: -8, item: '⚠️ Poor metadata', log: 'The model started with uncertain provenance.', next: 1 }
-          ]
-        },
-        {
-          id: 'scientist', stage: 1, name: 'Organoid scientist', icon: '🔬', x: 530, y: 230,
-          intro: 'The cells need the right environment. Culture conditions shape whether an organoid grows, differentiates, and stays useful.',
-          question: 'How will you set up the culture?',
-          choices: [
-            { text: 'Use tissue-specific medium, controlled scaffold, and SOPs', note: 'Best choice: robust growth and reproducibility.', dH: 16, dR: 15, dT: 8, item: '🌱 Optimised culture', log: 'Set up tissue-specific culture conditions.', next: 2 },
-            { text: 'Use a generic medium and adjust later', note: 'Works sometimes, but increases variability.', dH: 6, dR: -2, dT: 0, item: '🧪 Basic culture', log: 'Culture started, but conditions are not optimised.', next: 2 },
-            { text: 'Skip controls to save time', note: 'A classic way to create confusing data.', dH: -10, dR: -14, dT: -8, item: '🧯 Missing controls', log: 'Controls were skipped; confidence dropped.', next: 2 }
-          ]
-        },
-        {
-          id: 'incubator', stage: 2, name: 'Incubator guardian', icon: '🧑‍🔬', x: 242, y: 484,
-          intro: 'Your organoids are growing. Keep them fed and protected. Collect three medium drops, but avoid contamination bugs.',
-          question: 'Ready to start the incubator challenge?',
-          choices: [
-            { text: 'Start challenge', note: 'Collect 3 drops to mature the organoid.', challenge: true }
-          ]
-        },
-        {
-          id: 'imager', stage: 3, name: 'Imaging + QC expert', icon: '📸', x: 822, y: 230,
-          intro: 'A beautiful organoid is not automatically a good model. You need quality control and readouts that match the biological question.',
-          question: 'Which readout strategy will you use?',
-          choices: [
-            { text: 'Microscopy + viability + phenotype scoring', note: 'Strong baseline QC for model quality.', dH: 9, dR: 10, dT: 10, item: '📷 QC images', log: 'Performed imaging and model quality checks.', next: 4 },
-            { text: 'Only take a nice picture for the poster', note: 'Looks good, but does not prove much.', dH: 2, dR: -2, dT: -2, item: '🖼️ Pretty image', log: 'Generated a picture, but QC evidence is thin.', next: 4 },
-            { text: 'Skip QC and go straight to claims', note: 'Not enough evidence for translation.', dH: -7, dR: -10, dT: -12, item: '❓ No QC', log: 'Skipped model characterisation.', next: 4 }
-          ]
-        },
-        {
-          id: 'data', stage: 4, name: 'Data scientist', icon: '📊', x: 530, y: 484,
-          intro: 'The model now has readouts. To make it useful, you need transparent analysis, biological context, and attention to replicates.',
-          question: 'How will you analyse the experiment?',
-          choices: [
-            { text: 'Integrate phenotype, metadata, and replicates', note: 'Best choice: supports reproducible interpretation.', dH: 2, dR: 15, dT: 13, item: '🧠 Integrated analysis', log: 'Integrated model readouts with metadata and replication.', next: 5 },
-            { text: 'Use the first spreadsheet that looks significant', note: 'Quick, but fragile.', dH: 0, dR: -7, dT: -5, item: '📄 Fragile analysis', log: 'Analysis was fast, but less robust.', next: 5 },
-            { text: 'Ignore batch effects and replicates', note: 'This weakens the conclusion.', dH: -2, dR: -13, dT: -10, item: '⚠️ Batch risk', log: 'Batch effects were ignored.', next: 5 }
-          ]
-        },
-        {
-          id: 'translation', stage: 5, name: 'Translation lead', icon: '🚀', x: 822, y: 484,
-          intro: 'The final question: how should this organoid model be used responsibly in research, screening, or translation?',
-          question: 'Choose the translational next step.',
-          choices: [
-            { text: 'Benchmark, document SOPs, and plan next validation', note: 'Best choice: credible route to wider use.', dH: 3, dR: 10, dT: 18, item: '✅ Translational plan', log: 'Created a benchmarked, documented route to next validation.', complete: true },
-            { text: 'Claim it replaces every model immediately', note: 'Overclaiming reduces trust.', dH: -2, dR: -5, dT: -13, item: '📣 Overclaim', log: 'The model was overclaimed before sufficient validation.', complete: true },
-            { text: 'Keep it as a one-off experiment', note: 'Useful locally, but hard to scale.', dH: 0, dR: -5, dT: -7, item: '📦 One-off model', log: 'The model stayed useful but difficult to scale.', complete: true }
-          ]
-        }
-      ];
-
-      const mediumDrops = [
-        { x: 84, y: 358, got: false },
-        { x: 260, y: 362, got: false },
-        { x: 258, y: 506, got: false },
-        { x: 56, y: 506, got: false }
-      ];
-      const bugs = [
-        { x: 44, y: 350, vx: 1.15, vy: .95 },
-        { x: 246, y: 448, vx: -1.05, vy: .85 },
-        { x: 120, y: 500, vx: .95, vy: -1.1 }
-      ];
-
-      function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
-      function rects(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
-      function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
-      function playerBox(x = player.x, y = player.y) { return { x: x - player.w / 2, y: y - player.h / 2, w: player.w, h: player.h }; }
-
-      function addLog(text) {
-        state.journal.unshift(text);
-        state.journal = state.journal.slice(0, 6);
-        updateUI();
-      }
-
-      function addItem(item) {
-        if (item && !state.inventory.includes(item)) state.inventory.push(item);
-      }
-
-      function setStats(dH = 0, dR = 0, dT = 0) {
-        state.health = clamp(state.health + dH, 0, 100);
-        state.reproducibility = clamp(state.reproducibility + dR, 0, 100);
-        state.translation = clamp(state.translation + dT, 0, 100);
+      function initBars() {
+        ui.scoreBars.innerHTML = scoreDefs.map(def => `
+          <div class="bar-row">
+            <div class="bar-label"><span>${def.label}</span><span id="${def.key}Text">0%</span></div>
+            <div class="bar"><i id="${def.key}Bar"></i></div>
+          </div>
+        `).join('');
       }
 
       function updateUI() {
-        const [title, text] = objectives[state.stage] || objectives[objectives.length - 1];
-        ui.objectiveTitle.textContent = title;
-        ui.objectiveText.textContent = text;
-        ui.healthText.textContent = Math.round(state.health) + '%';
-        ui.repText.textContent = Math.round(state.reproducibility) + '%';
-        ui.transText.textContent = Math.round(state.translation) + '%';
-        ui.healthBar.style.width = state.health + '%';
-        ui.repBar.style.width = state.reproducibility + '%';
-        ui.transBar.style.width = state.translation + '%';
-        ui.hudStage.textContent = state.gameComplete ? 'Quest complete' : `Stage ${Math.min(state.stage + 1, 6)}/6`;
-        ui.hudHint.textContent = state.incubatorChallenge ? `Medium collected: ${state.mediumCollected}/3` : nearestNpcHint();
-        ui.inventory.innerHTML = state.inventory.length ? state.inventory.map(i => `<span class="item">${i}</span>`).join('') : '<span class="item">No items yet</span>';
-        ui.journal.innerHTML = state.journal.map(log => `<div class="log">${escapeHtml(log)}</div>`).join('');
+        const st = STAGES[state.stageIndex] || STAGES[STAGES.length - 1];
+        ui.objectiveTitle.textContent = state.gameComplete ? 'Quest complete' : st.label;
+        ui.objectiveText.textContent = state.gameComplete ? 'Show the final score to the stand team or restart for another client scenario.' : st.objective;
+        scoreDefs.forEach(def => {
+          const value = Math.round(clamp(state.scores[def.key] || 0));
+          const bar = document.getElementById(def.key + 'Bar');
+          const txt = document.getElementById(def.key + 'Text');
+          if (bar) bar.style.width = value + '%';
+          if (txt) txt.textContent = value + '%';
+        });
+        ui.inventory.innerHTML = state.inventory.length ? state.inventory.map(item => `<span class="item">${item}</span>`).join('') : '<span class="item">No items yet</span>';
+        ui.journal.innerHTML = state.journal.slice(-8).reverse().map(log => `<div class="log">${log}</div>`).join('');
+        updateHudOnly();
       }
 
-      function escapeHtml(s) {
-        return String(s).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+      function updateHudOnly() {
+        ui.hudScene.textContent = state.mini ? miniTitle() : (state.scene === 'overworld' ? 'Campus Courtyard' : ROOM_INFO[state.scene].title);
+        ui.hudStage.textContent = state.gameComplete ? 'Complete' : `Stage ${state.stageIndex + 1}/7`;
+        ui.hudHint.textContent = getHint();
+        ui.modePill.textContent = state.running ? (state.mode === 'extended' ? '🧭 Extended RPG mode' : '⚡ Quick stand demo') : '🎮 QR-ready · mobile friendly';
       }
 
-      function nearestNpcHint() {
-        if (state.gameComplete) return 'Show your result to the stand team';
-        const target = npcs.find(n => n.stage === state.stage);
-        if (!target) return 'Explore the facility';
-        const d = dist(player, target);
-        return d < 60 ? `Press Talk: ${target.name}` : `Find: ${target.name}`;
+      function addInventory(item) {
+        if (!state.inventory.includes(item)) state.inventory.push(item);
+        updateUI();
       }
 
-      function drawRoundedRect(x, y, w, h, r) {
+      function addLog(text) {
+        state.journal.push(text);
+        if (state.journal.length > 40) state.journal.shift();
+        updateUI();
+      }
+
+      function adjustScores(delta) {
+        Object.entries(delta).forEach(([key, val]) => {
+          state.scores[key] = clamp((state.scores[key] || 0) + val);
+        });
+        updateUI();
+      }
+
+      function setScore(key, value) {
+        state.scores[key] = clamp(value);
+        updateUI();
+      }
+
+      function currentStageId() { return STAGES[state.stageIndex] ? STAGES[state.stageIndex].id : 'complete'; }
+
+      function completeStage(id) {
+        state.completed[id] = true;
+        const idx = STAGES.findIndex(s => s.id === id);
+        if (idx === state.stageIndex && state.stageIndex < STAGES.length - 1) state.stageIndex += 1;
+        updateUI();
+      }
+
+      function startGame(mode) {
+        state.running = true;
+        state.mode = mode;
+        state.platformNeeded = mode === 'extended' ? 5 : 1;
+        state.platformQueue = buildPlatformQueue(mode);
+        state.platformRound = 0;
+        state.platformResults = [];
+        state.selectedPlatforms = [];
+        state.focusWeights = {};
+        ui.startOverlay.classList.remove('show');
+        addLog(mode === 'extended' ? 'Extended RPG started: five client scenarios will test platform trade-offs.' : 'Quick stand demo started: one client scenario will determine your platform match.');
+      }
+
+      function buildPlatformQueue(mode) {
+        if (mode === 'extended') {
+          const required = ['anaerobe-crosstalk', 'immune-vascular', 'mucus-microbial-screen'];
+          const requiredScenarios = required.map(id => SCENARIOS.find(s => s.id === id));
+          const others = shuffle(SCENARIOS.filter(s => !required.includes(s.id))).slice(0, 2);
+          return shuffle(requiredScenarios.concat(others));
+        }
+        return [sample(SCENARIOS.slice(0, 7))];
+      }
+
+      function miniTitle() {
+        if (!state.mini) return '';
+        if (state.mini.type === 'colonoscopy') return 'Mini-game: sample collection';
+        if (state.mini.type === 'incubator') return 'Mini-game: incubator run';
+        return 'Mini-game';
+      }
+
+      function getHint() {
+        if (!state.running) return 'Choose a mode';
+        if (state.dialogOpen) return 'Choose an option';
+        if (state.mini) {
+          if (state.mini.type === 'colonoscopy') return 'Guide the scope to biopsy targets';
+          if (state.mini.type === 'incubator') return 'Collect medium, avoid contamination';
+        }
+        if (state.scene === 'overworld') {
+          const near = getNearDoor();
+          if (near) return `Use door: ${near.name}`;
+          const target = BUILDINGS.find(b => b.id === currentStageId());
+          return target ? `Go to ${target.name}` : 'Explore the facility';
+        }
+        const exit = isNearExit();
+        if (exit) return 'Use exit to return outside';
+        const info = ROOM_INFO[state.scene];
+        if (info && dist(centerOf(playerRectAt(player.x, player.y)), info.npc) < 90) return `Talk to ${info.npc.name}`;
+        if (state.scene === currentStageId()) return 'Find the expert in this room';
+        return 'Return to the highlighted building';
+      }
+
+      function showModal(html, wide = false) {
+        ui.dialogBox.className = 'modal' + (wide ? ' wide' : '');
+        ui.dialogBox.innerHTML = html;
+        ui.dialogOverlay.classList.add('show');
+        state.dialogOpen = true;
+        updateUI();
+      }
+
+      function closeModal() {
+        ui.dialogOverlay.classList.remove('show');
+        state.dialogOpen = false;
+        updateUI();
+      }
+
+      function esc(text) {
+        return String(text).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      }
+
+      function modalButton(label, onClick, className = 'primary-btn') {
+        const id = 'btn_' + Math.random().toString(36).slice(2);
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener('click', onClick);
+        }, 0);
+        return `<button class="${className}" id="${id}">${label}</button>`;
+      }
+
+      function showMessage(speaker, title, body, buttons) {
+        const buttonHtml = (buttons && buttons.length ? buttons : [{ label: 'Continue', action: closeModal }])
+          .map(b => modalButton(b.label, b.action, b.className || 'primary-btn')).join(' ');
+        showModal(`<span class="speaker">${esc(speaker)}</span><h2>${esc(title)}</h2><p>${body}</p><div>${buttonHtml}</div>`);
+      }
+
+      function drawRoundRect(x, y, w, h, r) {
         ctx.beginPath();
         ctx.moveTo(x + r, y);
-        ctx.lineTo(x + w - r, y);
-        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-        ctx.lineTo(x + w, y + h - r);
-        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-        ctx.lineTo(x + r, y + h);
-        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-        ctx.lineTo(x, y + r);
-        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
         ctx.closePath();
       }
 
-      function drawWorld() {
-        ctx.clearRect(0, 0, W, H);
-        const grd = ctx.createLinearGradient(0, 0, W, H);
-        grd.addColorStop(0, '#e0f2fe');
-        grd.addColorStop(1, '#f8fafc');
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, W, H);
-
-        // corridors
-        ctx.fillStyle = '#cbd5e1';
-        ctx.fillRect(0, 280, W, 34);
-        ctx.fillRect(294, 0, 18, H);
-        ctx.fillRect(586, 0, 18, H);
-        ctx.strokeStyle = 'rgba(15,23,42,.18)';
-        ctx.lineWidth = 1;
-        for (let x = 0; x < W; x += 30) {
-          ctx.beginPath(); ctx.moveTo(x, 280); ctx.lineTo(x + 16, 314); ctx.stroke();
-        }
-
-        rooms.forEach(room => {
-          ctx.save();
-          ctx.shadowColor = 'rgba(15,23,42,.14)';
-          ctx.shadowBlur = 12;
-          ctx.shadowOffsetY = 5;
-          ctx.fillStyle = room.bg;
-          drawRoundedRect(room.x, room.y, room.w, room.h, 18);
-          ctx.fill();
-          ctx.restore();
-          ctx.strokeStyle = room.edge;
-          ctx.lineWidth = 4;
-          drawRoundedRect(room.x, room.y, room.w, room.h, 18);
-          ctx.stroke();
-          ctx.fillStyle = '#0f172a';
-          ctx.font = '800 14px system-ui, sans-serif';
-          ctx.fillText(room.label, room.x + 16, room.y + 26);
-        });
-
-        drawFurniture();
-        drawOrganoid();
-        if (state.incubatorChallenge) drawChallenge();
-        drawNpcs();
-        drawPlayer();
-        drawVignette();
-      }
-
-      function drawFurniture() {
-        obstacles.forEach((o, idx) => {
-          ctx.fillStyle = idx % 3 === 0 ? '#64748b' : idx % 3 === 1 ? '#94a3b8' : '#475569';
-          drawRoundedRect(o.x, o.y, o.w, o.h, 8);
-          ctx.fill();
-          ctx.fillStyle = 'rgba(255,255,255,.34)';
-          ctx.fillRect(o.x + 8, o.y + 7, Math.max(8, o.w - 16), 4);
-        });
-        // label key equipment
-        drawLabel(396, 126, 'bench');
-        drawLabel(100, 382, 'incubators');
-        drawLabel(662, 128, 'microscope');
-        drawLabel(365, 380, 'omics');
-        drawLabel(658, 382, 'SOPs');
-      }
-
-      function drawLabel(x, y, text) {
-        ctx.font = '700 10px system-ui, sans-serif';
-        ctx.fillStyle = 'rgba(15,23,42,.55)';
+      function drawText(text, x, y, size = 14, color = '#10202d', align = 'center', weight = 800) {
+        ctx.font = `${weight} ${size}px ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif`;
+        ctx.fillStyle = color;
+        ctx.textAlign = align;
+        ctx.textBaseline = 'middle';
         ctx.fillText(text, x, y);
       }
 
-      function drawOrganoid() {
-        const cx = 450;
-        const cy = 292;
-        const size = 18 + state.health * 0.23 + Math.sin(state.pulse / 18) * 2;
-        const g = ctx.createRadialGradient(cx - size / 4, cy - size / 4, 2, cx, cy, size);
-        g.addColorStop(0, '#fef3c7');
-        g.addColorStop(.45, '#f472b6');
-        g.addColorStop(1, '#7c3aed');
+      function drawWrappedText(text, x, y, maxWidth, lineHeight, color = '#fff', size = 15, weight = 700) {
+        ctx.font = `${weight} ${size}px ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif`;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        const words = text.split(' ');
+        let line = '';
+        let yy = y;
+        words.forEach(word => {
+          const test = line ? line + ' ' + word : word;
+          if (ctx.measureText(test).width > maxWidth && line) {
+            ctx.fillText(line, x, yy);
+            line = word;
+            yy += lineHeight;
+          } else {
+            line = test;
+          }
+        });
+        if (line) ctx.fillText(line, x, yy);
+      }
+
+      function drawOverworld() {
+        const grd = ctx.createLinearGradient(0, 0, 0, H);
+        grd.addColorStop(0, '#134e4a');
+        grd.addColorStop(1, '#052e2b');
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.fillStyle = 'rgba(255,255,255,.08)';
+        for (let x = 0; x < W; x += 48) ctx.fillRect(x, 0, 1, H);
+        for (let y = 0; y < H; y += 48) ctx.fillRect(0, y, W, 1);
+
+        ctx.fillStyle = '#d8b06a';
+        drawRoundRect(90, 258, 780, 78, 24); ctx.fill();
+        drawRoundRect(441, 88, 78, 440, 24); ctx.fill();
+        drawRoundRect(95, 268, 760, 58, 18); ctx.fillStyle = '#e7c586'; ctx.fill();
+        drawRoundRect(451, 98, 58, 420, 18); ctx.fill();
+
+        drawText('Imperial Organoid Facility', W / 2, 28, 22, '#e0f2fe', 'center', 950);
+        drawText('Walk into buildings to progress through the workflow', W / 2, 53, 13, '#bae6fd', 'center', 800);
+
+        BUILDINGS.forEach(drawBuilding);
+        drawDecorations();
+      }
+
+      function drawDecorations() {
         ctx.save();
-        ctx.globalAlpha = .24;
-        ctx.fillStyle = '#7c3aed';
-        ctx.beginPath(); ctx.arc(cx, cy, size + 16, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(cx, cy, size, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,.86)';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-        ctx.fillStyle = 'rgba(255,255,255,.55)';
-        for (let i = 0; i < 8; i++) {
-          const a = i * Math.PI / 4 + state.pulse / 60;
-          ctx.beginPath(); ctx.arc(cx + Math.cos(a) * size * .45, cy + Math.sin(a) * size * .45, Math.max(2, size * .08), 0, Math.PI * 2); ctx.fill();
+        for (let i = 0; i < 22; i++) {
+          const x = (i * 113 + 31) % W;
+          const y = (i * 67 + 98) % H;
+          if (x > 320 && x < 640 && y > 50 && y < 540) continue;
+          ctx.fillStyle = 'rgba(187,247,208,.42)';
+          ctx.beginPath(); ctx.arc(x, y, 3 + (i % 3), 0, Math.PI * 2); ctx.fill();
         }
-        ctx.fillStyle = '#0f172a';
-        ctx.font = '900 12px system-ui, sans-serif';
-        ctx.fillText('model status', cx - 35, cy + size + 24);
         ctx.restore();
       }
 
-      function drawNpcs() {
-        npcs.forEach(n => {
-          const active = n.stage === state.stage && !state.gameComplete;
+      function drawBuilding(b) {
+        const isTarget = currentStageId() === b.id && !state.gameComplete;
+        if (isTarget) {
           ctx.save();
-          if (active) {
-            ctx.globalAlpha = .36 + Math.sin(state.pulse / 12) * .10;
-            ctx.fillStyle = '#facc15';
-            ctx.beginPath(); ctx.arc(n.x, n.y, 32, 0, Math.PI * 2); ctx.fill();
-            ctx.globalAlpha = 1;
-          }
-          ctx.fillStyle = active ? '#312e81' : '#334155';
-          ctx.beginPath(); ctx.arc(n.x, n.y + 8, 17, 0, Math.PI * 2); ctx.fill();
-          ctx.font = '24px serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(n.icon, n.x, n.y + 14);
-          ctx.font = '800 10px system-ui, sans-serif';
-          ctx.fillStyle = active ? '#111827' : '#475569';
-          ctx.fillText(n.name.split(' ')[0], n.x, n.y + 36);
+          ctx.shadowColor = '#fef08a';
+          ctx.shadowBlur = 24 + Math.sin(state.pulse * 0.08) * 8;
+          ctx.strokeStyle = '#fde047';
+          ctx.lineWidth = 5;
+          drawRoundRect(b.x - 6, b.y - 6, b.w + 12, b.h + 12, 20);
+          ctx.stroke();
           ctx.restore();
-        });
-        ctx.textAlign = 'start';
+        }
+        ctx.fillStyle = 'rgba(0,0,0,.22)';
+        drawRoundRect(b.x + 8, b.y + 12, b.w, b.h, 18); ctx.fill();
+        ctx.fillStyle = b.color;
+        drawRoundRect(b.x, b.y, b.w, b.h, 18); ctx.fill();
+        ctx.fillStyle = b.roof;
+        drawRoundRect(b.x - 8, b.y - 14, b.w + 16, 48, 18); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.28)';
+        for (let i = 0; i < 3; i++) {
+          drawRoundRect(b.x + 18 + i * 52, b.y + 58, 28, 28, 6); ctx.fill();
+        }
+        ctx.fillStyle = '#4b5563';
+        drawRoundRect(b.door.x, b.door.y, b.door.w, b.door.h, 7); ctx.fill();
+        ctx.fillStyle = '#fde68a';
+        ctx.beginPath(); ctx.arc(b.door.x + b.door.w - 9, b.door.y + 18, 3, 0, Math.PI * 2); ctx.fill();
+        drawText(b.short, b.x + b.w / 2, b.y + 30, 15, '#0f172a', 'center', 950);
+        if (state.completed[b.id]) drawText('✓', b.x + b.w - 22, b.y + 28, 22, '#16a34a', 'center', 950);
+      }
+
+      function drawRoom() {
+        const info = ROOM_INFO[state.scene];
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#1f2937';
+        ctx.fillRect(38, 48, W - 76, H - 88);
+        ctx.strokeStyle = 'rgba(255,255,255,.08)';
+        ctx.lineWidth = 1;
+        for (let x = 38; x < W - 38; x += 40) { ctx.beginPath(); ctx.moveTo(x, 48); ctx.lineTo(x, H - 40); ctx.stroke(); }
+        for (let y = 48; y < H - 40; y += 40) { ctx.beginPath(); ctx.moveTo(38, y); ctx.lineTo(W - 38, y); ctx.stroke(); }
+        ctx.fillStyle = info.theme;
+        ctx.fillRect(38, 48, W - 76, 54);
+        drawText(info.title, W / 2, 75, 22, 'white', 'center', 950);
+        drawExitDoor();
+        drawRoomFurniture(state.scene);
+        drawNPC(info.npc.x, info.npc.y, info.npc.name, info.npc.emoji, state.scene === currentStageId());
+      }
+
+      function drawExitDoor() {
+        const x = W / 2 - 52, y = H - 78, w = 104, h = 40;
+        ctx.fillStyle = '#0f172a';
+        drawRoundRect(x, y, w, h, 10); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 2; ctx.stroke();
+        drawText('EXIT', W / 2, y + 20, 15, '#dbeafe', 'center', 950);
+      }
+
+      function drawRoomFurniture(room) {
+        if (room === 'hospital') {
+          drawBench(568, 188, 250, 104, '#bfdbfe', 'Colonoscopy sample station');
+          drawBench(600, 344, 200, 70, '#dbeafe', 'Consent + metadata');
+          drawMonitor(690, 198, 'Scope view');
+          drawText('mini-game here', 694, 318, 13, '#bfdbfe', 'center', 850);
+        } else if (room === 'platform') {
+          drawBench(555, 155, 310, 80, '#ddd6fe', 'Platform comparison table');
+          PLATFORMS.forEach((p, i) => {
+            const x = 410 + (i % 4) * 120;
+            const y = 305 + Math.floor(i / 4) * 92;
+            drawPlatformPod(p, x, y);
+          });
+        } else if (room === 'culture') {
+          drawBench(520, 178, 310, 84, '#bbf7d0', 'Matrix · medium · growth factors');
+          drawBench(550, 335, 240, 78, '#dcfce7', 'Organoid culture bench');
+          drawDish(670, 373, 1);
+        } else if (room === 'incubator') {
+          drawBench(545, 160, 270, 92, '#fed7aa', 'Incubator rack');
+          drawBench(560, 330, 230, 88, '#ffedd5', 'Medium and sterile handling');
+          drawDish(670, 370, 1.5);
+        } else if (room === 'imaging') {
+          drawBench(520, 168, 320, 92, '#a5f3fc', 'Microscope + TEER');
+          drawMonitor(680, 178, 'QC images');
+          drawBench(560, 336, 220, 76, '#cffafe', 'Readout panel');
+        } else if (room === 'data') {
+          drawBench(520, 168, 320, 92, '#c7d2fe', 'Analysis workstation');
+          drawMonitor(690, 176, 'QC dashboard');
+          drawBench(560, 336, 220, 76, '#e0e7ff', 'Replicates + SOP');
+        } else if (room === 'translation') {
+          drawBench(510, 160, 330, 105, '#fbcfe8', 'Client recommendation board');
+          drawBench(550, 340, 240, 76, '#fce7f3', 'Training + handoff');
+          drawText('Final score', 670, 379, 18, '#831843', 'center', 950);
+        }
+      }
+
+      function drawBench(x, y, w, h, color, label) {
+        ctx.fillStyle = 'rgba(0,0,0,.25)';
+        drawRoundRect(x + 8, y + 10, w, h, 15); ctx.fill();
+        ctx.fillStyle = color;
+        drawRoundRect(x, y, w, h, 15); ctx.fill();
+        ctx.strokeStyle = 'rgba(15,23,42,.18)'; ctx.lineWidth = 2; ctx.stroke();
+        drawText(label, x + w / 2, y + h / 2, 14, '#0f172a', 'center', 900);
+      }
+
+      function drawMonitor(x, y, label) {
+        ctx.fillStyle = '#0f172a'; drawRoundRect(x, y, 108, 70, 9); ctx.fill();
+        ctx.fillStyle = '#0ea5e9'; drawRoundRect(x + 8, y + 8, 92, 46, 5); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.22)'; ctx.fillRect(x + 16, y + 18, 52, 5); ctx.fillRect(x + 16, y + 30, 72, 5); ctx.fillRect(x + 16, y + 42, 38, 5);
+        drawText(label, x + 54, y + 88, 12, '#cbd5e1', 'center', 800);
+      }
+
+      function drawDish(x, y, scale) {
+        ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale);
+        ctx.fillStyle = 'rgba(14,165,233,.24)'; ctx.beginPath(); ctx.ellipse(0, 0, 54, 25, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.stroke();
+        for (let i = 0; i < 9; i++) {
+          ctx.fillStyle = ['#a78bfa', '#22c55e', '#f59e0b'][i % 3];
+          ctx.beginPath(); ctx.arc(-34 + (i % 5) * 17, -8 + Math.floor(i / 5) * 15, 5 + (i % 2), 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      function drawPlatformPod(p, x, y) {
+        ctx.fillStyle = 'rgba(0,0,0,.2)'; drawRoundRect(x + 5, y + 5, 84, 62, 12); ctx.fill();
+        ctx.fillStyle = '#f8fafc'; drawRoundRect(x, y, 84, 62, 12); ctx.fill();
+        drawText(p.icon, x + 22, y + 25, 20, '#0f172a', 'center', 900);
+        drawText(p.name, x + 48, y + 26, 12, '#0f172a', 'center', 900);
+        drawText('chip', x + 48, y + 44, 10, '#64748b', 'center', 800);
+      }
+
+      function drawNPC(x, y, name, emoji, isActive) {
+        if (isActive) {
+          ctx.save();
+          ctx.globalAlpha = .9;
+          ctx.strokeStyle = '#fde047';
+          ctx.lineWidth = 4;
+          ctx.beginPath(); ctx.arc(x, y + 10, 36 + Math.sin(state.pulse * 0.08) * 3, 0, Math.PI * 2); ctx.stroke();
+          ctx.restore();
+        }
+        ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x, y + 28, 26, 10, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#0f172a'; drawRoundRect(x - 17, y - 2, 34, 42, 10); ctx.fill();
+        ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(x, y - 10, 18, 0, Math.PI * 2); ctx.fill();
+        drawText(emoji, x, y - 10, 20, '#111827', 'center', 900);
+        drawText(name, x, y + 58, 12, '#e5e7eb', 'center', 900);
+        if (isActive) {
+          ctx.fillStyle = '#fde047'; ctx.beginPath(); ctx.arc(x + 24, y - 28, 13, 0, Math.PI * 2); ctx.fill();
+          drawText('!', x + 24, y - 28, 17, '#111827', 'center', 950);
+        }
       }
 
       function drawPlayer() {
+        if (state.mini) return;
+        const x = player.x, y = player.y;
+        ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.beginPath(); ctx.ellipse(x, y + 18, 21, 8, 0, 0, Math.PI * 2); ctx.fill();
+        const walk = Math.sin(player.step * 0.28) * 3;
+        ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(x - 7, y + 16); ctx.lineTo(x - 13, y + 28 + walk); ctx.moveTo(x + 7, y + 16); ctx.lineTo(x + 13, y + 28 - walk); ctx.stroke();
+        ctx.fillStyle = '#f8fafc'; drawRoundRect(x - 14, y - 4, 28, 32, 8); ctx.fill();
+        ctx.fillStyle = '#7c3aed'; drawRoundRect(x - 10, y + 2, 20, 20, 6); ctx.fill();
+        ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.arc(x, y - 14, 15, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#111827'; ctx.beginPath(); ctx.arc(x - 5, y - 16, 2, 0, Math.PI * 2); ctx.arc(x + 5, y - 16, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#111827'; ctx.fillRect(x - 12, y - 29, 24, 8);
+      }
+
+      function drawPrompt() {
+        if (state.dialogOpen || state.mini || !state.running) return;
+        const text = getHint();
+        if (!text || text === state.lastHint) {
+          // still draw, but no-op on storing; kept for prompt stability
+        }
+        const nearDoor = state.scene === 'overworld' ? getNearDoor() : null;
+        const nearNpc = state.scene !== 'overworld' && ROOM_INFO[state.scene] && dist({ x: player.x, y: player.y }, ROOM_INFO[state.scene].npc) < 92;
+        const exit = state.scene !== 'overworld' && isNearExit();
+        if (!nearDoor && !nearNpc && !exit) return;
         ctx.save();
-        const bob = Math.sin(player.step / 7) * 1.5;
-        // shadow
-        ctx.fillStyle = 'rgba(15,23,42,.2)';
-        ctx.beginPath(); ctx.ellipse(player.x, player.y + 18, 16, 5, 0, 0, Math.PI * 2); ctx.fill();
-        // lab coat body
-        ctx.fillStyle = '#f8fafc';
-        drawRoundedRect(player.x - 12, player.y - 8 + bob, 24, 30, 8);
-        ctx.fill();
-        ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.4; ctx.stroke();
-        // face
-        ctx.fillStyle = '#f6c28b';
-        ctx.beginPath(); ctx.arc(player.x, player.y - 14 + bob, 11, 0, Math.PI * 2); ctx.fill();
-        // hair
-        ctx.fillStyle = '#1f2937';
-        ctx.beginPath(); ctx.arc(player.x, player.y - 18 + bob, 11, Math.PI, 0); ctx.fill();
-        // goggles
-        ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.4;
-        ctx.strokeRect(player.x - 8, player.y - 15 + bob, 6, 4);
-        ctx.strokeRect(player.x + 2, player.y - 15 + bob, 6, 4);
-        ctx.beginPath(); ctx.moveTo(player.x - 2, player.y - 13 + bob); ctx.lineTo(player.x + 2, player.y - 13 + bob); ctx.stroke();
-        // feet
-        ctx.fillStyle = '#111827';
-        ctx.fillRect(player.x - 10, player.y + 20 + bob, 7, 4);
-        ctx.fillRect(player.x + 3, player.y + 20 - bob, 7, 4);
+        const w = Math.min(380, Math.max(210, ctx.measureText(text).width + 50));
+        const x = clamp(player.x - w / 2, 14, W - w - 14);
+        const y = clamp(player.y - 78, 112, H - 95);
+        ctx.fillStyle = 'rgba(2,6,23,.86)'; drawRoundRect(x, y, w, 44, 14); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.stroke();
+        drawText(text, x + w / 2, y + 22, 14, '#fff', 'center', 900);
         ctx.restore();
       }
 
-      function drawChallenge() {
-        mediumDrops.forEach(d => {
-          if (d.got) return;
-          ctx.save();
-          ctx.fillStyle = '#0ea5e9';
-          ctx.globalAlpha = .92;
-          ctx.beginPath();
-          ctx.moveTo(d.x, d.y - 12);
-          ctx.bezierCurveTo(d.x + 15, d.y + 4, d.x + 9, d.y + 20, d.x, d.y + 20);
-          ctx.bezierCurveTo(d.x - 9, d.y + 20, d.x - 15, d.y + 4, d.x, d.y - 12);
-          ctx.fill();
-          ctx.fillStyle = 'white';
-          ctx.globalAlpha = .7;
-          ctx.beginPath(); ctx.arc(d.x - 4, d.y + 3, 3, 0, Math.PI * 2); ctx.fill();
-          ctx.restore();
-        });
-        bugs.forEach(b => {
-          ctx.save();
-          ctx.translate(b.x, b.y);
-          ctx.fillStyle = '#1f2937';
-          ctx.beginPath(); ctx.arc(0, 0, 11, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = '#ef4444';
-          ctx.beginPath(); ctx.arc(-4, -3, 2, 0, Math.PI * 2); ctx.arc(4, -3, 2, 0, Math.PI * 2); ctx.fill();
-          ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 2;
-          for (let i = -1; i <= 1; i += 2) {
-            ctx.beginPath(); ctx.moveTo(i * 8, -3); ctx.lineTo(i * 18, -9); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(i * 9, 3); ctx.lineTo(i * 19, 8); ctx.stroke();
+      function draw() {
+        state.pulse += 1;
+        if (state.mini) {
+          if (state.mini.type === 'colonoscopy') drawColonoscopy();
+          else if (state.mini.type === 'incubator') drawIncubator();
+        } else if (state.scene === 'overworld') {
+          drawOverworld();
+        } else {
+          drawRoom();
+        }
+        drawPlayer();
+        drawPrompt();
+      }
+
+      function getObstacles() {
+        if (state.scene === 'overworld') {
+          return BUILDINGS.map(b => ({ x: b.x - 4, y: b.y - 18, w: b.w + 8, h: b.h + 22, door: b.door }));
+        }
+        const walls = [
+          { x: 0, y: 0, w: W, h: 48 },
+          { x: 0, y: H - 40, w: W / 2 - 60, h: 40 },
+          { x: W / 2 + 60, y: H - 40, w: W / 2 - 60, h: 40 },
+          { x: 0, y: 0, w: 38, h: H },
+          { x: W - 38, y: 0, w: 38, h: H }
+        ];
+        return walls;
+      }
+
+      function collidesWithObstacles(rect) {
+        for (const ob of getObstacles()) {
+          if (state.scene === 'overworld' && ob.door && rectsOverlap(rect, { x: ob.door.x - 6, y: ob.door.y - 8, w: ob.door.w + 12, h: ob.door.h + 20 })) {
+            continue;
           }
-          ctx.restore();
-        });
+          if (rectsOverlap(rect, ob)) return true;
+        }
+        return false;
       }
 
-      function drawVignette() {
-        const g = ctx.createRadialGradient(W / 2, H / 2, 60, W / 2, H / 2, W * .72);
-        g.addColorStop(0, 'rgba(255,255,255,0)');
-        g.addColorStop(1, 'rgba(15,23,42,.16)');
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, W, H);
-      }
-
-      function tryMove(dx, dy) {
-        const nx = clamp(player.x + dx, 18, W - 18);
-        const ny = clamp(player.y + dy, 35, H - 18);
-        const box = playerBox(nx, ny);
-        const hit = obstacles.some(o => rects(box, o));
-        if (!hit) { player.x = nx; player.y = ny; }
-      }
-
-      function update() {
-        if (!state.running || state.dialogOpen) return;
-        let dx = 0, dy = 0;
-        if (keys.up) dy -= 1;
-        if (keys.down) dy += 1;
-        if (keys.left) dx -= 1;
-        if (keys.right) dx += 1;
-        if (dx || dy) {
-          const len = Math.hypot(dx, dy) || 1;
-          tryMove(dx / len * player.speed, dy / len * player.speed);
+      function updatePlayer() {
+        if (!state.running || state.dialogOpen || state.mini) return;
+        let vx = 0, vy = 0;
+        if (keys.left) vx -= 1;
+        if (keys.right) vx += 1;
+        if (keys.up) vy -= 1;
+        if (keys.down) vy += 1;
+        if ((vx || vy) && player.target) player.target = null;
+        if (!vx && !vy && player.target) {
+          const dx = player.target.x - player.x;
+          const dy = player.target.y - player.y;
+          const d = Math.hypot(dx, dy);
+          if (d < 6) player.target = null;
+          else { vx = dx / d; vy = dy / d; }
+        }
+        if (vx || vy) {
+          const len = Math.hypot(vx, vy);
+          vx /= len; vy /= len;
+          const speed = player.speed;
+          const nx = clamp(player.x + vx * speed, 20, W - 20);
+          if (!collidesWithObstacles(playerRectAt(nx, player.y))) player.x = nx;
+          const ny = clamp(player.y + vy * speed, 20, H - 20);
+          if (!collidesWithObstacles(playerRectAt(player.x, ny))) player.y = ny;
           player.step += 1;
-          if (Math.abs(dx) > Math.abs(dy)) player.dir = dx > 0 ? 'right' : 'left';
-          else player.dir = dy > 0 ? 'down' : 'up';
-        }
-        state.pulse++;
-        updateChallenge();
-      }
-
-      function updateChallenge() {
-        if (!state.incubatorChallenge) return;
-        const bounds = { x: 25, y: 325, w: 264, h: 196 };
-        bugs.forEach(b => {
-          b.x += b.vx; b.y += b.vy;
-          if (b.x < bounds.x + 14 || b.x > bounds.x + bounds.w - 14) b.vx *= -1;
-          if (b.y < bounds.y + 14 || b.y > bounds.y + bounds.h - 14) b.vy *= -1;
-        });
-        mediumDrops.forEach(d => {
-          if (!d.got && Math.hypot(player.x - d.x, player.y - d.y) < 26) {
-            d.got = true;
-            state.mediumCollected += 1;
-            setStats(5, 2, 1);
-            addLog(`Fed the organoid culture (${state.mediumCollected}/3).`);
-            if (state.mediumCollected >= 3) completeIncubatorChallenge();
-          }
-        });
-        if (state.bugCooldown > 0) state.bugCooldown--;
-        const touchedBug = bugs.some(b => Math.hypot(player.x - b.x, player.y - b.y) < 24);
-        if (touchedBug && state.bugCooldown <= 0) {
-          state.bugCooldown = 80;
-          setStats(-7, -4, -2);
-          addLog('Contamination risk! Careful handling matters.');
+          if (Math.abs(vx) > Math.abs(vy)) player.dir = vx > 0 ? 'right' : 'left';
+          else player.dir = vy > 0 ? 'down' : 'up';
         }
       }
 
-      function completeIncubatorChallenge() {
-        state.incubatorChallenge = false;
-        state.stage = 3;
-        addItem('🛡️ Healthy culture');
-        addLog('The organoid matured. Next: imaging and quality control.');
-        showInfo('Healthy culture achieved', 'You kept the growing organoid fed and reduced contamination risk. Now visit Imaging + QC to check whether the model is informative.', 'Continue');
+      function getNearDoor() {
+        const p = playerRectAt(player.x, player.y);
+        return BUILDINGS.find(b => rectsOverlap(p, { x: b.door.x - 18, y: b.door.y - 18, w: b.door.w + 36, h: b.door.h + 40 }));
+      }
+
+      function isNearExit() {
+        return rectsOverlap(playerRectAt(player.x, player.y), { x: W / 2 - 66, y: H - 96, w: 132, h: 80 });
+      }
+
+      function enterBuilding(id) {
+        state.scene = id;
+        player.x = W / 2;
+        player.y = H - 125;
+        player.target = null;
         updateUI();
       }
 
-      function nearestNpc() {
-        let best = null;
-        let bestD = Infinity;
-        npcs.forEach(n => {
-          const d = dist(player, n);
-          if (d < bestD) { best = n; bestD = d; }
-        });
-        return bestD < 62 ? best : null;
+      function exitRoom() {
+        const b = BUILDINGS.find(x => x.id === state.scene);
+        state.scene = 'overworld';
+        if (b) { player.x = b.door.x + b.door.w / 2; player.y = b.door.y + 58; }
+        player.target = null;
+        updateUI();
       }
 
       function interact() {
-        if (!state.running || state.dialogOpen || state.gameComplete) return;
-        const n = nearestNpc();
-        if (!n) {
-          showInfo('No one nearby', 'Walk up to a glowing expert and press Talk / Use.', 'Back');
+        if (!state.running || state.dialogOpen) return;
+        if (state.mini) return;
+        if (state.scene === 'overworld') {
+          const b = getNearDoor();
+          if (b) enterBuilding(b.id);
           return;
         }
-        if (n.stage !== state.stage) {
-          const [title, text] = objectives[state.stage];
-          showInfo(n.name, `This expert will help later. Current mission: ${title}. ${text}`, 'Back');
-          return;
-        }
-        showNpcDialog(n);
+        if (isNearExit()) { exitRoom(); return; }
+        const info = ROOM_INFO[state.scene];
+        if (info && dist({ x: player.x, y: player.y }, info.npc) < 95) handleRoomAction(state.scene);
       }
 
-      function showNpcDialog(npc) {
-        state.dialogOpen = true;
-        ui.dialogOverlay.classList.add('show');
-        ui.dialogBox.innerHTML = `
-          <span class="speaker">${npc.icon} ${escapeHtml(npc.name)}</span>
-          <h2>${escapeHtml(objectives[state.stage][0])}</h2>
-          <p>${escapeHtml(npc.intro)}</p>
-          <p><strong>${escapeHtml(npc.question)}</strong></p>
-          <div class="choices">
-            ${npc.choices.map((c, idx) => `<button class="choice" data-choice="${idx}">${escapeHtml(c.text)}<small>${escapeHtml(c.note || '')}</small></button>`).join('')}
-          </div>`;
+      function handleRoomAction(room) {
+        if (room !== currentStageId() && !state.completed[room]) {
+          const target = BUILDINGS.find(b => b.id === currentStageId());
+          showMessage('🧭 Facility map', 'Wrong room for now', `This room will matter soon. Your current task is in <strong>${target ? target.name : 'the next room'}</strong>.`, [{ label: 'Back to the map', action: closeModal }]);
+          return;
+        }
+        if (state.completed[room]) {
+          showMessage('✅ Room complete', 'This task is already complete', 'You can revisit the room, but the mission has moved on. Return outside and follow the highlighted building.', [{ label: 'Continue', action: closeModal }]);
+          return;
+        }
+        if (room === 'hospital') startHospitalTask();
+        if (room === 'platform') startPlatformTask();
+        if (room === 'culture') startCultureTask();
+        if (room === 'incubator') startIncubatorTask();
+        if (room === 'imaging') startImagingTask();
+        if (room === 'data') startDataTask();
+        if (room === 'translation') startTranslationTask();
+      }
+
+      function startHospitalTask() {
+        showMessage('🩺 Clinical Lead', 'Collect a biopsy sample', 'A patient has consented to provide a research biopsy during colonoscopy. This mini-game is abstract and simplified: guide the scope, collect three biopsy targets, and avoid irritated patches to preserve sample quality and patient comfort.', [
+          { label: 'Start colonoscopy mini-game', action: () => { closeModal(); launchColonoscopy(); } },
+          { label: 'Not yet', action: closeModal, className: 'ghost-btn' }
+        ]);
+      }
+
+      function launchColonoscopy() {
+        state.mini = {
+          type: 'colonoscopy',
+          x: 78,
+          y: H / 2,
+          vx: 1.55,
+          comfort: 100,
+          collected: 0,
+          ended: false,
+          pointer: null,
+          biopsies: [
+            { x: 230, y: 236, r: 20, got: false },
+            { x: 424, y: 360, r: 20, got: false },
+            { x: 626, y: 250, r: 20, got: false },
+            { x: 800, y: 340, r: 20, got: false }
+          ],
+          hazards: [
+            { x: 306, y: 333, r: 31 },
+            { x: 532, y: 230, r: 34 },
+            { x: 720, y: 284, r: 29 }
+          ]
+        };
+        addLog('Clinical mini-game started: collect biopsy targets while keeping comfort high.');
+        updateUI();
+      }
+
+      function updateColonoscopy() {
+        const m = state.mini;
+        if (!m || m.type !== 'colonoscopy' || m.ended || state.dialogOpen) return;
+        let vy = 0, vx = m.vx;
+        if (keys.up) vy -= 2.3;
+        if (keys.down) vy += 2.3;
+        if (keys.left) vx -= 1.1;
+        if (keys.right) vx += 1.3;
+        if (m.pointer) {
+          const dx = m.pointer.x - m.x;
+          const dy = m.pointer.y - m.y;
+          vx += clamp(dx * 0.02, -1.5, 2.2);
+          vy += clamp(dy * 0.035, -3.1, 3.1);
+        }
+        m.x += vx;
+        m.y += vy;
+        if (m.y < 152) { m.y = 152; m.comfort -= .22; }
+        if (m.y > 448) { m.y = 448; m.comfort -= .22; }
+        if (m.x < 45) m.x = 45;
+        m.hazards.forEach(h => {
+          const d = Math.hypot(m.x - h.x, m.y - h.y);
+          if (d < h.r + 16) m.comfort -= .45;
+        });
+        m.biopsies.forEach(b => {
+          if (!b.got && Math.hypot(m.x - b.x, m.y - b.y) < b.r + 17) {
+            b.got = true;
+            m.collected += 1;
+            m.comfort = clamp(m.comfort + 3);
+          }
+        });
+        m.comfort = clamp(m.comfort);
+        if (m.x > W - 62 || m.comfort <= 0) finishColonoscopy();
+      }
+
+      function drawColonoscopy() {
+        const m = state.mini;
+        ctx.fillStyle = '#111827'; ctx.fillRect(0, 0, W, H);
+        const tunnel = ctx.createLinearGradient(0, 140, 0, 460);
+        tunnel.addColorStop(0, '#fecdd3');
+        tunnel.addColorStop(.5, '#fda4af');
+        tunnel.addColorStop(1, '#fecdd3');
+        ctx.fillStyle = tunnel;
+        drawRoundRect(46, 128, W - 92, 344, 120); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.18)';
+        for (let x = 70; x < W - 80; x += 70) {
+          ctx.beginPath(); ctx.ellipse(x, 170 + 24 * Math.sin(x * .03), 26, 8, .2, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.ellipse(x + 28, 420 + 20 * Math.cos(x * .02), 24, 8, -.3, 0, Math.PI * 2); ctx.fill();
+        }
+        m.hazards.forEach(h => {
+          ctx.fillStyle = 'rgba(220,38,38,.8)'; ctx.beginPath(); ctx.arc(h.x, h.y, h.r, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.beginPath(); ctx.arc(h.x - 7, h.y - 9, h.r * .35, 0, Math.PI * 2); ctx.fill();
+        });
+        m.biopsies.forEach(b => {
+          if (b.got) return;
+          ctx.strokeStyle = '#16a34a'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(b.x, b.y, b.r + Math.sin(state.pulse * .1) * 2, 0, Math.PI * 2); ctx.stroke();
+          ctx.fillStyle = '#bbf7d0'; ctx.beginPath(); ctx.arc(b.x, b.y, 7, 0, Math.PI * 2); ctx.fill();
+        });
+        ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(40, H / 2); ctx.quadraticCurveTo(m.x * .55, H / 2 + 60 * Math.sin(m.x * .02), m.x, m.y); ctx.stroke();
+        ctx.fillStyle = '#0ea5e9'; ctx.beginPath(); ctx.arc(m.x, m.y, 17, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#e0f2fe'; ctx.lineWidth = 4; ctx.stroke();
+        ctx.fillStyle = 'rgba(2,6,23,.85)'; drawRoundRect(18, 18, W - 36, 88, 18); ctx.fill();
+        drawText('Colonoscopy sample collection mini-game', W / 2, 42, 22, '#fff', 'center', 950);
+        drawText('Guide the scope to green biopsy targets. Avoid red irritated patches. This is a simplified educational game.', W / 2, 72, 14, '#cbd5e1', 'center', 750);
+        drawMiniBar(78, 520, 260, 22, m.comfort, 'Patient comfort');
+        drawMiniBar(380, 520, 220, 22, (m.x / (W - 62)) * 100, 'Progress');
+        drawText(`Biopsies: ${m.collected}/3 needed`, 728, 532, 18, '#fff', 'center', 950);
+      }
+
+      function drawMiniBar(x, y, w, h, value, label) {
+        ctx.fillStyle = 'rgba(255,255,255,.18)'; drawRoundRect(x, y, w, h, h / 2); ctx.fill();
+        ctx.fillStyle = value > 65 ? '#22c55e' : value > 35 ? '#f59e0b' : '#ef4444'; drawRoundRect(x, y, w * clamp(value) / 100, h, h / 2); ctx.fill();
+        drawText(`${label}: ${Math.round(clamp(value))}%`, x + w / 2, y + h / 2, 12, '#fff', 'center', 900);
+      }
+
+      function finishColonoscopy() {
+        const m = state.mini;
+        if (!m || m.ended) return;
+        m.ended = true;
+        const quality = clamp(38 + m.collected * 15 + m.comfort * .24);
+        const pass = m.collected >= 3;
+        state.mini = null;
+        setScore('sample', quality);
+        adjustScores({ reproducibility: pass ? 8 : -4, translation: pass ? 5 : -4, viability: pass ? 6 : -4 });
+        addInventory(pass ? 'Consented biopsy' : 'Partial biopsy');
+        addInventory('Clinical metadata');
+        addInventory('Chain-of-custody note');
+        addLog(`Sample collection complete: ${m.collected} biopsy target(s), sample quality ${Math.round(quality)}%.`);
+        completeStage('hospital');
+        showMessage('🩺 Clinical Lead', pass ? 'Good clinical sample' : 'Usable, but limited sample', pass ? 'You collected enough research material with consent and metadata. A good clinical context improves the value of every downstream organoid experiment.' : 'You can still continue, but the limited sample will make validation harder. In real studies, sample quality, consent and metadata are critical.', [{ label: 'Continue to Platform Hall', action: () => { closeModal(); exitRoom(); } }]);
+      }
+
+      function startPlatformTask() {
+        if (state.platformRound >= state.platformNeeded) {
+          completeStage('platform');
+          return;
+        }
+        const scenario = state.platformQueue[state.platformRound];
+        showPlatformChoice(scenario);
+      }
+
+      function scorePlatform(platform, scenario) {
+        let total = 0;
+        let maxPossible = 0;
+        Object.entries(scenario.weights).forEach(([tag, weight]) => {
+          total += (platform.tags[tag] || 0) * weight;
+          maxPossible += 3 * weight;
+        });
+        const raw = maxPossible ? total / maxPossible : 0;
+        const bestBonus = scenario.best.includes(platform.id) ? 0.06 : 0;
+        return clamp((raw + bestBonus) * 100);
+      }
+
+      function rankedPlatforms(scenario) {
+        return PLATFORMS.map(p => ({ platform: p, score: scorePlatform(p, scenario) })).sort((a, b) => b.score - a.score);
+      }
+
+      function showPlatformChoice(scenario) {
+        const round = state.platformRound + 1;
+        const difficulty = scenario.difficulty === 'tricky' ? 'less obvious' : 'clear clues';
+        const cards = PLATFORMS.map(p => `
+          <button class="choice" data-platform="${p.id}">
+            ${p.icon} ${p.name} <small>${p.subtitle}<br>${esc(p.summary)}</small>
+            <span class="tag-list">${p.strengths.map(s => `<span class="tag">${esc(s)}</span>`).join('')}</span>
+          </button>
+        `).join('');
+        showModal(`
+          <span class="speaker">🤝 ${esc(scenario.client)} · Case ${round}/${state.platformNeeded} · ${difficulty}</span>
+          <h2>${esc(scenario.title)}</h2>
+          <p><strong>Biological question:</strong> ${esc(scenario.question)}</p>
+          <p class="kbd">Choose the platform whose features best match the question. Some extended-mode cases have more than one defensible answer.</p>
+          <div class="platform-grid">${cards}</div>
+        `, true);
+        ui.dialogBox.querySelectorAll('[data-platform]').forEach(btn => {
+          btn.addEventListener('click', () => resolvePlatformChoice(btn.getAttribute('data-platform'), scenario));
+        });
+      }
+
+      function mergeWeights(weights) {
+        Object.entries(weights).forEach(([tag, value]) => {
+          state.focusWeights[tag] = (state.focusWeights[tag] || 0) + value;
+        });
+      }
+
+      function resolvePlatformChoice(platformId, scenario) {
+        const chosen = platformById(platformId);
+        const ranks = rankedPlatforms(scenario);
+        const chosenScore = scorePlatform(chosen, scenario);
+        const best = ranks[0];
+        const match = Math.round(chosenScore);
+        state.platformResults.push({ scenario, platform: chosen, match, best: best.platform, topScore: Math.round(best.score) });
+        state.selectedPlatforms.push(chosen.id);
+        mergeWeights(scenario.weights);
+        state.platformRound += 1;
+        const avg = state.platformResults.reduce((sum, r) => sum + r.match, 0) / state.platformResults.length;
+        setScore('platform', avg);
+        adjustScores({ reproducibility: (match - 70) / 10, translation: (match - 65) / 8, viability: (match - 75) / 16 });
+        const top3 = ranks.slice(0, 3).map(r => `${r.platform.name} (${Math.round(r.score)}%)`).join(' · ');
+        const verdict = match >= 92 ? 'Excellent platform match' : match >= 75 ? 'Good, but check assumptions' : 'Risky match';
+        const why = scenario.teaching;
+        const nextButtons = [];
+        if (state.platformRound < state.platformNeeded) {
+          nextButtons.push({ label: 'Next client case', action: () => { closeModal(); showPlatformChoice(state.platformQueue[state.platformRound]); } });
+        } else {
+          nextButtons.push({ label: 'Lock platform triage', action: () => { closeModal(); addInventory('Platform triage report'); addLog(`Platform triage complete: average match ${Math.round(avg)}%.`); completeStage('platform'); } });
+        }
+        showModal(`
+          <span class="speaker">${chosen.icon} ${esc(chosen.name)} selected</span>
+          <h2>${verdict}: ${match}%</h2>
+          <p><strong>Your choice:</strong> ${esc(chosen.name)} — ${esc(chosen.subtitle)}</p>
+          <p><strong>Top scoring options for this case:</strong> ${esc(top3)}</p>
+          <div class="result-note"><strong>Teaching point:</strong> ${esc(why)}</div>
+          <p class="kbd">This score is an educational simplification based on public platform feature summaries, not a procurement recommendation.</p>
+          <div>${nextButtons.map(b => modalButton(b.label, b.action)).join(' ')}</div>
+        `);
+      }
+
+      function bestSelectedPlatform() {
+        if (!state.platformResults.length) return null;
+        return state.platformResults.slice().sort((a, b) => b.match - a.match)[0].platform;
+      }
+
+      function startCultureTask() {
+        const choices = [
+          { label: 'Patient-derived organoids + endothelial interface + flow acclimatisation', detail: 'Best when maturity, barrier, patient relevance and dynamic physiology matter.', tags: { organoid: 3, endothelial: 2, barrier: 3, mechanical: 2, inflammation: 1 }, score: { viability: 14, reproducibility: 8, translation: 8 } },
+          { label: 'Caco-2/HT-29 goblet barrier panel in a scalable plate workflow', detail: 'Good for mucus/barrier screening and simple repeated endpoints.', tags: { mucus: 3, throughput: 3, barrier: 2, screen: 3, reproducibility: 2 }, score: { viability: 8, reproducibility: 14, translation: 7 } },
+          { label: 'Host-microbe co-culture preparation with oxygen-gradient controls', detail: 'Good when live microbes or microbial products are central to the question.', tags: { microbiome: 3, oxygen: 3, anaerobic: 2, compartmental: 2, omics: 2 }, score: { viability: 6, reproducibility: 10, translation: 11 } },
+          { label: 'Gut-liver dosing plan with timed media sampling', detail: 'Best for absorption, metabolism and oral bioavailability cases.', tags: { gut_liver: 3, metabolism: 3, sampling: 3, barrier: 2, multi_organ: 2 }, score: { viability: 8, reproducibility: 10, translation: 13 } }
+        ];
+        showChoiceTask('🧫 Organoid Scientist', 'Build the model', 'Choose the culture strategy that best fits the client question and the platform triage.', choices, 'culture', choice => {
+          const match = tagMatch(choice.tags, state.focusWeights);
+          const multiplier = 0.65 + match * 0.55;
+          adjustScores({
+            viability: choice.score.viability * multiplier,
+            reproducibility: choice.score.reproducibility * multiplier,
+            translation: choice.score.translation * multiplier
+          });
+          addInventory('Culture SOP');
+          addLog(`Culture strategy selected: ${choice.label}. Fit ${Math.round(match * 100)}%.`);
+        });
+      }
+
+      function tagMatch(tags, weights) {
+        const keys = Object.keys(weights);
+        if (!keys.length) return .65;
+        let score = 0, max = 0;
+        keys.forEach(k => { score += (tags[k] || 0) * weights[k]; max += 3 * weights[k]; });
+        return max ? clamp(score / max, 0, 1) : .65;
+      }
+
+      function showChoiceTask(speaker, title, prompt, choices, stageId, beforeComplete) {
+        const buttons = choices.map((ch, i) => `
+          <button class="choice" data-choice="${i}">${esc(ch.label)}<small>${esc(ch.detail)}</small></button>
+        `).join('');
+        showModal(`<span class="speaker">${speaker}</span><h2>${esc(title)}</h2><p>${esc(prompt)}</p><div class="choices">${buttons}</div>`);
         ui.dialogBox.querySelectorAll('[data-choice]').forEach(btn => {
-          btn.addEventListener('click', () => choose(npc, npc.choices[Number(btn.dataset.choice)]));
+          btn.addEventListener('click', () => {
+            const choice = choices[Number(btn.getAttribute('data-choice'))];
+            if (beforeComplete) beforeComplete(choice);
+            completeStage(stageId);
+            closeModal();
+          });
         });
       }
 
-      function choose(npc, choice) {
-        if (choice.challenge) {
-          state.incubatorChallenge = true;
-          state.mediumCollected = 0;
-          mediumDrops.forEach(d => d.got = false);
-          addLog('Incubator challenge started: collect three medium drops.');
-          closeDialog();
-          updateUI();
-          return;
-        }
-        setStats(choice.dH, choice.dR, choice.dT);
-        addItem(choice.item);
-        if (choice.log) addLog(choice.log);
-        if (choice.complete) {
-          closeDialog();
-          completeGame();
-          return;
-        }
-        state.stage = choice.next;
-        closeDialog();
+      function startIncubatorTask() {
+        showMessage('🧤 Incubator Guardian', 'Keep the model alive', 'Collect five medium droplets to feed the organoid. Avoid contamination particles. The aim is not speed alone: stable handling improves viability and reproducibility.', [
+          { label: 'Start incubator run', action: () => { closeModal(); launchIncubator(); } },
+          { label: 'Not yet', action: closeModal, className: 'ghost-btn' }
+        ]);
+      }
+
+      function launchIncubator() {
+        state.mini = {
+          type: 'incubator',
+          x: 115,
+          y: 312,
+          collected: 0,
+          hits: 0,
+          time: 0,
+          ended: false,
+          pointer: null,
+          medium: [
+            { x: 220, y: 190, got: false }, { x: 420, y: 420, got: false }, { x: 560, y: 250, got: false },
+            { x: 735, y: 396, got: false }, { x: 815, y: 180, got: false }, { x: 342, y: 320, got: false }
+          ],
+          bugs: [
+            { x: 360, y: 175, vx: 1.3, vy: 1.1 }, { x: 620, y: 420, vx: -1.2, vy: .9 }, { x: 770, y: 300, vx: -1.45, vy: -1.0 }
+          ]
+        };
+        addLog('Incubator mini-game started: collect medium and avoid contamination.');
         updateUI();
       }
 
-      function showInfo(title, body, buttonText = 'OK') {
-        state.dialogOpen = true;
-        ui.dialogOverlay.classList.add('show');
-        ui.dialogBox.innerHTML = `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(body)}</p><button class="primary-btn" id="infoClose">${escapeHtml(buttonText)}</button>`;
-        document.getElementById('infoClose').addEventListener('click', closeDialog);
-      }
-
-      function closeDialog() {
-        state.dialogOpen = false;
-        ui.dialogOverlay.classList.remove('show');
-        ui.dialogBox.innerHTML = '';
-      }
-
-      function completeGame() {
-        state.stage = 6;
-        state.gameComplete = true;
-        const overall = Math.round((state.health + state.reproducibility + state.translation) / 3);
-        let rank = 'Promising prototype';
-        if (overall >= 82) rank = 'Translation-ready candidate';
-        else if (overall >= 65) rank = 'Strong research model';
-        else if (overall < 45) rank = 'Needs rescue and re-validation';
-        state.dialogOpen = true;
-        ui.dialogOverlay.classList.add('show');
-        ui.dialogBox.innerHTML = `
-          <div class="complete-card">
-            <span class="speaker">🏆 Quest complete</span>
-            <h2>${escapeHtml(rank)}</h2>
-            <p>You built an organoid workflow from clinical sample to translational decision.</p>
-            <div class="score-big">
-              <div class="score-box"><strong>${Math.round(state.health)}%</strong><span>Health</span></div>
-              <div class="score-box"><strong>${Math.round(state.reproducibility)}%</strong><span>Reproducibility</span></div>
-              <div class="score-box"><strong>${Math.round(state.translation)}%</strong><span>Translation</span></div>
-            </div>
-            <p><strong>Stand challenge:</strong> show this screen to the Organoid Facility team and ask: “What would you validate next?”</p>
-            <button class="primary-btn" id="restartBtn">Play again</button>
-          </div>`;
-        document.getElementById('restartBtn').addEventListener('click', restart);
-        updateUI();
-      }
-
-      function restart() {
-        Object.assign(state, {
-          running: true,
-          dialogOpen: false,
-          stage: 0,
-          health: 55,
-          reproducibility: 45,
-          translation: 35,
-          inventory: [],
-          journal: [],
-          incubatorChallenge: false,
-          mediumCollected: 0,
-          bugCooldown: 0,
-          gameComplete: false,
-          pulse: 0
+      function updateIncubator() {
+        const m = state.mini;
+        if (!m || m.type !== 'incubator' || m.ended || state.dialogOpen) return;
+        m.time += 1;
+        let vx = 0, vy = 0;
+        if (keys.left) vx -= 1; if (keys.right) vx += 1; if (keys.up) vy -= 1; if (keys.down) vy += 1;
+        if (!vx && !vy && m.pointer) {
+          const dx = m.pointer.x - m.x, dy = m.pointer.y - m.y, d = Math.hypot(dx, dy);
+          if (d > 4) { vx = dx / d; vy = dy / d; }
+        }
+        if (vx || vy) {
+          const len = Math.hypot(vx, vy); vx /= len; vy /= len;
+          m.x = clamp(m.x + vx * 4, 60, W - 60); m.y = clamp(m.y + vy * 4, 128, H - 70);
+        }
+        m.bugs.forEach(b => {
+          b.x += b.vx; b.y += b.vy;
+          if (b.x < 70 || b.x > W - 70) b.vx *= -1;
+          if (b.y < 140 || b.y > H - 80) b.vy *= -1;
+          if (Math.hypot(m.x - b.x, m.y - b.y) < 28) {
+            m.hits += 1;
+            b.vx *= -1; b.vy *= -1;
+            m.x = clamp(m.x - b.vx * 18, 60, W - 60); m.y = clamp(m.y - b.vy * 18, 128, H - 70);
+          }
         });
-        player.x = 76; player.y = 456; player.step = 0;
-        mediumDrops.forEach(d => d.got = false);
-        closeDialog();
-        updateUI();
+        m.medium.forEach(drop => {
+          if (!drop.got && Math.hypot(m.x - drop.x, m.y - drop.y) < 28) {
+            drop.got = true; m.collected += 1;
+          }
+        });
+        if (m.collected >= 5 || m.time > 60 * 38) finishIncubator();
+      }
+
+      function drawIncubator() {
+        const m = state.mini;
+        ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#1f2937'; ctx.fillRect(42, 118, W - 84, H - 178);
+        ctx.strokeStyle = 'rgba(255,255,255,.08)';
+        for (let x = 42; x < W - 42; x += 46) { ctx.beginPath(); ctx.moveTo(x, 118); ctx.lineTo(x, H - 60); ctx.stroke(); }
+        for (let y = 118; y < H - 60; y += 46) { ctx.beginPath(); ctx.moveTo(42, y); ctx.lineTo(W - 42, y); ctx.stroke(); }
+        ctx.fillStyle = 'rgba(2,6,23,.86)'; drawRoundRect(18, 18, W - 36, 76, 18); ctx.fill();
+        drawText('Incubator run: feed the organoid, avoid contamination', W / 2, 43, 22, '#fff', 'center', 950);
+        drawText('Collect five medium droplets. Contamination hits reduce viability and reproducibility.', W / 2, 70, 14, '#cbd5e1', 'center', 800);
+        m.medium.forEach(drop => {
+          if (drop.got) return;
+          ctx.fillStyle = '#38bdf8'; ctx.beginPath(); ctx.arc(drop.x, drop.y, 16 + Math.sin(state.pulse * .1) * 1.5, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.beginPath(); ctx.arc(drop.x - 5, drop.y - 6, 5, 0, Math.PI * 2); ctx.fill();
+        });
+        m.bugs.forEach(b => {
+          ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(b.x, b.y, 18, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = '#fecaca'; ctx.lineWidth = 3;
+          for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; ctx.beginPath(); ctx.moveTo(b.x + Math.cos(a) * 11, b.y + Math.sin(a) * 11); ctx.lineTo(b.x + Math.cos(a) * 25, b.y + Math.sin(a) * 25); ctx.stroke(); }
+        });
+        drawDish(W / 2, 312, 1.8);
+        ctx.fillStyle = '#f8fafc'; drawRoundRect(m.x - 16, m.y - 16, 32, 44, 12); ctx.fill();
+        ctx.fillStyle = '#7c3aed'; ctx.fillRect(m.x - 5, m.y - 26, 10, 24);
+        drawText('🧪', m.x, m.y + 4, 24, '#111827', 'center', 900);
+        drawText(`Medium: ${m.collected}/5`, 170, 548, 18, '#fff', 'center', 950);
+        drawText(`Contamination hits: ${m.hits}`, W / 2, 548, 18, '#fff', 'center', 950);
+        drawText(`Time: ${Math.max(0, 38 - Math.floor(m.time / 60))}s`, 770, 548, 18, '#fff', 'center', 950);
+      }
+
+      function finishIncubator() {
+        const m = state.mini;
+        if (!m || m.ended) return;
+        m.ended = true;
+        state.mini = null;
+        const good = m.collected >= 5;
+        const penalty = Math.min(25, m.hits * 4);
+        adjustScores({ viability: (good ? 17 : 7) - penalty, reproducibility: (good ? 10 : 3) - penalty / 2, translation: good ? 4 : -2 });
+        addInventory(good ? 'Healthy organoid run' : 'Stressed organoid run');
+        addLog(`Incubator run complete: ${m.collected} medium droplets collected, ${m.hits} contamination hit(s).`);
+        completeStage('incubator');
+        showMessage('🧤 Incubator Guardian', good ? 'Organoid culture stabilised' : 'Culture survived with caveats', good ? 'Great handling. The organoid is viable enough for downstream imaging and readouts.' : 'The model survived, but contamination/stress will make interpretation less confident.', [{ label: 'Continue to Imaging & QC', action: () => { closeModal(); exitRoom(); } }]);
+      }
+
+      function startImagingTask() {
+        const choices = [
+          { label: 'Barrier QC package: TEER/permeability + ZO-1/villin imaging + cytokines', detail: 'Strong general package for barrier integrity and inflammation.', tags: { barrier: 3, imaging: 2, inflammation: 3, immune: 2, sampling: 1 }, score: { reproducibility: 12, translation: 10, viability: 6 } },
+          { label: 'Microbiome mechanism package: epithelial RNA-seq + microbial profiling + oxygen controls', detail: 'Best when host-microbe crosstalk or anaerobic conditions are central.', tags: { microbiome: 3, omics: 3, oxygen: 3, anaerobic: 2, sampling: 2 }, score: { reproducibility: 10, translation: 14, viability: 4 } },
+          { label: 'ADME package: permeability + timed parent/metabolite LC-MS sampling', detail: 'Best for gut-liver and oral bioavailability cases.', tags: { gut_liver: 3, metabolism: 3, sampling: 3, barrier: 2, drug_response: 2 }, score: { reproducibility: 12, translation: 14, viability: 4 } },
+          { label: 'Screening package: automated imaging + plate readouts + positive/negative controls', detail: 'Best for high-throughput screens where consistency matters.', tags: { throughput: 3, screen: 3, imaging: 3, reproducibility: 3, barrier: 1 }, score: { reproducibility: 16, translation: 9, viability: 4 } }
+        ];
+        showChoiceTask('🔬 QC Lead', 'Choose readouts', 'Pick readouts that prove your model answers the biological question rather than just looking pretty.', choices, 'imaging', choice => {
+          const match = tagMatch(choice.tags, state.focusWeights);
+          const multiplier = .7 + match * .5;
+          adjustScores({ reproducibility: choice.score.reproducibility * multiplier, translation: choice.score.translation * multiplier, viability: choice.score.viability });
+          addInventory('QC readout panel');
+          addLog(`Readout panel selected: ${choice.label}. Fit ${Math.round(match * 100)}%.`);
+        });
+      }
+
+      function startDataTask() {
+        const choices = [
+          { label: 'Pre-register QC gates, include matched controls, normalise to baseline, and report confidence intervals', detail: 'Best practice: honest, reproducible and useful to clients.', score: { reproducibility: 18, translation: 12 } },
+          { label: 'Use a single endpoint and ignore outliers because the microscope image looks good', detail: 'Tempting for a demo, but risky science.', score: { reproducibility: -18, translation: -12 } },
+          { label: 'Build a repeatable analysis notebook and flag platform-specific limitations', detail: 'Strong option for a core facility that supports many users.', score: { reproducibility: 16, translation: 14 } },
+          { label: 'Rank platforms by score only, without checking whether the biology matches the assay window', detail: 'Fast, but misses the point of biological question matching.', score: { reproducibility: -8, translation: -10 } }
+        ];
+        showChoiceTask('📊 Data Scientist', 'Interpret the evidence', 'The client wants a clear answer. How do you prevent over-claiming?', choices, 'data', choice => {
+          adjustScores(choice.score);
+          addInventory('Analysis plan');
+          addLog(`Data strategy selected: ${choice.label}`);
+        });
+      }
+
+      function startTranslationTask() {
+        const top = bestSelectedPlatform();
+        const platformText = top ? `${top.name} (${top.subtitle})` : 'the selected platform';
+        const choices = [
+          { label: `Recommend ${platformText} with QC endpoints, training needs, timeline, and caveats`, detail: 'Best translational handoff: useful without overselling.', score: { translation: 20, reproducibility: 8 } },
+          { label: 'Promise the model will perfectly predict patient response', detail: 'Overclaiming lowers trust and translational value.', score: { translation: -20, reproducibility: -10 } },
+          { label: 'Suggest a phased pilot: feasibility → validation → client decision point → scale-up', detail: 'Strong when platform choice is uncertain or samples are precious.', score: { translation: 18, reproducibility: 10 } },
+          { label: 'Skip validation and start a full compound screen tomorrow', detail: 'Fast, but risky unless validation is already complete.', score: { translation: -12, reproducibility: -8 } }
+        ];
+        showChoiceTask('🚀 Translation Lead', 'Make the final recommendation', 'Finish the quest by choosing how the Facility should present the model to the client.', choices, 'translation', choice => {
+          adjustScores(choice.score);
+          addInventory('Client handoff');
+          addLog(`Translation decision selected: ${choice.label}`);
+          state.gameComplete = true;
+          setTimeout(showFinalScore, 100);
+        });
+      }
+
+      function overallScore() {
+        const vals = Object.values(state.scores);
+        return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+      }
+
+      function showFinalScore() {
+        const platformLines = state.platformResults.map(r => `<li>${esc(r.scenario.title)}: chose <strong>${esc(r.platform.name)}</strong> (${r.match}%). Top: ${esc(r.best.name)} (${r.topScore}%).</li>`).join('');
+        const top = bestSelectedPlatform();
+        const title = overallScore() >= 82 ? 'Certified Organoid Platform Strategist' : overallScore() >= 65 ? 'Organoid Facility Explorer' : 'Promising Recruit — revisit the platform hall';
+        showModal(`
+          <span class="speaker">🏁 Quest complete</span>
+          <h2>${title}</h2>
+          <p>Your overall score is <strong>${overallScore()}%</strong>. Show this screen to the stand team.</p>
+          <div class="score-big">
+            ${scoreDefs.map(def => `<div class="score-box"><strong>${Math.round(state.scores[def.key])}%</strong><span>${def.label}</span></div>`).join('')}
+          </div>
+          <h3>Platform decisions</h3>
+          <ul>${platformLines || '<li>No platform decision recorded.</li>'}</ul>
+          <p><strong>Best moment:</strong> ${top ? esc(top.name + ' — ' + top.summary) : 'Complete the Platform Hall to unlock a recommendation.'}</p>
+          <p class="kbd">Educational note: real platform selection should also consider availability, cell source, training, cost, validation, IP/data needs and the exact assay endpoint.</p>
+          <div>${modalButton('Play again', () => location.reload())} ${modalButton('Close', closeModal, 'ghost-btn')}</div>
+        `, true);
+      }
+
+      function showCodex() {
+        const cards = PLATFORMS.map(p => `
+          <div class="result-note">
+            <strong>${p.icon} ${esc(p.name)} — ${esc(p.subtitle)}</strong>
+            <p>${esc(p.summary)}</p>
+            <div class="tag-list">${p.strengths.map(s => `<span class="tag">${esc(s)}</span>`).join('')}</div>
+          </div>
+        `).join('');
+        showModal(`
+          <span class="speaker">📚 Platform codex</span>
+          <h2>Gut-on-chip platform feature map</h2>
+          <p>This codex powers the platform scoring. It is simplified for a public stand game; it is not a purchasing or experimental-design decision tree.</p>
+          ${cards}
+          <div>${modalButton('Close codex', closeModal)}</div>
+        `, true);
+      }
+
+      function update() {
+        if (state.mini) {
+          if (state.mini.type === 'colonoscopy') updateColonoscopy();
+          if (state.mini && state.mini.type === 'incubator') updateIncubator();
+        } else {
+          updatePlayer();
+        }
+        updateHudOnly();
       }
 
       function loop() {
         update();
-        drawWorld();
+        draw();
         requestAnimationFrame(loop);
       }
 
-      function bindInput() {
-        const keyMap = {
-          ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
-          w: 'up', W: 'up', s: 'down', S: 'down', a: 'left', A: 'left', d: 'right', D: 'right'
-        };
-        window.addEventListener('keydown', e => {
-          if (keyMap[e.key]) { keys[keyMap[e.key]] = true; e.preventDefault(); }
-          if (e.key === ' ' || e.key === 'Enter') { interact(); e.preventDefault(); }
-          if (e.key === 'Escape' && state.dialogOpen) closeDialog();
-        });
-        window.addEventListener('keyup', e => {
-          if (keyMap[e.key]) { keys[keyMap[e.key]] = false; e.preventDefault(); }
-        });
-        document.querySelectorAll('[data-dir]').forEach(btn => {
-          const dir = btn.dataset.dir;
-          const down = e => { e.preventDefault(); keys[dir] = true; };
-          const up = e => { e.preventDefault(); keys[dir] = false; };
-          btn.addEventListener('pointerdown', down);
-          btn.addEventListener('pointerup', up);
-          btn.addEventListener('pointercancel', up);
-          btn.addEventListener('pointerleave', up);
-        });
-        ui.touchInteract.addEventListener('click', interact);
-        ui.startBtn.addEventListener('click', () => {
-          ui.startOverlay.classList.remove('show');
-          state.running = true;
-          addLog('Quest started. Find the clinical collaborator.');
-        });
-        canvas.addEventListener('click', interact);
+      function canvasToGameXY(evt) {
+        const rect = canvas.getBoundingClientRect();
+        const x = (evt.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (evt.clientY - rect.top) * (canvas.height / rect.height);
+        return { x: clamp(x, 0, W), y: clamp(y, 0, H) };
       }
 
-      bindInput();
+      let activePointerId = null;
+      canvas.addEventListener('pointerdown', evt => {
+        if (!state.running || state.dialogOpen) return;
+        canvas.setPointerCapture(evt.pointerId);
+        activePointerId = evt.pointerId;
+        const pos = canvasToGameXY(evt);
+        if (state.mini) state.mini.pointer = pos;
+        else player.target = pos;
+      });
+      canvas.addEventListener('pointermove', evt => {
+        if (activePointerId !== evt.pointerId || !state.running || state.dialogOpen) return;
+        const pos = canvasToGameXY(evt);
+        if (state.mini) state.mini.pointer = pos;
+      });
+      canvas.addEventListener('pointerup', evt => {
+        if (activePointerId === evt.pointerId) {
+          activePointerId = null;
+          if (state.mini) state.mini.pointer = null;
+        }
+      });
+
+      function setDir(dir, val) {
+        if (dir === 'up') keys.up = val;
+        if (dir === 'down') keys.down = val;
+        if (dir === 'left') keys.left = val;
+        if (dir === 'right') keys.right = val;
+      }
+      document.querySelectorAll('[data-dir]').forEach(btn => {
+        const dir = btn.getAttribute('data-dir');
+        btn.addEventListener('pointerdown', evt => { evt.preventDefault(); setDir(dir, true); btn.setPointerCapture(evt.pointerId); });
+        btn.addEventListener('pointerup', evt => { evt.preventDefault(); setDir(dir, false); });
+        btn.addEventListener('pointercancel', () => setDir(dir, false));
+        btn.addEventListener('pointerleave', () => setDir(dir, false));
+      });
+
+      window.addEventListener('keydown', evt => {
+        const k = evt.key.toLowerCase();
+        if (['arrowup','arrowdown','arrowleft','arrowright',' ','enter'].includes(k)) evt.preventDefault();
+        if (k === 'arrowup' || k === 'w') keys.up = true;
+        if (k === 'arrowdown' || k === 's') keys.down = true;
+        if (k === 'arrowleft' || k === 'a') keys.left = true;
+        if (k === 'arrowright' || k === 'd') keys.right = true;
+        if (k === 'e' || k === ' ' || k === 'enter') interact();
+        if (k === 'c') showCodex();
+      }, { passive: false });
+      window.addEventListener('keyup', evt => {
+        const k = evt.key.toLowerCase();
+        if (k === 'arrowup' || k === 'w') keys.up = false;
+        if (k === 'arrowdown' || k === 's') keys.down = false;
+        if (k === 'arrowleft' || k === 'a') keys.left = false;
+        if (k === 'arrowright' || k === 'd') keys.right = false;
+      });
+
+      ui.touchInteract.addEventListener('click', interact);
+      ui.codexBtn.addEventListener('click', showCodex);
+      ui.touchCodex.addEventListener('click', showCodex);
+      ui.restartBtn.addEventListener('click', () => location.reload());
+      ui.quickBtn.addEventListener('click', () => startGame('quick'));
+      ui.extendedBtn.addEventListener('click', () => startGame('extended'));
+
+      initBars();
       updateUI();
       loop();
     })();
