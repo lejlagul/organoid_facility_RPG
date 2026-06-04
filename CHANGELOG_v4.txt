@@ -1,0 +1,11 @@
+v4 changelog
+============
+
+Addressed feedback:
+- The new quest box no longer overlays the canvas artwork.
+- Removed duplicate top-canvas viability/reproducibility/translation score overlay.
+- Corrected bottom-row building doors.
+- Reworked Hospital, Imaging/QC, Data Room, and Translation Hub interiors.
+- Filled rooms with extra NPCs, desks, lab equipment, screens, sample racks, server racks, plants, and visual detail.
+- Removed the non-functional Client briefing canvas box.
+- Preserved mobile-friendly movement and the Talk / Use button.

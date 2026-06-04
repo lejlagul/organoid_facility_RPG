@@ -3,93 +3,242 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Organoid Quest: Platform RPG</title>
+  <title>Organoid Quest: Pixel RPG v4</title>
   <style>
     :root {
-      --bg: #071421;
-      --panel: rgba(255,255,255,.94);
-      --ink: #10202d;
-      --muted: #64748b;
-      --brand: #7c3aed;
-      --brand2: #06b6d4;
-      --green: #16a34a;
-      --yellow: #f59e0b;
-      --red: #dc2626;
-      --shadow: 0 18px 55px rgba(0,0,0,.35);
-      --radius: 20px;
+      --bg: #050914;
+      --ink: #e6edf7;
+      --muted: #9fb2c8;
+      --panel: #101928;
+      --panel2: #172235;
+      --panel3: #233248;
+      --border: #c7b995;
+      --gold: #ffd84d;
+      --red: #ef4444;
+      --blue: #38bdf8;
+      --green: #7ee256;
+      --violet: #a78bfa;
+      --shadow: 0 18px 55px rgba(0,0,0,.42);
+      --radius: 18px;
+      --pixel-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
     * { box-sizing: border-box; }
     html, body {
       margin: 0;
       min-height: 100%;
       overflow-x: hidden;
-      background: radial-gradient(circle at 15% 0%, #193a60 0, #071421 48%, #030712 100%);
-      color: white;
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      -webkit-font-smoothing: antialiased;
+      background:
+        radial-gradient(circle at 16% 0%, rgba(42,80,120,.75) 0, rgba(9,17,31,.9) 44%, #030712 100%),
+        linear-gradient(180deg, #07111f 0%, #030712 100%);
+      color: var(--ink);
+      font-family: var(--pixel-font);
+      -webkit-font-smoothing: none;
+      font-smooth: never;
+      text-rendering: geometricPrecision;
     }
-    body { display: flex; justify-content: center; padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); }
+    body {
+      display: flex;
+      justify-content: center;
+      padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+    }
     button { font-family: inherit; }
-    .app { width: min(1220px, 100%); display: grid; gap: 12px; }
-    header { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .title-block h1 { margin: 0; font-size: clamp(24px, 4.2vw, 44px); line-height: 1.02; letter-spacing: -0.045em; }
-    .title-block p { margin: 6px 0 0; color: #c3d9ed; font-size: 14px; }
-    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; color: #e5f5ff; font-weight: 800; font-size: 13px; }
-    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 12px; align-items: start; }
-    .game-card, .side-card { border-radius: var(--radius); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); box-shadow: var(--shadow); overflow: hidden; backdrop-filter: blur(8px); }
-    .canvas-wrap { position: relative; background: #0b1220; }
-    canvas { display: block; width: 100%; aspect-ratio: 960 / 600; image-rendering: auto; touch-action: none; background: #0b1220; }
-    .top-hud { position: absolute; left: 12px; right: 12px; top: 12px; display: flex; gap: 8px; flex-wrap: wrap; pointer-events: none; }
-    .hud-chip { padding: 7px 10px; background: rgba(5,13,23,.76); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; font-size: 12px; font-weight: 900; box-shadow: 0 8px 24px rgba(0,0,0,.22); }
-    .mobile-controls { display: none; padding: 10px; gap: 10px; justify-content: space-between; align-items: center; background: rgba(255,255,255,.06); border-top: 1px solid rgba(255,255,255,.12); }
-    .dpad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); gap: 6px; }
-    .dpad button, .interact-btn, .small-btn, .choice, .primary-btn, .ghost-btn { border-radius: 15px; cursor: pointer; font-weight: 900; }
-    .dpad button { background: rgba(255,255,255,.16); color: white; font-size: 21px; border: 1px solid rgba(255,255,255,.15); touch-action: none; }
+    .app { width: min(1260px, 100%); display: grid; gap: 10px; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 4px 2px 0;
+    }
+    .title-block h1 {
+      margin: 0;
+      font-size: clamp(22px, 3.4vw, 38px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      text-shadow: 0 3px 0 rgba(0,0,0,.55);
+    }
+    .title-block p { margin: 6px 0 0; color: #b8c9dc; font-size: 12px; line-height: 1.35; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      background: linear-gradient(180deg, #21304a, #101928);
+      border: 2px solid #66758e;
+      box-shadow: inset 0 0 0 2px #0b1220, 0 6px 0 rgba(0,0,0,.22);
+      border-radius: 999px;
+      color: #f8fafc;
+      font-weight: 900;
+      font-size: 12px;
+    }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 12px; align-items: start; }
+    .game-card, .side-card {
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(33,48,74,.92), rgba(11,18,32,.96));
+      border: 3px solid #111827;
+      box-shadow: var(--shadow), inset 0 0 0 2px #607089;
+      overflow: hidden;
+    }
+    .canvas-wrap {
+      position: relative;
+      background: #0b1220;
+      border-bottom: 3px solid #111827;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      aspect-ratio: 960 / 600;
+      image-rendering: pixelated;
+      touch-action: none;
+      background: #0b1220;
+      cursor: crosshair;
+    }
+    .top-hud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 10px;
+      background: linear-gradient(180deg, #111827, #0b1220);
+      border-top: 2px solid #53657c;
+    }
+    .hud-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #1c2a40, #111827);
+      border: 2px solid #596a82;
+      box-shadow: inset 0 0 0 2px #07111f;
+      color: #edf6ff;
+      font-size: 11px;
+      font-weight: 950;
+    }
+    .mobile-controls {
+      display: none;
+      padding: 10px;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, #172235, #0d1524);
+      border-top: 2px solid #56667e;
+    }
+    .dpad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); gap: 5px; }
+    .dpad button, .interact-btn, .small-btn, .choice, .primary-btn, .ghost-btn {
+      cursor: pointer;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+      touch-action: manipulation;
+    }
+    .dpad button {
+      border-radius: 14px;
+      background: linear-gradient(180deg, #384761, #1a2537);
+      color: white;
+      font-size: 20px;
+      border: 2px solid #6f7e96;
+      box-shadow: inset 0 0 0 2px #0c1422, 0 4px 0 rgba(0,0,0,.38);
+    }
     .dpad span { display: block; }
-    .dpad button:active, .interact-btn:active, .small-btn:active, .choice:active, .primary-btn:active, .ghost-btn:active { transform: translateY(1px); }
-    .interact-btn { min-width: 126px; height: 72px; border: 0; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: white; box-shadow: 0 12px 28px rgba(6,182,212,.25); }
+    .dpad button:active, .interact-btn:active, .small-btn:active, .choice:active, .primary-btn:active, .ghost-btn:active { transform: translateY(2px); box-shadow: inset 0 0 0 2px #0c1422, 0 2px 0 rgba(0,0,0,.4); }
+    .interact-btn {
+      min-width: 126px;
+      height: 72px;
+      border-radius: 999px;
+      border: 3px solid #8ab4e8;
+      background: linear-gradient(180deg, #2f6fb1, #173b73);
+      color: white;
+      box-shadow: inset 0 0 0 3px #0b1e3a, 0 8px 0 rgba(0,0,0,.36);
+      font-size: 14px;
+    }
     .mobile-actions { display: grid; gap: 8px; }
-    .side-card { padding: 14px; color: #ecfeff; }
-    .side-card h2 { margin: 0 0 8px; font-size: 18px; }
-    .objective { padding: 12px; border-radius: 16px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); margin-bottom: 12px; }
-    .objective strong { display: block; margin-bottom: 4px; color: white; }
-    .objective span { color: #c8dcec; font-size: 14px; line-height: 1.35; }
+    .side-card {
+      padding: 14px;
+      color: #e9f4ff;
+      position: relative;
+    }
+    .side-card h2 { margin: 0 0 8px; font-size: 16px; color: var(--gold); text-shadow: 0 2px 0 rgba(0,0,0,.45); }
+    .objective {
+      padding: 12px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #172235, #0f1828);
+      border: 2px solid #5d6c83;
+      box-shadow: inset 0 0 0 2px #0b1220;
+      margin-bottom: 12px;
+    }
+    .objective strong { display: block; margin-bottom: 5px; color: #fff; font-size: 13px; }
+    .objective span { color: #c1d0e2; font-size: 12px; line-height: 1.45; }
     .bar-group { display: grid; gap: 9px; margin: 12px 0; }
     .bar-row { display: grid; gap: 5px; }
-    .bar-label { display: flex; justify-content: space-between; color: #dbeafe; font-size: 12.5px; font-weight: 850; }
-    .bar { height: 11px; background: rgba(255,255,255,.16); border-radius: 999px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); }
-    .bar > i { display: block; height: 100%; width: 0%; border-radius: inherit; background: linear-gradient(90deg, var(--brand2), var(--brand)); transition: width .25s ease; }
+    .bar-label { display: flex; justify-content: space-between; color: #e3eeff; font-size: 11.5px; font-weight: 900; }
+    .bar { height: 13px; background: #08111e; border-radius: 999px; overflow: hidden; border: 2px solid #41516a; box-shadow: inset 0 2px 0 rgba(255,255,255,.07); }
+    .bar > i { display: block; height: 100%; width: 0%; border-radius: inherit; background: linear-gradient(90deg, #38bdf8, #a78bfa); transition: width .25s ease; }
     .inventory { display: flex; flex-wrap: wrap; gap: 7px; min-height: 32px; }
-    .item { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.16); padding: 7px 9px; border-radius: 999px; font-size: 12px; font-weight: 850; }
+    .item { background: #152238; border: 2px solid #53657c; padding: 7px 9px; border-radius: 999px; font-size: 11px; font-weight: 900; color: #edf6ff; }
     .journal { margin: 12px 0 0; display: grid; gap: 7px; max-height: 176px; overflow: auto; padding-right: 3px; }
-    .log { font-size: 12px; color: #c8dcec; background: rgba(255,255,255,.07); border-left: 3px solid rgba(6,182,212,.9); padding: 8px; border-radius: 10px; line-height: 1.35; }
+    .log { font-size: 11px; color: #c4d3e4; background: rgba(8,17,30,.86); border-left: 4px solid #38bdf8; padding: 8px; border-radius: 9px; line-height: 1.4; }
     .side-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-    .small-btn, .ghost-btn { padding: 9px 11px; background: rgba(255,255,255,.14); color: white; border: 1px solid rgba(255,255,255,.15); }
-    .ghost-btn { background: rgba(15,23,42,.34); }
-    .footer-note { color: #a9c0d3; font-size: 12px; line-height: 1.4; margin-top: 12px; }
-    .overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(2,6,23,.72); z-index: 20; }
+    .small-btn, .ghost-btn {
+      padding: 9px 11px;
+      background: linear-gradient(180deg, #2a3852, #152036);
+      color: white;
+      border: 2px solid #65758d;
+      border-radius: 12px;
+      box-shadow: inset 0 0 0 2px #0b1220, 0 4px 0 rgba(0,0,0,.28);
+      font-size: 11.5px;
+    }
+    .ghost-btn { background: linear-gradient(180deg, #f8fafc, #dce6f3); color: #10202d; border-color: #b8c6d8; }
+    .footer-note { color: #aabdce; font-size: 11px; line-height: 1.45; margin-top: 12px; }
+    .overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(1,5,13,.78); z-index: 20; }
     .overlay.show { display: flex; }
-    .modal { width: min(760px, 100%); max-height: min(88vh, 900px); overflow: auto; color: var(--ink); background: var(--panel); border-radius: 24px; padding: clamp(16px, 3.4vw, 24px); box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.78); }
+    .modal {
+      width: min(760px, 100%);
+      max-height: min(88vh, 900px);
+      overflow: auto;
+      color: #172032;
+      background: linear-gradient(180deg, #f8fbff, #dfe8f4);
+      border-radius: 20px;
+      padding: clamp(16px, 3.4vw, 24px);
+      box-shadow: var(--shadow), inset 0 0 0 3px #ffffff;
+      border: 4px solid #101827;
+    }
     .modal.wide { width: min(960px, 100%); }
-    .modal h2 { margin: 0 0 8px; font-size: clamp(22px, 5vw, 34px); color: #0f172a; letter-spacing: -0.04em; line-height: 1.05; }
+    .modal h2 { margin: 0 0 8px; font-size: clamp(22px, 5vw, 32px); color: #0f172a; letter-spacing: -0.06em; line-height: 1.06; }
     .modal h3 { margin: 14px 0 6px; color: #172554; font-size: 17px; }
-    .modal p { color: #334155; line-height: 1.45; margin: 8px 0; }
-    .modal .speaker { display: inline-flex; gap: 8px; align-items: center; padding: 6px 10px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-weight: 950; font-size: 13px; margin-bottom: 10px; }
+    .modal p { color: #334155; line-height: 1.45; margin: 8px 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .modal .speaker { display: inline-flex; gap: 8px; align-items: center; padding: 6px 10px; border-radius: 999px; background: #111827; color: #fff3a3; font-weight: 950; font-size: 12px; margin-bottom: 10px; border: 2px solid #6b7280; }
     .mode-grid, .platform-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
-    .platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .choices { display: grid; gap: 9px; margin-top: 14px; }
-    .choice { text-align: left; padding: 13px 14px; background: white; color: #111827; border: 1px solid #dbe3ef; box-shadow: 0 6px 14px rgba(15,23,42,.08); }
+    .choice {
+      text-align: left;
+      padding: 13px 14px;
+      background: linear-gradient(180deg, #ffffff, #edf2fa);
+      color: #111827;
+      border: 3px solid #c6d1df;
+      border-radius: 14px;
+      box-shadow: 0 5px 0 rgba(15,23,42,.14);
+      font-size: 13px;
+    }
     .choice:hover, .choice:focus { border-color: #7c3aed; outline: none; }
-    .choice small { display: block; color: #64748b; margin-top: 3px; font-weight: 750; line-height: 1.35; }
-    .primary-btn { padding: 13px 16px; border: 0; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: white; box-shadow: 0 10px 24px rgba(124,58,237,.24); }
+    .choice small { display: block; color: #536172; margin-top: 4px; font-weight: 750; line-height: 1.35; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .primary-btn {
+      padding: 12px 16px;
+      border: 3px solid #1e3a8a;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+      color: white;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.18), 0 5px 0 rgba(15,23,42,.25);
+    }
     .modal .primary-btn, .modal .ghost-btn { margin-top: 12px; }
     .kbd { color: #475569; font-size: 13px; }
     .score-big { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 12px 0; }
-    .score-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 10px; text-align: center; }
+    .score-box { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 14px; padding: 10px; text-align: center; }
     .score-box strong { display: block; font-size: 24px; color: #111827; }
-    .score-box span { font-size: 12px; color: #64748b; font-weight: 850; }
+    .score-box span { font-size: 11px; color: #64748b; font-weight: 850; }
     .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .tag { display: inline-block; background: #eef2ff; color: #3730a3; padding: 4px 7px; border-radius: 999px; font-size: 11px; font-weight: 900; }
+    .tag { display: inline-block; background: #eef2ff; color: #3730a3; padding: 4px 7px; border-radius: 999px; font-size: 10px; font-weight: 900; }
     .result-note { padding: 10px 12px; border-radius: 14px; background: #f8fafc; border-left: 4px solid #7c3aed; margin-top: 10px; }
     @media (max-width: 980px) {
       body { padding: 8px; }
@@ -100,17 +249,15 @@
       .score-big { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 610px) {
-      header { align-items: flex-start; }
+      .title-block h1 { font-size: 23px; }
+      .title-block p { font-size: 11px; }
       .pill { width: 100%; justify-content: center; }
-      .title-block p { font-size: 12.5px; }
-      .top-hud { top: 8px; left: 8px; right: 8px; }
-      .hud-chip { font-size: 11px; padding: 6px 8px; }
-      .dpad { grid-template-columns: repeat(3, 45px); grid-template-rows: repeat(3, 45px); gap: 5px; }
-      .interact-btn { min-width: 104px; height: 64px; }
+      .dpad { grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 44px); gap: 5px; }
+      .interact-btn { min-width: 102px; height: 62px; }
       .mode-grid, .platform-grid { grid-template-columns: 1fr; }
       .score-big { grid-template-columns: 1fr; }
       .side-card { padding: 12px; }
-      .modal { border-radius: 19px; }
+      .modal { border-radius: 18px; }
     }
   </style>
 </head>
@@ -118,8 +265,8 @@
   <main class="app" aria-label="Organoid Quest game">
     <header>
       <div class="title-block">
-        <h1>Organoid Quest: Platform RPG</h1>
-        <p>Walk into buildings, collect a sample, choose a gut-on-chip platform, and translate the model.</p>
+        <h1>Organoid Quest: Pixel RPG</h1>
+        <p>A polished mobile-friendly RPG stand game for matching gut-on-chip platforms to biological questions.</p>
       </div>
       <div class="pill" id="modePill">🎮 QR-ready · mobile friendly</div>
     </header>
@@ -127,7 +274,7 @@
     <section class="layout">
       <div class="game-card">
         <div class="canvas-wrap">
-          <canvas id="game" width="960" height="600" aria-label="Playable RPG map"></canvas>
+          <canvas id="game" width="1440" height="900" aria-label="Playable RPG map"></canvas>
           <div class="top-hud">
             <div class="hud-chip" id="hudScene">Campus Courtyard</div>
             <div class="hud-chip" id="hudStage">Stage 1/7</div>
@@ -161,7 +308,7 @@
           <button class="small-btn" id="restartBtn">Restart</button>
         </div>
         <div class="journal" id="journal"></div>
-        <p class="footer-note">Tip for visitors: on mobile, tap the canvas to walk and use the big Talk / Use button near doors and NPCs.</p>
+        <p class="footer-note">Tip for visitors: on mobile, tap a building to auto-walk to its door, or use the D-pad and the big Talk / Use button.</p>
       </aside>
     </section>
   </main>
@@ -193,8 +340,12 @@
 
       const canvas = document.getElementById('game');
       const ctx = canvas.getContext('2d');
-      const W = canvas.width;
-      const H = canvas.height;
+      // Logical resolution stays 960x600, while the canvas renders at 1440x900.
+      // This sharpens the RPG graphics without changing movement coordinates.
+      const W = 960;
+      const H = 600;
+      const RENDER_SCALE = canvas.width / W;
+      ctx.imageSmoothingEnabled = false;
 
       const ui = {
         startOverlay: document.getElementById('startOverlay'),
@@ -389,13 +540,13 @@
       ];
 
       const BUILDINGS = [
-        { id: 'hospital', name: 'Hospital', short: 'Hospital', x: 54, y: 72, w: 188, h: 142, color: '#dbeafe', roof: '#60a5fa', door: { x: 128, y: 186, w: 42, h: 34 } },
-        { id: 'platform', name: 'Platform Hall', short: 'Platform', x: 360, y: 52, w: 240, h: 158, color: '#ede9fe', roof: '#8b5cf6', door: { x: 459, y: 178, w: 42, h: 36 } },
-        { id: 'culture', name: 'Culture Lab', short: 'Culture', x: 704, y: 76, w: 198, h: 138, color: '#dcfce7', roof: '#22c55e', door: { x: 782, y: 186, w: 42, h: 34 } },
-        { id: 'incubator', name: 'Incubator Suite', short: 'Incubator', x: 72, y: 372, w: 218, h: 148, color: '#ffedd5', roof: '#f97316', door: { x: 162, y: 370, w: 42, h: 36 } },
-        { id: 'imaging', name: 'Imaging & QC', short: 'Imaging', x: 365, y: 364, w: 210, h: 154, color: '#cffafe', roof: '#06b6d4', door: { x: 449, y: 362, w: 42, h: 36 } },
-        { id: 'data', name: 'Data Room', short: 'Data', x: 628, y: 374, w: 135, h: 140, color: '#e0e7ff', roof: '#6366f1', door: { x: 674, y: 372, w: 42, h: 36 } },
-        { id: 'translation', name: 'Translation Hub', short: 'Translate', x: 805, y: 374, w: 120, h: 140, color: '#fce7f3', roof: '#ec4899', door: { x: 844, y: 372, w: 42, h: 36 } }
+        { id: 'hospital', name: 'Hospital', short: 'Hospital', x: 54, y: 72, w: 190, h: 142, color: '#dbeafe', roof: '#60a5fa', door: { x: 128, y: 178, w: 42, h: 36 } },
+        { id: 'platform', name: 'Platform Hall', short: 'Platform', x: 352, y: 52, w: 248, h: 158, color: '#ede9fe', roof: '#8b5cf6', door: { x: 455, y: 174, w: 42, h: 36 } },
+        { id: 'culture', name: 'Culture Lab', short: 'Culture', x: 704, y: 74, w: 204, h: 142, color: '#dcfce7', roof: '#22c55e', door: { x: 785, y: 180, w: 42, h: 36 } },
+        { id: 'incubator', name: 'Incubator Suite', short: 'Incubator', x: 66, y: 350, w: 220, h: 154, color: '#ffedd5', roof: '#f97316', door: { x: 155, y: 468, w: 42, h: 36 } },
+        { id: 'imaging', name: 'Imaging & QC', short: 'Imaging', x: 348, y: 348, w: 220, h: 156, color: '#cffafe', roof: '#06b6d4', door: { x: 437, y: 468, w: 42, h: 36 } },
+        { id: 'data', name: 'Data Room', short: 'Data', x: 590, y: 360, w: 150, h: 146, color: '#e0e7ff', roof: '#6366f1', door: { x: 644, y: 470, w: 42, h: 36 } },
+        { id: 'translation', name: 'Translation Hub', short: 'Translate', x: 796, y: 352, w: 150, h: 154, color: '#fce7f3', roof: '#ec4899', door: { x: 850, y: 468, w: 42, h: 36 } }
       ];
 
       const ROOM_INFO = {
@@ -408,7 +559,7 @@
         translation: { title: 'Translation Hub', npc: { x: 250, y: 280, name: 'Translation Lead', emoji: '🚀' }, theme: '#db2777' }
       };
 
-      const player = { x: 468, y: 514, w: 28, h: 34, speed: 3.05, dir: 'down', target: null, step: 0 };
+      const player = { x: W / 2, y: 300, w: 28, h: 34, speed: 3.35, dir: 'down', target: null, path: [], step: 0 };
       const keys = { up: false, down: false, left: false, right: false };
 
       const state = {
@@ -518,6 +669,11 @@
         state.running = true;
         state.mode = mode;
         state.platformNeeded = mode === 'extended' ? 5 : 1;
+        // v2.1 movement fix: start on the open courtyard path, never inside a building collision box.
+        player.x = W / 2;
+        player.y = 300;
+        player.target = null;
+        player.path = [];
         state.platformQueue = buildPlatformQueue(mode);
         state.platformRound = 0;
         state.platformResults = [];
@@ -599,6 +755,7 @@
       }
 
       function drawRoundRect(x, y, w, h, r) {
+        r = Math.max(0, Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2));
         ctx.beginPath();
         ctx.moveTo(x + r, y);
         ctx.arcTo(x + w, y, x + w, y + h, r);
@@ -609,11 +766,11 @@
       }
 
       function drawText(text, x, y, size = 14, color = '#10202d', align = 'center', weight = 800) {
-        ctx.font = `${weight} ${size}px ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif`;
+        ctx.font = `${weight} ${size}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace`;
         ctx.fillStyle = color;
         ctx.textAlign = align;
         ctx.textBaseline = 'middle';
-        ctx.fillText(text, x, y);
+        ctx.fillText(text, Math.round(x), Math.round(y));
       }
 
       function drawWrappedText(text, x, y, maxWidth, lineHeight, color = '#fff', size = 15, weight = 700) {
@@ -638,224 +795,879 @@
       }
 
       function drawOverworld() {
+        drawGrassField();
+        drawWaterline();
+        drawCampusPaths();
+        drawPerimeterWalls();
+        drawForestBackground();
+        BUILDINGS.forEach(b => drawBuildingBaseShadow(b));
+        BUILDINGS.slice().sort((a, b) => (a.y + a.h) - (b.y + b.h)).forEach(drawBuilding);
+        drawDecorations();
+        drawFountain(480, 300);
+        drawNoticeBoard(310, 520, 'Mission Board');
+        drawNoticeBoard(836, 280, 'Model garden');
+      }
+
+      function drawGrassField() {
         const grd = ctx.createLinearGradient(0, 0, 0, H);
-        grd.addColorStop(0, '#134e4a');
-        grd.addColorStop(1, '#052e2b');
+        grd.addColorStop(0, '#2f6638');
+        grd.addColorStop(.52, '#2a5c34');
+        grd.addColorStop(1, '#1f4730');
         ctx.fillStyle = grd;
         ctx.fillRect(0, 0, W, H);
+        const tile = 24;
+        for (let y = 0; y < H; y += tile) {
+          for (let x = 0; x < W; x += tile) {
+            const n = ((x * 13 + y * 7) % 5);
+            ctx.fillStyle = n < 2 ? 'rgba(88,148,67,.22)' : 'rgba(17,80,45,.15)';
+            ctx.fillRect(x, y, tile, tile);
+            if (((x * 31 + y * 17) % 11) === 0) {
+              ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fillRect(x + 6, y + 9, 3, 3);
+              ctx.fillStyle = 'rgba(255,218,85,.55)'; ctx.fillRect(x + 10, y + 7, 3, 3);
+            }
+            if (((x * 19 + y * 29) % 13) === 1) {
+              ctx.fillStyle = 'rgba(190,126,255,.5)'; ctx.fillRect(x + 16, y + 16, 3, 3);
+            }
+          }
+        }
+      }
 
-        ctx.fillStyle = 'rgba(255,255,255,.08)';
-        for (let x = 0; x < W; x += 48) ctx.fillRect(x, 0, 1, H);
-        for (let y = 0; y < H; y += 48) ctx.fillRect(0, y, W, 1);
+      function drawWaterline() {
+        ctx.fillStyle = '#12324e'; ctx.fillRect(0, H - 47, W, 47);
+        for (let x = 0; x < W; x += 32) {
+          ctx.fillStyle = x % 64 === 0 ? '#1a6591' : '#194f78';
+          ctx.fillRect(x, H - 42 + ((x / 32) % 2) * 6, 24, 3);
+          ctx.fillStyle = 'rgba(157,218,255,.35)';
+          ctx.fillRect(x + 8, H - 24 + ((x / 32) % 3) * 3, 18, 2);
+        }
+        ctx.fillStyle = '#5f5c52';
+        for (let x = 0; x < W; x += 36) {
+          drawPixelStone(x, H - 54, 34, 14);
+        }
+        ctx.fillStyle = '#8b5a2b'; ctx.fillRect(470, H - 60, 44, 60);
+        ctx.fillStyle = '#a56a32'; ctx.fillRect(462, H - 54, 60, 10);
+        ctx.fillRect(462, H - 28, 60, 10);
+      }
 
-        ctx.fillStyle = '#d8b06a';
-        drawRoundRect(90, 258, 780, 78, 24); ctx.fill();
-        drawRoundRect(441, 88, 78, 440, 24); ctx.fill();
-        drawRoundRect(95, 268, 760, 58, 18); ctx.fillStyle = '#e7c586'; ctx.fill();
-        drawRoundRect(451, 98, 58, 420, 18); ctx.fill();
+      function drawCampusPaths() {
+        const hub = { x: 480, y: 300 };
+        ctx.save();
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        function path(points) {
+          ctx.strokeStyle = 'rgba(59,43,24,.34)'; ctx.lineWidth = 70;
+          ctx.beginPath(); points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke();
+          ctx.strokeStyle = '#8d7047'; ctx.lineWidth = 58;
+          ctx.beginPath(); points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke();
+          ctx.strokeStyle = '#bc985f'; ctx.lineWidth = 46;
+          ctx.beginPath(); points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke();
+          ctx.strokeStyle = 'rgba(244,217,149,.28)'; ctx.lineWidth = 14;
+          ctx.beginPath(); points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke();
+        }
+        BUILDINGS.forEach(b => {
+          const door = doorApproachPoint(b);
+          const mid = { x: door.x, y: hub.y };
+          if (b.id === 'translation') path([hub, { x: hub.x, y: 390 }, door]);
+          else if (b.id === 'incubator' || b.id === 'hospital') path([hub, { x: 300, y: hub.y }, { x: door.x, y: hub.y }, door]);
+          else if (b.id === 'data' || b.id === 'culture') path([hub, { x: 660, y: hub.y }, { x: door.x, y: hub.y }, door]);
+          else path([hub, mid, door]);
+        });
+        ctx.restore();
+        // Scatter pebbles on paths
+        for (let i = 0; i < 60; i++) {
+          const x = (i * 47 + 19) % 820 + 70;
+          const y = (i * 83 + 100) % 330 + 170;
+          if (Math.abs(y - 300) < 45 || Math.abs(x - 480) < 44) {
+            ctx.fillStyle = i % 2 ? 'rgba(103,77,43,.32)' : 'rgba(232,205,150,.25)';
+            ctx.fillRect(x, y, 3, 2);
+          }
+        }
+      }
 
-        drawText('Imperial Organoid Facility', W / 2, 28, 22, '#e0f2fe', 'center', 950);
-        drawText('Walk into buildings to progress through the workflow', W / 2, 53, 13, '#bae6fd', 'center', 800);
+      function drawPerimeterWalls() {
+        ctx.fillStyle = '#454c55';
+        for (let x = 0; x < W; x += 24) { drawPixelStone(x, 0, 22, 16); drawPixelStone(x, H - 65, 22, 16); }
+        for (let y = 0; y < H - 42; y += 24) { drawPixelStone(0, y, 16, 22); drawPixelStone(W - 16, y, 16, 22); }
+      }
 
-        BUILDINGS.forEach(drawBuilding);
-        drawDecorations();
+      function drawPixelStone(x, y, w, h) {
+        ctx.fillStyle = '#48515b'; ctx.fillRect(x, y, w, h);
+        ctx.fillStyle = '#68727f'; ctx.fillRect(x + 2, y + 2, w - 4, 3);
+        ctx.fillStyle = '#2a3038'; ctx.fillRect(x, y + h - 3, w, 3);
+      }
+
+      function drawForestBackground() {
+        const points = [];
+        for (let i = 0; i < 24; i++) points.push({ x: 22 + i * 42, y: 28 + ((i * 37) % 34) });
+        for (let i = 0; i < 9; i++) points.push({ x: 18 + ((i * 67) % 920), y: 515 + ((i * 29) % 34) });
+        for (let i = 0; i < 8; i++) { points.push({ x: 34, y: 92 + i * 54 }); points.push({ x: 925, y: 82 + i * 56 }); }
+        points.forEach((p, i) => drawTree(p.x, p.y, i % 3));
+      }
+
+      function drawTree(x, y, type = 0) {
+        ctx.fillStyle = '#5b371e'; ctx.fillRect(x - 5, y + 18, 10, 18);
+        const greens = type === 0 ? ['#1f6b3b','#2e8a48','#3fa35b'] : type === 1 ? ['#174f35','#2c7040','#3a8a50'] : ['#245a2d','#337a3b','#4c9a4a'];
+        ctx.fillStyle = greens[0]; ctx.fillRect(x - 24, y - 2, 48, 30);
+        ctx.fillStyle = greens[1]; ctx.fillRect(x - 18, y - 12, 36, 34);
+        ctx.fillStyle = greens[2]; ctx.fillRect(x - 10, y - 20, 22, 26);
+        ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.fillRect(x - 15, y - 8, 12, 5);
+        ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(x - 22, y + 22, 44, 5);
+      }
+
+      function drawFountain(x, y) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(x + 5, y + 9, 64, 30, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#656a70'; ctx.beginPath(); ctx.ellipse(x, y, 64, 32, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#a2a7ad'; ctx.beginPath(); ctx.ellipse(x, y - 4, 50, 24, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#195f91'; ctx.beginPath(); ctx.ellipse(x, y - 4, 42, 18, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#54c5ff'; ctx.fillRect(x - 5, y - 44, 10, 36);
+        ctx.fillStyle = 'rgba(186,230,253,.85)'; ctx.fillRect(x - 2, y - 48, 4, 44);
+        ctx.fillStyle = 'rgba(186,230,253,.55)'; ctx.fillRect(x - 25, y - 15, 50, 4);
+        ctx.restore();
+      }
+
+      function drawLamp(x, y) {
+        ctx.fillStyle = '#2c2f36'; ctx.fillRect(x - 3, y, 6, 34);
+        ctx.fillStyle = '#171b24'; ctx.fillRect(x - 8, y + 32, 16, 6);
+        ctx.fillStyle = '#ffd36b'; ctx.fillRect(x - 8, y - 12, 16, 14);
+        ctx.fillStyle = 'rgba(255,211,107,.22)'; ctx.beginPath(); ctx.arc(x, y - 4, 26, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#252b35'; ctx.lineWidth = 2; ctx.strokeRect(x - 9, y - 13, 18, 16);
+      }
+
+      function drawNoticeBoard(x, y, label) {
+        ctx.fillStyle = '#3b2718'; ctx.fillRect(x - 36, y - 24, 72, 40);
+        ctx.fillStyle = '#b78343'; ctx.fillRect(x - 31, y - 19, 62, 30);
+        ctx.fillStyle = '#f1d5a4'; ctx.fillRect(x - 24, y - 13, 22, 7);
+        ctx.fillStyle = '#7dd3fc'; ctx.fillRect(x + 4, y - 13, 20, 7);
+        ctx.fillStyle = '#3b2718'; ctx.fillRect(x - 28, y + 16, 7, 31); ctx.fillRect(x + 21, y + 16, 7, 31);
+        drawText(label, x, y + 58, 10, '#e7d5b0', 'center', 900);
       }
 
       function drawDecorations() {
-        ctx.save();
-        for (let i = 0; i < 22; i++) {
-          const x = (i * 113 + 31) % W;
-          const y = (i * 67 + 98) % H;
-          if (x > 320 && x < 640 && y > 50 && y < 540) continue;
-          ctx.fillStyle = 'rgba(187,247,208,.42)';
-          ctx.beginPath(); ctx.arc(x, y, 3 + (i % 3), 0, Math.PI * 2); ctx.fill();
+        drawLamp(322, 245); drawLamp(637, 245); drawLamp(319, 370); drawLamp(642, 370);
+        drawTree(292, 92, 0); drawTree(642, 78, 2); drawTree(922, 306, 1); drawTree(42, 320, 2);
+        // small NPCs outside
+        if (state.scene === 'overworld') {
+          drawNPC(248, 502, 'Recruiter', '!', currentStageId() === 'hospital' && !state.completed.hospital, { small: true });
+          drawNPC(832, 240, 'Scientist', '...', false, { small: true });
         }
-        ctx.restore();
+      }
+
+      function drawBuildingBaseShadow(b) {
+        ctx.fillStyle = 'rgba(0,0,0,.30)';
+        drawRoundRect(b.x + 9, b.y + 13, b.w, b.h, 12); ctx.fill();
+      }
+
+      function buildingLabel(b) {
+        const map = {
+          hospital: '✚ Hospital',
+          platform: 'Platform Hall',
+          culture: '⚗ Culture Lab',
+          incubator: 'Incubator',
+          imaging: '▣ Imaging/QC',
+          data: 'Data Room',
+          translation: 'Translation Hub'
+        };
+        return map[b.id] || b.short;
       }
 
       function drawBuilding(b) {
         const isTarget = currentStageId() === b.id && !state.gameComplete;
+        ctx.save();
         if (isTarget) {
-          ctx.save();
-          ctx.shadowColor = '#fef08a';
-          ctx.shadowBlur = 24 + Math.sin(state.pulse * 0.08) * 8;
-          ctx.strokeStyle = '#fde047';
+          ctx.shadowColor = '#fff16a';
+          ctx.shadowBlur = 22 + Math.sin(state.pulse * 0.07) * 8;
+          ctx.strokeStyle = '#ffe35b';
           ctx.lineWidth = 5;
-          drawRoundRect(b.x - 6, b.y - 6, b.w + 12, b.h + 12, 20);
+          drawRoundRect(b.x - 8, b.y - 22, b.w + 16, b.h + 34, 16);
           ctx.stroke();
-          ctx.restore();
+          ctx.shadowBlur = 0;
         }
-        ctx.fillStyle = 'rgba(0,0,0,.22)';
-        drawRoundRect(b.x + 8, b.y + 12, b.w, b.h, 18); ctx.fill();
-        ctx.fillStyle = b.color;
-        drawRoundRect(b.x, b.y, b.w, b.h, 18); ctx.fill();
+
+        // main body
+        ctx.fillStyle = '#343b44';
+        drawRoundRect(b.x - 3, b.y - 3, b.w + 6, b.h + 6, 10); ctx.fill();
+        ctx.fillStyle = '#c5ced7';
+        drawRoundRect(b.x, b.y, b.w, b.h, 9); ctx.fill();
+        ctx.fillStyle = 'rgba(98,112,128,.22)';
+        for (let yy = b.y + 18; yy < b.y + b.h - 12; yy += 18) ctx.fillRect(b.x + 8, yy, b.w - 16, 2);
+        for (let xx = b.x + 20; xx < b.x + b.w - 20; xx += 42) ctx.fillRect(xx, b.y + 14, 2, b.h - 26);
+
+        // roof and top trim
+        ctx.fillStyle = '#303945';
+        drawRoundRect(b.x - 7, b.y - 16, b.w + 14, 47, 11); ctx.fill();
         ctx.fillStyle = b.roof;
-        drawRoundRect(b.x - 8, b.y - 14, b.w + 16, 48, 18); ctx.fill();
-        ctx.fillStyle = 'rgba(255,255,255,.28)';
-        for (let i = 0; i < 3; i++) {
-          drawRoundRect(b.x + 18 + i * 52, b.y + 58, 28, 28, 6); ctx.fill();
-        }
-        ctx.fillStyle = '#4b5563';
-        drawRoundRect(b.door.x, b.door.y, b.door.w, b.door.h, 7); ctx.fill();
-        ctx.fillStyle = '#fde68a';
-        ctx.beginPath(); ctx.arc(b.door.x + b.door.w - 9, b.door.y + 18, 3, 0, Math.PI * 2); ctx.fill();
-        drawText(b.short, b.x + b.w / 2, b.y + 30, 15, '#0f172a', 'center', 950);
-        if (state.completed[b.id]) drawText('✓', b.x + b.w - 22, b.y + 28, 22, '#16a34a', 'center', 950);
-      }
+        drawRoundRect(b.x - 2, b.y - 9, b.w + 4, 29, 8); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.17)'; ctx.fillRect(b.x + 8, b.y - 6, b.w - 18, 4);
 
-      function drawRoom() {
-        const info = ROOM_INFO[state.scene];
-        ctx.fillStyle = '#111827';
-        ctx.fillRect(0, 0, W, H);
-        ctx.fillStyle = '#1f2937';
-        ctx.fillRect(38, 48, W - 76, H - 88);
-        ctx.strokeStyle = 'rgba(255,255,255,.08)';
-        ctx.lineWidth = 1;
-        for (let x = 38; x < W - 38; x += 40) { ctx.beginPath(); ctx.moveTo(x, 48); ctx.lineTo(x, H - 40); ctx.stroke(); }
-        for (let y = 48; y < H - 40; y += 40) { ctx.beginPath(); ctx.moveTo(38, y); ctx.lineTo(W - 38, y); ctx.stroke(); }
-        ctx.fillStyle = info.theme;
-        ctx.fillRect(38, 48, W - 76, 54);
-        drawText(info.title, W / 2, 75, 22, 'white', 'center', 950);
-        drawExitDoor();
-        drawRoomFurniture(state.scene);
-        drawNPC(info.npc.x, info.npc.y, info.npc.name, info.npc.emoji, state.scene === currentStageId());
-      }
+        // signboard
+        const signW = Math.min(b.w - 22, 190), signX = b.x + (b.w - signW) / 2;
+        const signColor = b.id === 'culture' ? '#5b2a74' : b.id === 'translation' ? '#236b37' : b.id === 'imaging' ? '#0b666b' : b.id === 'incubator' ? '#8b4b11' : '#1d3e6d';
+        ctx.fillStyle = '#0e1724'; drawRoundRect(signX - 4, b.y + 18, signW + 8, 32, 4); ctx.fill();
+        ctx.fillStyle = signColor; drawRoundRect(signX, b.y + 20, signW, 26, 3); ctx.fill();
+        drawText(buildingLabel(b), b.x + b.w / 2, b.y + 33, b.w < 150 ? 11 : 14, '#fff6d8', 'center', 950);
 
-      function drawExitDoor() {
-        const x = W / 2 - 52, y = H - 78, w = 104, h = 40;
-        ctx.fillStyle = '#0f172a';
-        drawRoundRect(x, y, w, h, 10); ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 2; ctx.stroke();
-        drawText('EXIT', W / 2, y + 20, 15, '#dbeafe', 'center', 950);
-      }
+        // lit windows
+        const winY = b.y + Math.min(76, b.h - 54);
+        const windows = b.w > 170 ? [b.x + 22, b.x + b.w - 48] : [b.x + 18, b.x + b.w - 44];
+        windows.forEach(wx => drawWindow(wx, winY));
+        if (b.w > 210) drawWindow(b.x + b.w / 2 - 13, winY - 8);
 
-      function drawRoomFurniture(room) {
-        if (room === 'hospital') {
-          drawBench(568, 188, 250, 104, '#bfdbfe', 'Colonoscopy sample station');
-          drawBench(600, 344, 200, 70, '#dbeafe', 'Consent + metadata');
-          drawMonitor(690, 198, 'Scope view');
-          drawText('mini-game here', 694, 318, 13, '#bfdbfe', 'center', 850);
-        } else if (room === 'platform') {
-          drawBench(555, 155, 310, 80, '#ddd6fe', 'Platform comparison table');
-          PLATFORMS.forEach((p, i) => {
-            const x = 410 + (i % 4) * 120;
-            const y = 305 + Math.floor(i / 4) * 92;
-            drawPlatformPod(p, x, y);
-          });
-        } else if (room === 'culture') {
-          drawBench(520, 178, 310, 84, '#bbf7d0', 'Matrix · medium · growth factors');
-          drawBench(550, 335, 240, 78, '#dcfce7', 'Organoid culture bench');
-          drawDish(670, 373, 1);
-        } else if (room === 'incubator') {
-          drawBench(545, 160, 270, 92, '#fed7aa', 'Incubator rack');
-          drawBench(560, 330, 230, 88, '#ffedd5', 'Medium and sterile handling');
-          drawDish(670, 370, 1.5);
-        } else if (room === 'imaging') {
-          drawBench(520, 168, 320, 92, '#a5f3fc', 'Microscope + TEER');
-          drawMonitor(680, 178, 'QC images');
-          drawBench(560, 336, 220, 76, '#cffafe', 'Readout panel');
-        } else if (room === 'data') {
-          drawBench(520, 168, 320, 92, '#c7d2fe', 'Analysis workstation');
-          drawMonitor(690, 176, 'QC dashboard');
-          drawBench(560, 336, 220, 76, '#e0e7ff', 'Replicates + SOP');
-        } else if (room === 'translation') {
-          drawBench(510, 160, 330, 105, '#fbcfe8', 'Client recommendation board');
-          drawBench(550, 340, 240, 76, '#fce7f3', 'Training + handoff');
-          drawText('Final score', 670, 379, 18, '#831843', 'center', 950);
-        }
-      }
+        // door
+        ctx.fillStyle = '#111827'; drawRoundRect(b.door.x - 4, b.door.y - 4, b.door.w + 8, b.door.h + 8, 4); ctx.fill();
+        ctx.fillStyle = '#4b3320'; drawRoundRect(b.door.x, b.door.y, b.door.w, b.door.h, 3); ctx.fill();
+        ctx.fillStyle = '#714927'; ctx.fillRect(b.door.x + 4, b.door.y + 4, b.door.w / 2 - 6, b.door.h - 8); ctx.fillRect(b.door.x + b.door.w / 2 + 2, b.door.y + 4, b.door.w / 2 - 6, b.door.h - 8);
+        ctx.fillStyle = '#ffd36b'; ctx.fillRect(b.door.x + b.door.w - 11, b.door.y + b.door.h / 2, 4, 4);
 
-      function drawBench(x, y, w, h, color, label) {
-        ctx.fillStyle = 'rgba(0,0,0,.25)';
-        drawRoundRect(x + 8, y + 10, w, h, 15); ctx.fill();
-        ctx.fillStyle = color;
-        drawRoundRect(x, y, w, h, 15); ctx.fill();
-        ctx.strokeStyle = 'rgba(15,23,42,.18)'; ctx.lineWidth = 2; ctx.stroke();
-        drawText(label, x + w / 2, y + h / 2, 14, '#0f172a', 'center', 900);
-      }
-
-      function drawMonitor(x, y, label) {
-        ctx.fillStyle = '#0f172a'; drawRoundRect(x, y, 108, 70, 9); ctx.fill();
-        ctx.fillStyle = '#0ea5e9'; drawRoundRect(x + 8, y + 8, 92, 46, 5); ctx.fill();
-        ctx.fillStyle = 'rgba(255,255,255,.22)'; ctx.fillRect(x + 16, y + 18, 52, 5); ctx.fillRect(x + 16, y + 30, 72, 5); ctx.fillRect(x + 16, y + 42, 38, 5);
-        drawText(label, x + 54, y + 88, 12, '#cbd5e1', 'center', 800);
-      }
-
-      function drawDish(x, y, scale) {
-        ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale);
-        ctx.fillStyle = 'rgba(14,165,233,.24)'; ctx.beginPath(); ctx.ellipse(0, 0, 54, 25, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.stroke();
-        for (let i = 0; i < 9; i++) {
-          ctx.fillStyle = ['#a78bfa', '#22c55e', '#f59e0b'][i % 3];
-          ctx.beginPath(); ctx.arc(-34 + (i % 5) * 17, -8 + Math.floor(i / 5) * 15, 5 + (i % 2), 0, Math.PI * 2); ctx.fill();
+        // building-specific rooftop props
+        if (b.id === 'platform') drawGlassDome(b.x + b.w / 2, b.y - 12);
+        if (b.id === 'hospital') drawAmbulance(b.x - 35, b.y + b.h - 38);
+        if (b.id === 'culture') drawRooftopTank(b.x + b.w - 28, b.y - 30, '#7e3f98');
+        if (b.id === 'incubator') drawRooftopVent(b.x + b.w - 50, b.y - 24);
+        if (b.id === 'imaging') drawTinyMicroscope(b.x + b.w - 42, b.y - 26);
+        if (b.id === 'data') drawServerStack(b.x + b.w - 26, b.y + 68);
+        if (b.id === 'translation') drawGreenhouseRoof(b.x + b.w / 2, b.y - 12, b.w - 40);
+        if (state.completed[b.id]) {
+          ctx.fillStyle = '#0b3320'; drawRoundRect(b.x + b.w - 34, b.y - 10, 26, 22, 4); ctx.fill();
+          drawText('✓', b.x + b.w - 21, b.y + 1, 17, '#79f27c', 'center', 950);
         }
         ctx.restore();
       }
 
-      function drawPlatformPod(p, x, y) {
-        ctx.fillStyle = 'rgba(0,0,0,.2)'; drawRoundRect(x + 5, y + 5, 84, 62, 12); ctx.fill();
-        ctx.fillStyle = '#f8fafc'; drawRoundRect(x, y, 84, 62, 12); ctx.fill();
-        drawText(p.icon, x + 22, y + 25, 20, '#0f172a', 'center', 900);
-        drawText(p.name, x + 48, y + 26, 12, '#0f172a', 'center', 900);
-        drawText('chip', x + 48, y + 44, 10, '#64748b', 'center', 800);
+      function drawWindow(x, y) {
+        ctx.fillStyle = '#1a2432'; ctx.fillRect(x - 3, y - 3, 32, 30);
+        ctx.fillStyle = '#ffd36b'; ctx.fillRect(x, y, 26, 24);
+        ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(x + 3, y + 3, 8, 18);
+        ctx.fillStyle = 'rgba(72,45,17,.32)'; ctx.fillRect(x + 12, y, 2, 24); ctx.fillRect(x, y + 11, 26, 2);
       }
 
-      function drawNPC(x, y, name, emoji, isActive) {
+      function drawGlassDome(cx, y) {
+        ctx.fillStyle = '#26313f'; ctx.fillRect(cx - 45, y + 15, 90, 9);
+        ctx.fillStyle = '#88d7ff';
+        ctx.beginPath(); ctx.ellipse(cx, y + 16, 48, 28, 0, Math.PI, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 2;
+        for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.moveTo(cx + i * 15, y + 16); ctx.lineTo(cx + i * 8, y - 9); ctx.stroke(); }
+        ctx.beginPath(); ctx.ellipse(cx, y + 16, 36, 20, 0, Math.PI, Math.PI * 2); ctx.stroke();
+      }
+
+      function drawAmbulance(x, y) {
+        ctx.fillStyle = 'rgba(0,0,0,.26)'; ctx.fillRect(x + 4, y + 28, 90, 9);
+        ctx.fillStyle = '#edf6ff'; ctx.fillRect(x, y, 78, 30);
+        ctx.fillStyle = '#9ed8ff'; ctx.fillRect(x + 48, y + 5, 20, 10);
+        ctx.fillStyle = '#ef4444'; ctx.fillRect(x + 18, y + 11, 6, 16); ctx.fillRect(x + 13, y + 16, 16, 6);
+        ctx.fillStyle = '#1d4ed8'; ctx.fillRect(x + 4, y + 22, 44, 4);
+        ctx.fillStyle = '#111827'; ctx.beginPath(); ctx.arc(x + 18, y + 31, 7, 0, Math.PI * 2); ctx.arc(x + 62, y + 31, 7, 0, Math.PI * 2); ctx.fill();
+      }
+
+      function drawRooftopTank(x, y, color) {
+        ctx.fillStyle = '#1e293b'; ctx.fillRect(x - 8, y + 30, 30, 6);
+        ctx.fillStyle = color; drawRoundRect(x - 10, y, 34, 34, 9); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.22)'; ctx.fillRect(x - 3, y + 5, 6, 22);
+      }
+
+      function drawRooftopVent(x, y) {
+        ctx.fillStyle = '#1f2937'; ctx.fillRect(x, y + 8, 40, 24);
+        ctx.fillStyle = '#6b7280'; ctx.fillRect(x + 4, y + 12, 32, 4); ctx.fillRect(x + 4, y + 22, 32, 4);
+      }
+
+      function drawTinyMicroscope(x, y) {
+        ctx.fillStyle = '#243244'; ctx.fillRect(x + 12, y + 26, 32, 7); ctx.fillRect(x + 24, y + 7, 8, 26);
+        ctx.strokeStyle = '#cdd6df'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(x + 22, y + 13, 15, -1.2, 1.2); ctx.stroke();
+      }
+
+      function drawServerStack(x, y) {
+        for (let i = 0; i < 3; i++) {
+          ctx.fillStyle = '#0f172a'; ctx.fillRect(x, y + i * 15, 32, 12);
+          ctx.fillStyle = '#38bdf8'; ctx.fillRect(x + 5, y + 4 + i * 15, 16, 3);
+        }
+      }
+
+      function drawGreenhouseRoof(cx, y, w) {
+        ctx.fillStyle = '#25354a'; ctx.fillRect(cx - w/2, y + 22, w, 9);
+        ctx.fillStyle = '#a7f3d0'; ctx.fillRect(cx - w/2 + 8, y + 5, w - 16, 22);
+        ctx.fillStyle = 'rgba(37,99,80,.32)';
+        for (let i = 0; i < 5; i++) ctx.fillRect(cx - w/2 + 15 + i * ((w - 34) / 4), y + 5, 2, 22);
+      }
+
+      function drawRoom() {
+        const info = ROOM_INFO[state.scene];
+        drawRoomShell(info.title, info.theme);
+        drawRoomFurniture(state.scene);
+        drawRoomAmbientNPCs(state.scene);
+        drawExitDoor();
+        if (state.scene === 'platform') {
+          drawNPC(338, 318, 'Scientist', '...', false);
+          drawNPC(238, 318, 'Client', '...', state.scene === currentStageId());
+        } else {
+          drawNPC(info.npc.x, info.npc.y, info.npc.name, info.npc.emoji, state.scene === currentStageId());
+        }
+      }
+
+      function drawRoomShell(title, theme) {
+        ctx.fillStyle = '#030814'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = 'rgba(0,0,0,.45)'; drawRoundRect(26, 30, W - 52, H - 48, 16); ctx.fill();
+        ctx.fillStyle = '#10151f'; drawRoundRect(30, 24, W - 60, H - 46, 16); ctx.fill();
+        ctx.strokeStyle = '#8793a6'; ctx.lineWidth = 4; ctx.stroke();
+        ctx.strokeStyle = '#222b38'; ctx.lineWidth = 7; drawRoundRect(36, 30, W - 72, H - 58, 12); ctx.stroke();
+
+        // Back wall with windows. The room sign is built into the wall rather than floating over gameplay.
+        ctx.fillStyle = '#5a4838'; ctx.fillRect(44, 42, W - 88, 102);
+        ctx.fillStyle = 'rgba(255,255,255,.10)'; ctx.fillRect(50, 48, W - 100, 8);
+        ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.fillRect(44, 132, W - 88, 12);
+        for (let x = 78; x < W - 90; x += 74) {
+          ctx.fillStyle = '#182130'; ctx.fillRect(x, 70, 32, 30);
+          ctx.fillStyle = '#ffe196'; ctx.fillRect(x + 5, 75, 22, 18);
+          ctx.fillStyle = 'rgba(255,255,255,.32)'; ctx.fillRect(x + 8, 77, 6, 15);
+        }
+        const signW = Math.min(520, W - 260);
+        ctx.fillStyle = '#080f1e'; drawRoundRect(W / 2 - signW / 2 - 6, 58, signW + 12, 46, 6); ctx.fill();
+        ctx.fillStyle = theme; drawRoundRect(W / 2 - signW / 2, 62, signW, 38, 4); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.15)'; ctx.fillRect(W / 2 - signW / 2 + 10, 66, signW - 20, 4);
+        drawText(title, W / 2, 82, 19, '#fff7df', 'center', 950);
+        drawWallPoster(82, 76, 'SOP');
+        drawWallPoster(W - 104, 76, 'DATA');
+        drawPlantPot(76, 137); drawPlantPot(W - 78, 137);
+
+        // Floor with tile variation.
+        ctx.fillStyle = '#a98f70'; ctx.fillRect(44, 144, W - 88, H - 196);
+        ctx.fillStyle = 'rgba(255,244,210,.18)';
+        for (let x = 44; x <= W - 44; x += 34) ctx.fillRect(x, 144, 2, H - 196);
+        for (let y = 144; y <= H - 52; y += 34) ctx.fillRect(44, y, W - 88, 2);
+        ctx.fillStyle = 'rgba(50,35,20,.16)';
+        for (let y = 164; y < H - 66; y += 68) for (let x = 64; x < W - 70; x += 68) ctx.fillRect(x, y, 4, 4);
+      }
+
+      function drawWallPoster(x, y, text) {
+        ctx.fillStyle = '#0e1724'; drawRoundRect(x - 34, y - 24, 68, 48, 3); ctx.fill();
+        ctx.fillStyle = '#1d3e6d'; ctx.fillRect(x - 29, y - 19, 58, 38);
+        drawText(text, x, y - 3, 10, '#fff6d8', 'center', 950);
+        ctx.fillStyle = '#ffd84d'; ctx.fillRect(x - 19, y + 10, 38, 3);
+        ctx.fillStyle = '#38bdf8'; ctx.fillRect(x - 18, y + 16, 26, 3);
+      }
+
+      function drawExitDoor() {
+        const x = W / 2 - 58, y = H - 78, w = 116, h = 42;
+        ctx.fillStyle = 'rgba(0,0,0,.34)'; drawRoundRect(x + 6, y + 6, w, h, 7); ctx.fill();
+        ctx.fillStyle = '#08111f'; drawRoundRect(x, y, w, h, 6); ctx.fill();
+        ctx.strokeStyle = '#7c8da4'; ctx.lineWidth = 3; ctx.stroke();
+        ctx.fillStyle = '#1d3f66'; ctx.fillRect(x + 8, y + 8, w - 16, h - 16);
+        ctx.fillStyle = 'rgba(255,255,255,.10)'; ctx.fillRect(x + 13, y + 12, w - 26, 5);
+        drawText('EXIT', W / 2, y + 22, 15, '#eaf2ff', 'center', 950);
+      }
+
+      function drawFloorRug(x, y, w, h, color) {
+        ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(x + 4, y + 4, w/2, h/2, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = color; ctx.beginPath(); ctx.ellipse(x, y, w/2, h/2, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(x, y, w/2 - 12, h/2 - 9, 0, 0, Math.PI * 2); ctx.stroke();
+      }
+
+      function drawPlantPot(x, y, scale = 1) {
+        ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale);
+        ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(0, 29, 24, 8, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#7c3f1d'; drawRoundRect(-15, 10, 30, 24, 4); ctx.fill();
+        ctx.fillStyle = '#3a2415'; ctx.fillRect(-12, 11, 24, 6);
+        const leaves = ['#166534', '#15803d', '#22c55e'];
+        for (let i = 0; i < 7; i++) {
+          ctx.fillStyle = leaves[i % leaves.length];
+          ctx.fillRect(-22 + i * 7, -10 + (i % 3) * 4, 14, 24);
+        }
+        ctx.restore();
+      }
+
+      function drawConsolePanel(x, y, w, h, color, label, screenLabel = '') {
+        ctx.fillStyle = 'rgba(0,0,0,.32)'; drawRoundRect(x + 7, y + 8, w, h, 9); ctx.fill();
+        ctx.fillStyle = '#0d1524'; drawRoundRect(x - 4, y - 4, w + 8, h + 8, 9); ctx.fill();
+        ctx.fillStyle = color; drawRoundRect(x, y, w, h, 8); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(x + 12, y + 10, w - 24, 5);
+        ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(x + 12, y + h - 16, w - 24, 7);
+        drawText(label, x + w / 2, y + 28, 11, '#fff8dd', 'center', 950);
+        if (screenLabel) {
+          ctx.fillStyle = '#0a1320'; drawRoundRect(x + w - 116, y + 38, 88, 46, 5); ctx.fill();
+          ctx.fillStyle = '#1d9bd7'; ctx.fillRect(x + w - 106, y + 46, 68, 27);
+          ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fillRect(x + w - 99, y + 52, 42, 4); ctx.fillRect(x + w - 99, y + 62, 52, 4);
+        }
+      }
+
+      function drawChair(x, y, color) {
+        ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x, y + 10, 22, 7, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#111827'; ctx.fillRect(x - 18, y - 6, 36, 24);
+        ctx.fillStyle = color; ctx.fillRect(x - 14, y - 2, 28, 16);
+      }
+
+      function drawReceptionDesk(x, y, w, h, color, label) {
+        drawConsolePanel(x, y, w, h, color, label, '');
+        ctx.fillStyle = '#0b1220'; ctx.fillRect(x + 20, y + 45, 56, 20);
+        ctx.fillStyle = '#eaf2ff'; ctx.fillRect(x + 28, y + 50, 40, 3); ctx.fillRect(x + 28, y + 58, 34, 3);
+        drawChair(x + w - 48, y + h + 12, '#1d4ed8');
+      }
+
+      function drawProcedureBed(x, y) {
+        ctx.fillStyle = 'rgba(0,0,0,.28)'; drawRoundRect(x + 8, y + 10, 170, 60, 10); ctx.fill();
+        ctx.fillStyle = '#101827'; drawRoundRect(x, y, 170, 58, 9); ctx.fill();
+        ctx.fillStyle = '#dbeafe'; drawRoundRect(x + 8, y + 8, 154, 42, 6); ctx.fill();
+        ctx.fillStyle = '#93c5fd'; ctx.fillRect(x + 18, y + 14, 48, 30);
+        ctx.fillStyle = '#64748b'; ctx.fillRect(x + 20, y + 55, 8, 18); ctx.fillRect(x + 138, y + 55, 8, 18);
+      }
+
+      function drawSampleTray(x, y, label) {
+        ctx.fillStyle = 'rgba(0,0,0,.28)'; drawRoundRect(x + 5, y + 6, 150, 54, 6); ctx.fill();
+        ctx.fillStyle = '#0d1524'; drawRoundRect(x, y, 150, 54, 6); ctx.fill();
+        for (let i = 0; i < 6; i++) {
+          ctx.fillStyle = i % 2 ? '#38bdf8' : '#f472b6'; ctx.fillRect(x + 16 + i*20, y + 12, 11, 25);
+          ctx.fillStyle = '#e0f2fe'; ctx.fillRect(x + 16 + i*20, y + 8, 11, 5);
+        }
+        drawText(label, x + 75, y + 46, 9, '#eaf2ff', 'center', 850);
+      }
+
+      function drawSinkStation(x, y) {
+        drawConsolePanel(x, y, 112, 78, '#334155', 'Sterile sink', '');
+        ctx.fillStyle = '#94a3b8'; ctx.fillRect(x + 33, y + 38, 46, 18);
+        ctx.fillStyle = '#38bdf8'; ctx.fillRect(x + 40, y + 42, 32, 4);
+        ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x + 58, y + 34); ctx.lineTo(x + 58, y + 22); ctx.lineTo(x + 72, y + 22); ctx.stroke();
+      }
+
+      function drawLaminarHood(x, y) {
+        drawConsolePanel(x, y, 275, 112, '#2f6b48', 'Sterile hood', '');
+        ctx.fillStyle = '#a7f3d0'; ctx.fillRect(x + 24, y + 36, 226, 42);
+        ctx.fillStyle = 'rgba(255,255,255,.32)'; for (let i = 0; i < 5; i++) ctx.fillRect(x + 34 + i * 44, y + 40, 8, 34);
+        ctx.fillStyle = '#0b1220'; ctx.fillRect(x + 42, y + 82, 170, 8);
+      }
+
+      function drawShelfRack(x, y, color) {
+        ctx.fillStyle = '#111827'; ctx.fillRect(x - 4, y - 4, 142, 110);
+        ctx.fillStyle = color; ctx.fillRect(x, y, 134, 102);
+        for (let r = 0; r < 3; r++) {
+          ctx.fillStyle = '#0b1220'; ctx.fillRect(x + 10, y + 18 + r * 26, 114, 5);
+          for (let i = 0; i < 5; i++) {
+            ctx.fillStyle = ['#38bdf8','#f472b6','#a7f3d0','#ffd84d'][i % 4];
+            ctx.fillRect(x + 16 + i * 21, y + 6 + r * 26, 10, 16);
+          }
+        }
+      }
+
+      function drawMicroscopeLarge(x, y) {
+        ctx.fillStyle = 'rgba(0,0,0,.28)'; drawRoundRect(x + 6, y + 7, 112, 112, 9); ctx.fill();
+        ctx.fillStyle = '#0d1524'; drawRoundRect(x, y, 112, 112, 9); ctx.fill();
+        ctx.fillStyle = '#1e293b'; ctx.fillRect(x + 20, y + 82, 72, 12);
+        ctx.fillStyle = '#cbd5e1'; ctx.fillRect(x + 52, y + 28, 12, 54);
+        ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 9; ctx.beginPath(); ctx.arc(x + 56, y + 44, 31, -1.1, 1.4); ctx.stroke();
+        ctx.fillStyle = '#38bdf8'; ctx.fillRect(x + 42, y + 86, 38, 6);
+        drawText('Microscope', x + 56, y + 108, 9, '#eaf2ff', 'center', 850);
+      }
+
+      function drawTEERStation(x, y) {
+        drawConsolePanel(x, y, 230, 68, '#236b75', 'TEER + barrier station', '');
+        ctx.fillStyle = '#0b1220'; ctx.fillRect(x + 26, y + 38, 46, 11); ctx.fillRect(x + 85, y + 38, 46, 11); ctx.fillRect(x + 144, y + 38, 46, 11);
+        ctx.fillStyle = '#38bdf8'; ctx.fillRect(x + 31, y + 41, 36, 5); ctx.fillStyle = '#22c55e'; ctx.fillRect(x + 90, y + 41, 36, 5); ctx.fillStyle = '#f472b6'; ctx.fillRect(x + 149, y + 41, 36, 5);
+      }
+
+      function drawWallImageGrid(x, y) {
+        ctx.fillStyle = '#0d1524'; drawRoundRect(x, y, 210, 112, 8); ctx.fill();
+        ctx.fillStyle = '#143a4a'; drawRoundRect(x + 8, y + 8, 194, 96, 6); ctx.fill();
+        for (let r = 0; r < 2; r++) for (let c = 0; c < 3; c++) {
+          const px = x + 18 + c * 60, py = y + 18 + r * 38;
+          ctx.fillStyle = '#0b1220'; ctx.fillRect(px, py, 48, 28);
+          ctx.fillStyle = ['#38bdf8','#a78bfa','#22c55e','#f472b6'][c + r];
+          ctx.fillRect(px + 8, py + 7, 9, 9); ctx.fillRect(px + 24, py + 12, 12, 8);
+        }
+      }
+
+      function drawServerCabinet(x, y) {
+        ctx.fillStyle = 'rgba(0,0,0,.30)'; ctx.fillRect(x + 5, y + 7, 42, 136);
+        ctx.fillStyle = '#0d1524'; ctx.fillRect(x, y, 42, 136);
+        for (let i = 0; i < 7; i++) {
+          ctx.fillStyle = '#1f2937'; ctx.fillRect(x + 5, y + 8 + i * 18, 32, 12);
+          ctx.fillStyle = i % 2 ? '#38bdf8' : '#22c55e'; ctx.fillRect(x + 10, y + 12 + i * 18, 8, 3);
+          ctx.fillStyle = '#94a3b8'; ctx.fillRect(x + 22, y + 12 + i * 18, 9, 3);
+        }
+      }
+
+      function drawDataDesk(x, y, label) {
+        drawConsolePanel(x, y, 300, 72, '#334a95', label, '');
+        drawMonitor(x + 28, y - 4, '');
+        drawMonitor(x + 154, y - 4, '');
+      }
+
+      function drawWallChart(x, y) {
+        ctx.fillStyle = '#0d1524'; drawRoundRect(x, y, 150, 94, 6); ctx.fill();
+        ctx.fillStyle = '#f8fafc'; ctx.fillRect(x + 8, y + 8, 134, 78);
+        ctx.fillStyle = '#1d4ed8'; ctx.fillRect(x + 22, y + 58, 18, 20);
+        ctx.fillStyle = '#22c55e'; ctx.fillRect(x + 52, y + 42, 18, 36);
+        ctx.fillStyle = '#f97316'; ctx.fillRect(x + 82, y + 28, 18, 50);
+        ctx.fillStyle = '#a78bfa'; ctx.fillRect(x + 112, y + 50, 18, 28);
+        ctx.fillStyle = '#334155'; ctx.fillRect(x + 18, y + 20, 96, 3);
+      }
+
+      function drawConferenceTable(x, y) {
+        ctx.fillStyle = 'rgba(0,0,0,.26)'; drawRoundRect(x + 8, y + 9, 245, 92, 24); ctx.fill();
+        ctx.fillStyle = '#0d1524'; drawRoundRect(x, y, 245, 92, 22); ctx.fill();
+        ctx.fillStyle = '#75532d'; drawRoundRect(x + 8, y + 8, 229, 76, 18); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(x + 30, y + 18, 185, 5);
+        drawChair(x + 42, y - 12, '#16a34a'); drawChair(x + 114, y - 12, '#16a34a'); drawChair(x + 186, y - 12, '#16a34a');
+        drawChair(x + 42, y + 102, '#16a34a'); drawChair(x + 114, y + 102, '#16a34a'); drawChair(x + 186, y + 102, '#16a34a');
+      }
+
+      function drawRoomAmbientNPCs(room) {
+        if (room === 'hospital') {
+          drawNPC(134, 314, 'Nurse', '...', false, { small: true });
+          drawNPC(482, 365, 'Technician', '...', false, { small: true, noLabel: true });
+          drawNPC(824, 304, 'Endoscopy Tech', '...', false, { small: true, noLabel: true });
+        } else if (room === 'culture') {
+          drawNPC(390, 310, 'Researcher', '...', false, { small: true, noLabel: true });
+          drawNPC(770, 430, 'Trainee', '...', false, { small: true, noLabel: true });
+        } else if (room === 'incubator') {
+          drawNPC(382, 322, 'Lab Tech', '...', false, { small: true, noLabel: true });
+          drawNPC(812, 300, 'QC Runner', '...', false, { small: true, noLabel: true });
+        } else if (room === 'imaging') {
+          drawNPC(418, 300, 'Image Analyst', '...', false, { small: true, noLabel: true });
+          drawNPC(804, 302, 'Microscopist', '...', false, { small: true, noLabel: true });
+        } else if (room === 'data') {
+          drawNPC(438, 300, 'Bioinformatician', '...', false, { small: true, noLabel: true });
+          drawNPC(814, 302, 'QA Officer', '...', false, { small: true, noLabel: true });
+        } else if (room === 'translation') {
+          drawNPC(428, 310, 'Industry Partner', '...', false, { small: true, noLabel: true });
+          drawNPC(806, 302, 'Training Lead', '...', false, { small: true, noLabel: true });
+        }
+      }
+
+      function drawRoomFurniture(room) {
+        if (room === 'platform') {
+          drawPlatformHallRoom();
+        } else if (room === 'hospital') {
+          drawFloorRug(210, 302, 178, 80, '#1d4ed8');
+          drawReceptionDesk(82, 350, 240, 78, '#31517b', 'Consent + metadata desk');
+          drawProcedureBed(132, 184);
+          drawCabinet(78, 168, '#3868a8');
+          drawConsolePanel(555, 160, 305, 104, '#245b94', 'Colonoscopy sample station', 'scope');
+          drawScopeConsole(702, 182);
+          drawSampleTray(606, 326, 'Biopsy tubes');
+          drawConsolePanel(610, 366, 230, 70, '#476b9e', 'Sample ID + cold chain', 'metadata');
+          drawSinkStation(404, 166);
+          drawPlantPot(874, 398);
+        } else if (room === 'culture') {
+          drawFloorRug(230, 304, 170, 76, '#16a34a');
+          drawLaminarHood(560, 160);
+          drawConsolePanel(535, 330, 290, 76, '#356f48', 'Matrix · medium · growth factors', 'protocol');
+          drawDish(688, 390, 1.2);
+          drawIncubatorRack(94, 168, '#2f7b4a');
+          drawSampleTray(375, 348, 'Organoid plates');
+          drawCabinet(790, 300, '#315a42');
+          drawPlantPot(842, 182);
+        } else if (room === 'incubator') {
+          drawFloorRug(250, 304, 170, 76, '#ea580c');
+          drawIncubatorRack(535, 162, '#b96d2d');
+          drawIncubatorRack(690, 162, '#8b4f1f');
+          drawConsolePanel(532, 326, 315, 80, '#b06628', 'Medium + sterile handling', 'feed schedule');
+          drawCabinet(88, 166, '#7d4b21');
+          drawShelfRack(348, 166, '#73431f');
+          drawSampleTray(380, 356, 'Sterile tips');
+          drawPlantPot(854, 390);
+        } else if (room === 'imaging') {
+          drawFloorRug(220, 310, 172, 76, '#0891b2');
+          drawMicroscopeLarge(552, 160);
+          drawConsolePanel(642, 162, 220, 96, '#246f77', 'Live microscopy', 'QC images');
+          drawTEERStation(596, 330);
+          drawConsolePanel(608, 404, 250, 64, '#2a8390', 'Readout panel', 'TEER + barrier');
+          drawWallImageGrid(86, 168);
+          drawSampleTray(360, 364, 'Stained organoids');
+          drawPlantPot(858, 390);
+        } else if (room === 'data') {
+          drawFloorRug(225, 310, 174, 76, '#4f46e5');
+          drawServerCabinet(78, 166); drawServerCabinet(126, 166); drawServerCabinet(174, 166);
+          drawConsolePanel(520, 160, 335, 96, '#394a90', 'Analysis workstation', 'QC dashboard');
+          drawMonitor(694, 176, 'Dashboard');
+          drawDataDesk(536, 330, 'Replicates + SOP');
+          drawConsolePanel(650, 402, 210, 58, '#4358aa', 'FAIR report export', 'analysis log');
+          drawWallChart(350, 162);
+          drawPlantPot(850, 386);
+        } else if (room === 'translation') {
+          drawFloorRug(220, 310, 174, 76, '#db2777');
+          drawConferenceTable(112, 340);
+          drawConsolePanel(520, 154, 335, 108, '#2e7b43', 'Client recommendation board', 'decision matrix');
+          drawGreenhouseRoof(686, 154, 220);
+          drawConsolePanel(560, 350, 255, 76, '#389250', 'Training + handoff', 'final package');
+          drawWallChart(86, 166);
+          drawSampleTray(414, 362, 'Report pack');
+          drawPlantPot(850, 386);
+        }
+      }
+
+      function drawPlatformHallRoom() {
+        drawFloorRug(288, 312, 190, 84, '#31517b');
+        drawPlantPot(66, 455); drawPlantPot(880, 452); drawPlantPot(458, 178); drawPlantPot(612, 178);
+        drawShelfRack(62, 168, '#243244');
+        const booths = [
+          { x: 86, y: 156 }, { x: 255, y: 156 }, { x: 424, y: 156 }, { x: 593, y: 156 },
+          { x: 86, y: 350 }, { x: 424, y: 372 }, { x: 593, y: 350 }
+        ];
+        PLATFORMS.forEach((p, i) => drawPlatformPod(p, booths[i].x, booths[i].y, i + 1));
+        const scenario = state.platformQueue[state.platformRound];
+        if (scenario && !state.completed.platform) drawMatchPanel(scenario);
+        else drawGenericPlatformPanel();
+      }
+
+      function drawRug(x, y, w, h) {
+        ctx.fillStyle = '#31517b'; ctx.beginPath(); ctx.ellipse(x, y, w / 2, h / 2, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#7da7d9'; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(x, y, w / 2 - 12, h / 2 - 9, 0, 0, Math.PI * 2); ctx.stroke();
+      }
+
+      function drawMatchPanel(scenario) {
+        const ranks = rankedPlatforms(scenario).slice(0, 7);
+        const x = 745, y = 146, w = 185, h = 350;
+        ctx.fillStyle = 'rgba(0,0,0,.35)'; drawRoundRect(x + 6, y + 6, w, h, 12); ctx.fill();
+        ctx.fillStyle = '#111b2e'; drawRoundRect(x, y, w, h, 12); ctx.fill();
+        ctx.strokeStyle = '#73839b'; ctx.lineWidth = 3; ctx.stroke();
+        drawText('Match Scores', x + w / 2, y + 24, 15, '#fff7df', 'center', 950);
+        ranks.forEach((r, i) => {
+          const yy = y + 55 + i * 38;
+          const col = i === 0 ? '#ffd84d' : i === 1 ? '#38bdf8' : i === 2 ? '#a78bfa' : '#94a3b8';
+          ctx.fillStyle = col; drawRoundRect(x + 12, yy - 14, 26, 24, 4); ctx.fill();
+          drawText(String(i + 1), x + 25, yy - 2, 13, '#0b1220', 'center', 950);
+          drawText(r.platform.name, x + 48, yy - 7, 12, '#f8fafc', 'left', 950);
+          drawStars(x + 50, yy + 10, r.score);
+          ctx.fillStyle = '#0a1320'; drawRoundRect(x + 116, yy + 3, 50, 8, 999); ctx.fill();
+          ctx.fillStyle = col; drawRoundRect(x + 116, yy + 3, 50 * r.score / 100, 8, 999); ctx.fill();
+          drawText(Math.round(r.score), x + 176, yy + 7, 10, '#e5edf8', 'center', 900);
+        });
+        drawText('Talk to the client', x + w / 2, y + h - 24, 10, '#cbd5e1', 'center', 800);
+      }
+
+      function drawGenericPlatformPanel() {
+        const x = 745, y = 146, w = 185, h = 220;
+        ctx.fillStyle = '#162136'; drawRoundRect(x, y, w, h, 10); ctx.fill();
+        ctx.strokeStyle = '#708099'; ctx.lineWidth = 3; ctx.stroke();
+        drawText('Platform Codex', x + w / 2, y + 26, 15, '#fff8dd', 'center', 950);
+        drawWrappedText('Each booth is a gut-on-chip option. Talk to the client during the Platform Hall stage, then choose the best match.', x + 16, y + 58, w - 32, 17, '#cbd5e1', 11, 800);
+      }
+
+      function drawStars(x, y, score) {
+        const stars = Math.round(score / 20);
+        for (let i = 0; i < 5; i++) drawText(i < stars ? '★' : '☆', x + i * 13, y, 11, i < stars ? '#ffd84d' : '#596579', 'left', 900);
+      }
+
+      function drawDialoguePreview(scenario) {
+        const x = 270, y = 487, w = 450, h = 82;
+        ctx.fillStyle = '#0b1220'; drawRoundRect(x + 5, y + 5, w, h, 8); ctx.fill();
+        ctx.fillStyle = '#111d31'; drawRoundRect(x, y, w, h, 8); ctx.fill();
+        ctx.strokeStyle = '#71819b'; ctx.lineWidth = 3; ctx.stroke();
+        drawText(scenario.client, x + 18, y + 18, 12, '#ffd84d', 'left', 950);
+        drawWrappedText(scenario.question, x + 18, y + 33, w - 36, 16, '#edf6ff', 11, 800);
+      }
+
+      function drawLabBench(x, y, w, h, color, label) {
+        ctx.fillStyle = 'rgba(0,0,0,.30)'; drawRoundRect(x + 7, y + 8, w, h, 8); ctx.fill();
+        ctx.fillStyle = '#111827'; drawRoundRect(x - 4, y - 4, w + 8, h + 8, 8); ctx.fill();
+        ctx.fillStyle = color; drawRoundRect(x, y, w, h, 7); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.16)'; ctx.fillRect(x + 8, y + 8, w - 16, 5);
+        ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.fillRect(x + 8, y + h - 14, w - 16, 6);
+        drawText(label, x + w / 2, y + h / 2, 12, '#fff7df', 'center', 900);
+      }
+
+      function drawCabinet(x, y, color) {
+        ctx.fillStyle = '#111827'; ctx.fillRect(x - 4, y - 4, 84, 150);
+        ctx.fillStyle = color; ctx.fillRect(x, y, 76, 142);
+        for (let i = 0; i < 4; i++) {
+          ctx.fillStyle = 'rgba(255,255,255,.15)'; ctx.fillRect(x + 9, y + 12 + i * 32, 58, 8);
+          ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.fillRect(x + 9, y + 25 + i * 32, 58, 5);
+        }
+      }
+
+      function drawScopeConsole(x, y) {
+        drawMonitor(x, y, 'Scope view');
+        ctx.fillStyle = '#111827'; drawRoundRect(x - 54, y + 88, 220, 36, 6); ctx.fill();
+        ctx.fillStyle = '#38bdf8'; ctx.fillRect(x - 40, y + 102, 64, 5);
+        ctx.fillStyle = '#22c55e'; ctx.fillRect(x + 40, y + 102, 78, 5);
+      }
+
+      function drawIncubatorRack(x, y, color) {
+        ctx.fillStyle = '#111827'; ctx.fillRect(x - 5, y - 5, 190, 96);
+        ctx.fillStyle = color; ctx.fillRect(x, y, 180, 86);
+        for (let i = 0; i < 4; i++) {
+          ctx.fillStyle = '#dbeafe'; ctx.fillRect(x + 14 + i * 40, y + 18, 25, 34);
+          ctx.fillStyle = '#a7f3d0'; ctx.fillRect(x + 17 + i * 40, y + 21, 19, 26);
+          ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(x + 20 + i * 40, y + 23, 4, 22);
+        }
+      }
+
+      function drawBench(x, y, w, h, color, label) {
+        drawLabBench(x, y, w, h, color, label);
+      }
+
+      function drawMonitor(x, y, label) {
+        ctx.fillStyle = '#0b1220'; drawRoundRect(x + 4, y + 5, 118, 76, 7); ctx.fill();
+        ctx.fillStyle = '#111827'; drawRoundRect(x, y, 118, 76, 7); ctx.fill();
+        ctx.fillStyle = '#1d9bd7'; ctx.fillRect(x + 10, y + 10, 98, 50);
+        ctx.fillStyle = 'rgba(255,255,255,.26)'; ctx.fillRect(x + 18, y + 19, 52, 5); ctx.fillRect(x + 18, y + 32, 76, 5); ctx.fillRect(x + 18, y + 45, 36, 5);
+        ctx.fillStyle = '#0b1220'; ctx.fillRect(x + 47, y + 76, 24, 13); ctx.fillRect(x + 31, y + 88, 56, 6);
+        drawText(label, x + 59, y + 108, 11, '#edf6ff', 'center', 850);
+      }
+
+      function drawDish(x, y, scale) {
+        ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale);
+        ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(5, 8, 60, 26, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#1b4a67'; ctx.beginPath(); ctx.ellipse(0, 0, 58, 26, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#94e2ff'; ctx.lineWidth = 4; ctx.stroke();
+        ctx.fillStyle = 'rgba(148,226,255,.22)'; ctx.beginPath(); ctx.ellipse(0, -2, 48, 19, 0, 0, Math.PI * 2); ctx.fill();
+        for (let i = 0; i < 11; i++) {
+          const colors = ['#a78bfa', '#22c55e', '#f59e0b', '#38bdf8'];
+          ctx.fillStyle = colors[i % colors.length];
+          ctx.fillRect(-38 + (i % 6) * 15, -10 + Math.floor(i / 6) * 15, 8, 8);
+        }
+        ctx.restore();
+      }
+
+      function drawPlatformPod(p, x, y, number = 1) {
+        const colors = {
+          emulate: '#1d4ed8', cnbio: '#a34819', biomimx: '#287a3c', mepsgen: '#5541a4',
+          humix: '#b58b0b', dynamic42: '#157280', mimetas: '#9d3b88'
+        };
+        const c = colors[p.id] || '#334155';
+        ctx.fillStyle = 'rgba(0,0,0,.32)'; drawRoundRect(x + 6, y + 7, 128, 100, 8); ctx.fill();
+        ctx.fillStyle = '#0d1524'; drawRoundRect(x - 4, y - 4, 136, 108, 8); ctx.fill();
+        ctx.fillStyle = '#263142'; drawRoundRect(x, y, 128, 100, 6); ctx.fill();
+        ctx.fillStyle = c; drawRoundRect(x + 5, y - 16, 118, 28, 5); ctx.fill();
+        drawText(`${number} ${p.name}`, x + 64, y - 2, 13, '#fff7df', 'center', 950);
+        ctx.fillStyle = '#0b1220'; ctx.fillRect(x + 13, y + 24, 102, 44);
+        ctx.fillStyle = 'rgba(56,189,248,.85)'; ctx.fillRect(x + 21, y + 33, 84, 4); ctx.fillRect(x + 25, y + 47, 52, 4);
+        if (p.id === 'humix') { ctx.fillStyle = '#f472b6'; ctx.fillRect(x + 24, y + 40, 76, 9); ctx.fillStyle = '#38bdf8'; ctx.fillRect(x + 24, y + 53, 76, 8); }
+        if (p.id === 'biomimx') { ctx.fillStyle = '#f472b6'; ctx.fillRect(x + 28, y + 44, 72, 10); ctx.fillStyle = '#fbbf24'; ctx.fillRect(x + 48, y + 37, 24, 5); }
+        if (p.id === 'mimetas') { for (let i = 0; i < 5; i++) { ctx.fillStyle = i % 2 ? '#38bdf8' : '#f472b6'; ctx.fillRect(x + 23 + i*16, y + 36, 10, 24); } }
+        ctx.fillStyle = '#111827'; drawRoundRect(x + 20, y + 74, 88, 18, 4); ctx.fill();
+        drawText(p.subtitle.slice(0, 18), x + 64, y + 83, 9, '#cbd5e1', 'center', 800);
+      }
+
+      function drawNPC(x, y, name, emoji = '...', isActive = false, opts = {}) {
+        const scale = opts.small ? .82 : 1;
         if (isActive) {
           ctx.save();
-          ctx.globalAlpha = .9;
-          ctx.strokeStyle = '#fde047';
+          ctx.globalAlpha = .88;
+          ctx.strokeStyle = '#ffd84d';
           ctx.lineWidth = 4;
-          ctx.beginPath(); ctx.arc(x, y + 10, 36 + Math.sin(state.pulse * 0.08) * 3, 0, Math.PI * 2); ctx.stroke();
+          ctx.beginPath(); ctx.ellipse(x, y + 27 * scale, 31 * scale + Math.sin(state.pulse * 0.08) * 3, 13 * scale, 0, 0, Math.PI * 2); ctx.stroke();
           ctx.restore();
         }
-        ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(x, y + 28, 26, 10, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#0f172a'; drawRoundRect(x - 17, y - 2, 34, 42, 10); ctx.fill();
-        ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(x, y - 10, 18, 0, Math.PI * 2); ctx.fill();
-        drawText(emoji, x, y - 10, 20, '#111827', 'center', 900);
-        drawText(name, x, y + 58, 12, '#e5e7eb', 'center', 900);
-        if (isActive) {
-          ctx.fillStyle = '#fde047'; ctx.beginPath(); ctx.arc(x + 24, y - 28, 13, 0, Math.PI * 2); ctx.fill();
-          drawText('!', x + 24, y - 28, 17, '#111827', 'center', 950);
+        // shadow
+        ctx.fillStyle = 'rgba(0,0,0,.30)'; ctx.beginPath(); ctx.ellipse(x, y + 34 * scale, 22 * scale, 8 * scale, 0, 0, Math.PI * 2); ctx.fill();
+        // legs
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(x - 10 * scale, y + 14 * scale, 7 * scale, 20 * scale);
+        ctx.fillRect(x + 4 * scale, y + 14 * scale, 7 * scale, 20 * scale);
+        // coat/body
+        const coat = name.toLowerCase().includes('client') || name.toLowerCase().includes('recruiter') ? '#2563a5' : '#eef6ff';
+        ctx.fillStyle = '#0b1220'; ctx.fillRect(x - 15 * scale, y - 8 * scale, 30 * scale, 30 * scale);
+        ctx.fillStyle = coat; ctx.fillRect(x - 13 * scale, y - 6 * scale, 26 * scale, 28 * scale);
+        ctx.fillStyle = name.toLowerCase().includes('client') || name.toLowerCase().includes('recruiter') ? '#93c5fd' : '#38bdf8';
+        ctx.fillRect(x - 5 * scale, y - 3 * scale, 10 * scale, 23 * scale);
+        // head/hair
+        ctx.fillStyle = '#f0b37e'; ctx.fillRect(x - 12 * scale, y - 26 * scale, 24 * scale, 22 * scale);
+        ctx.fillStyle = name.toLowerCase().includes('scientist') ? '#6b3f25' : '#3a2318';
+        ctx.fillRect(x - 14 * scale, y - 31 * scale, 28 * scale, 10 * scale);
+        ctx.fillRect(x - 12 * scale, y - 24 * scale, 7 * scale, 8 * scale);
+        ctx.fillStyle = '#0b1220';
+        ctx.fillRect(x - 6 * scale, y - 16 * scale, 3 * scale, 3 * scale);
+        ctx.fillRect(x + 5 * scale, y - 16 * scale, 3 * scale, 3 * scale);
+        if (name.toLowerCase().includes('scientist')) {
+          ctx.strokeStyle = '#0b1220'; ctx.lineWidth = 1.5; ctx.strokeRect(x - 9 * scale, y - 19 * scale, 8 * scale, 6 * scale); ctx.strokeRect(x + 3 * scale, y - 19 * scale, 8 * scale, 6 * scale);
+        }
+        // speech bubble
+        if (isActive || emoji === '!' || emoji === '...') {
+          const bx = x + 22 * scale, by = y - 48 * scale;
+          ctx.fillStyle = '#f8fafc'; drawRoundRect(bx - 16, by - 12, 36, 25, 5); ctx.fill();
+          ctx.fillStyle = '#f8fafc'; ctx.fillRect(bx - 3, by + 9, 8, 8);
+          drawText(isActive ? '!' : emoji, bx + 2, by, 15, '#111827', 'center', 950);
+        }
+        if (!opts.noLabel) {
+          const label = name.length > 15 ? name.split(' ')[0] : name;
+          ctx.fillStyle = '#0b1220'; drawRoundRect(x - 48 * scale, y + 46 * scale, 96 * scale, 22 * scale, 4); ctx.fill();
+          ctx.strokeStyle = '#74839b'; ctx.lineWidth = 2; ctx.stroke();
+          drawText(label, x, y + 57 * scale, 10 * scale, '#edf6ff', 'center', 900);
         }
       }
 
       function drawPlayer() {
         if (state.mini) return;
-        const x = player.x, y = player.y;
-        ctx.fillStyle = 'rgba(0,0,0,.24)'; ctx.beginPath(); ctx.ellipse(x, y + 18, 21, 8, 0, 0, Math.PI * 2); ctx.fill();
-        const walk = Math.sin(player.step * 0.28) * 3;
-        ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 5; ctx.lineCap = 'round';
-        ctx.beginPath(); ctx.moveTo(x - 7, y + 16); ctx.lineTo(x - 13, y + 28 + walk); ctx.moveTo(x + 7, y + 16); ctx.lineTo(x + 13, y + 28 - walk); ctx.stroke();
-        ctx.fillStyle = '#f8fafc'; drawRoundRect(x - 14, y - 4, 28, 32, 8); ctx.fill();
-        ctx.fillStyle = '#7c3aed'; drawRoundRect(x - 10, y + 2, 20, 20, 6); ctx.fill();
-        ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.arc(x, y - 14, 15, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#111827'; ctx.beginPath(); ctx.arc(x - 5, y - 16, 2, 0, Math.PI * 2); ctx.arc(x + 5, y - 16, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#111827'; ctx.fillRect(x - 12, y - 29, 24, 8);
+        const x = Math.round(player.x), y = Math.round(player.y);
+        const bob = Math.sin(player.step * 0.32) * 2;
+        ctx.fillStyle = 'rgba(0,0,0,.34)'; ctx.beginPath(); ctx.ellipse(x, y + 28, 22, 8, 0, 0, Math.PI * 2); ctx.fill();
+        // legs animate
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(x - 10, y + 10, 7, 22 + (player.dir === 'left' || player.dir === 'right' ? bob : -bob));
+        ctx.fillRect(x + 4, y + 10, 7, 22 + (player.dir === 'left' || player.dir === 'right' ? -bob : bob));
+        // outline and lab coat body
+        ctx.fillStyle = '#07111f'; ctx.fillRect(x - 17, y - 13, 34, 34);
+        ctx.fillStyle = '#f8fbff'; ctx.fillRect(x - 14, y - 10, 28, 31);
+        ctx.fillStyle = '#2f72b8'; ctx.fillRect(x - 6, y - 7, 12, 27);
+        ctx.fillStyle = '#c6d3e0'; ctx.fillRect(x - 14, y - 10, 7, 31); ctx.fillRect(x + 7, y - 10, 7, 31);
+        // head
+        ctx.fillStyle = '#f2b783'; ctx.fillRect(x - 13, y - 34, 26, 24);
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(x - 15, y - 39, 30, 10); ctx.fillRect(x - 12, y - 31, 8, 8); ctx.fillRect(x + 5, y - 34, 9, 8);
+        if (player.dir !== 'up') {
+          ctx.fillStyle = '#0b1220'; ctx.fillRect(x - 7, y - 22, 3, 3); ctx.fillRect(x + 6, y - 22, 3, 3);
+          ctx.fillStyle = '#8b3a2a'; ctx.fillRect(x - 3, y - 15, 7, 2);
+        }
+        // tiny badge
+        ctx.fillStyle = '#ffd84d'; ctx.fillRect(x + 10, y - 2, 4, 4);
       }
 
       function drawPrompt() {
         if (state.dialogOpen || state.mini || !state.running) return;
         const text = getHint();
-        if (!text || text === state.lastHint) {
-          // still draw, but no-op on storing; kept for prompt stability
-        }
         const nearDoor = state.scene === 'overworld' ? getNearDoor() : null;
         const nearNpc = state.scene !== 'overworld' && ROOM_INFO[state.scene] && dist({ x: player.x, y: player.y }, ROOM_INFO[state.scene].npc) < 92;
         const exit = state.scene !== 'overworld' && isNearExit();
         if (!nearDoor && !nearNpc && !exit) return;
         ctx.save();
-        const w = Math.min(380, Math.max(210, ctx.measureText(text).width + 50));
-        const x = clamp(player.x - w / 2, 14, W - w - 14);
-        const y = clamp(player.y - 78, 112, H - 95);
-        ctx.fillStyle = 'rgba(2,6,23,.86)'; drawRoundRect(x, y, w, 44, 14); ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.stroke();
-        drawText(text, x + w / 2, y + 22, 14, '#fff', 'center', 900);
+        const w = Math.min(470, Math.max(245, ctx.measureText(text).width + 64));
+        const x = clamp(player.x - w / 2, 16, W - w - 16);
+        const y = clamp(player.y - 88, 100, H - 118);
+        ctx.fillStyle = '#0b1220'; drawRoundRect(x + 5, y + 5, w, 48, 7); ctx.fill();
+        ctx.fillStyle = '#172235'; drawRoundRect(x, y, w, 48, 7); ctx.fill();
+        ctx.strokeStyle = '#7d8da6'; ctx.lineWidth = 3; ctx.stroke();
+        drawText('✦ ' + text, x + w / 2, y + 24, 13, '#fff7df', 'center', 950);
         ctx.restore();
+      }
+
+      function drawGameHud() {
+        // v4: no in-canvas quest/stats overlay. Mission text and scores are in the clean UI below/side of the canvas.
+        return;
+      }
+
+      function drawQuestBanner() {
+        const st = STAGES[state.stageIndex] || STAGES[STAGES.length - 1];
+        const text = state.gameComplete ? 'Quest complete: show your score to the stand team' : `New quest: ${st.label}`;
+        const x = 14, y = 14, w = 640, h = 58;
+        ctx.fillStyle = 'rgba(4,9,20,.42)'; drawRoundRect(x + 5, y + 5, w, h, 8); ctx.fill();
+        ctx.fillStyle = '#111827'; drawRoundRect(x, y, w, h, 8); ctx.fill();
+        ctx.strokeStyle = '#8c98aa'; ctx.lineWidth = 3; ctx.stroke();
+        ctx.fillStyle = '#b7791f'; drawRoundRect(x + 18, y + 13, 42, 34, 5); ctx.fill();
+        ctx.fillStyle = '#ffe7a3'; ctx.fillRect(x + 24, y + 19, 30, 22);
+        drawText('!', x + 60, y + 17, 13, '#ffd84d', 'center', 950);
+        drawText(text, x + 82, y + 30, 18, '#fff7df', 'left', 950);
+        drawText(getHint(), x + 82, y + 49, 10, '#bac8db', 'left', 850);
+      }
+
+      function drawCanvasStats() {
+        const x = 674, y = 14, w = 270, h = 104;
+        ctx.fillStyle = 'rgba(4,9,20,.42)'; drawRoundRect(x + 5, y + 5, w, h, 8); ctx.fill();
+        ctx.fillStyle = '#111827'; drawRoundRect(x, y, w, h, 8); ctx.fill();
+        ctx.strokeStyle = '#8c98aa'; ctx.lineWidth = 3; ctx.stroke();
+        drawHudBar(x + 18, y + 25, 230, state.scores.viability, '♥ Viability', '#ef4444');
+        drawHudBar(x + 18, y + 55, 230, state.scores.reproducibility, '⚗ Reproducibility', '#38bdf8');
+        drawHudBar(x + 18, y + 85, 230, state.scores.translation, '◎ Translation', '#7ee256');
+      }
+
+      function drawHudBar(x, y, w, value, label, color) {
+        drawText(label, x, y - 10, 11, '#edf6ff', 'left', 900);
+        ctx.fillStyle = '#08111e'; drawRoundRect(x + 112, y - 16, w - 116, 10, 999); ctx.fill();
+        ctx.fillStyle = color; drawRoundRect(x + 112, y - 16, (w - 116) * clamp(value) / 100, 10, 999); ctx.fill();
+        drawText(`${Math.round(clamp(value))}/100`, x + w, y - 11, 10, '#edf6ff', 'right', 850);
       }
 
       function draw() {
         state.pulse += 1;
+        ctx.setTransform(RENDER_SCALE, 0, 0, RENDER_SCALE, 0, 0);
+        ctx.imageSmoothingEnabled = false;
+        ctx.clearRect(0, 0, W, H);
         if (state.mini) {
           if (state.mini.type === 'colonoscopy') drawColonoscopy();
           else if (state.mini.type === 'incubator') drawIncubator();
@@ -866,11 +1678,12 @@
         }
         drawPlayer();
         drawPrompt();
+        drawGameHud();
       }
 
       function getObstacles() {
         if (state.scene === 'overworld') {
-          return BUILDINGS.map(b => ({ x: b.x - 4, y: b.y - 18, w: b.w + 8, h: b.h + 22, door: b.door }));
+          return BUILDINGS.map(b => ({ x: b.x - 4, y: b.y - 18, w: b.w + 8, h: b.h + 22, door: b.door, building: b }));
         }
         const walls = [
           { x: 0, y: 0, w: W, h: 48 },
@@ -882,9 +1695,15 @@
         return walls;
       }
 
+      function doorPassage(ob) {
+        // Forgiving doorway corridor: prevents the player being caught on building edges.
+        const d = ob.door;
+        return { x: d.x - 18, y: d.y - 76, w: d.w + 36, h: d.h + 152 };
+      }
+
       function collidesWithObstacles(rect) {
         for (const ob of getObstacles()) {
-          if (state.scene === 'overworld' && ob.door && rectsOverlap(rect, { x: ob.door.x - 6, y: ob.door.y - 8, w: ob.door.w + 12, h: ob.door.h + 20 })) {
+          if (state.scene === 'overworld' && ob.door && rectsOverlap(rect, doorPassage(ob))) {
             continue;
           }
           if (rectsOverlap(rect, ob)) return true;
@@ -892,20 +1711,114 @@
         return false;
       }
 
+      function ensurePlayerCanMove() {
+        if (!collidesWithObstacles(playerRectAt(player.x, player.y))) return;
+        const candidates = state.scene === 'overworld'
+          ? [
+              { x: W / 2, y: 300 }, { x: W / 2, y: H - 48 }, { x: 150, y: 300 },
+              { x: 820, y: 300 }, { x: 60, y: H - 48 }, { x: W - 60, y: H - 48 }
+            ]
+          : [
+              { x: W / 2, y: H - 125 }, { x: W / 2, y: H - 92 },
+              { x: 160, y: 300 }, { x: 790, y: 300 }
+            ];
+        for (const c of candidates) {
+          if (!collidesWithObstacles(playerRectAt(c.x, c.y))) {
+            player.x = c.x;
+            player.y = c.y;
+            player.target = null;
+            player.path = [];
+            return;
+          }
+        }
+      }
+
+      function pointInRect(pt, rect) {
+        return pt.x >= rect.x && pt.x <= rect.x + rect.w && pt.y >= rect.y && pt.y <= rect.y + rect.h;
+      }
+
+      function doorApproachPoint(b) {
+        // Front-facing door approach point. Bottom-row doors now sit on the front of the buildings.
+        return { x: b.door.x + b.door.w / 2, y: b.door.y + b.door.h + 14 };
+      }
+
+      function routeSideForBuilding(b) {
+        if (b.id === 'incubator') return b.x + b.w + 38;
+        if (b.id === 'imaging') return b.x - 34;
+        if (b.id === 'data') return b.x + b.w + 34;
+        if (b.id === 'translation') return b.x - 28;
+        return b.door.x + b.door.w / 2;
+      }
+
+      function setPath(points) {
+        const cleaned = points
+          .map(pt => ({ x: clamp(pt.x, 22, W - 22), y: clamp(pt.y, 22, H - 22) }))
+          .filter(pt => Math.hypot(pt.x - player.x, pt.y - player.y) > 12);
+        player.path = cleaned;
+        player.target = player.path.length ? player.path.shift() : null;
+      }
+
+      function setPlayerTarget(pos) {
+        player.path = [];
+        player.target = null;
+        if (state.scene === 'overworld') {
+          const tappedBuilding = BUILDINGS.find(b =>
+            pointInRect(pos, { x: b.x - 18, y: b.y - 28, w: b.w + 36, h: b.h + 52 }) ||
+            pointInRect(pos, { x: b.door.x - 28, y: b.door.y - 28, w: b.door.w + 56, h: b.door.h + 56 })
+          );
+          if (tappedBuilding) {
+            const door = doorApproachPoint(tappedBuilding);
+            const hub = { x: W / 2, y: 300 };
+            if (tappedBuilding.y < H / 2) {
+              const lane = { x: door.x, y: 300 };
+              setPath([hub, lane, door]);
+            } else {
+              const sideX = clamp(routeSideForBuilding(tappedBuilding), 42, W - 42);
+              setPath([hub, { x: sideX, y: hub.y }, { x: sideX, y: door.y }, door]);
+            }
+            return;
+          }
+        } else {
+          const info = ROOM_INFO[state.scene];
+          const exitZone = { x: W / 2 - 66, y: H - 96, w: 132, h: 80 };
+          if (rectsOverlap({ x: pos.x - 12, y: pos.y - 12, w: 24, h: 24 }, exitZone)) {
+            player.target = { x: W / 2, y: H - 72 };
+            return;
+          }
+          if (info && dist(pos, info.npc) < 130) {
+            player.target = { x: info.npc.x, y: info.npc.y + 58 };
+            return;
+          }
+        }
+        player.target = pos;
+      }
+
       function updatePlayer() {
         if (!state.running || state.dialogOpen || state.mini) return;
+        ensurePlayerCanMove();
         let vx = 0, vy = 0;
         if (keys.left) vx -= 1;
         if (keys.right) vx += 1;
         if (keys.up) vy -= 1;
         if (keys.down) vy += 1;
-        if ((vx || vy) && player.target) player.target = null;
-        if (!vx && !vy && player.target) {
-          const dx = player.target.x - player.x;
-          const dy = player.target.y - player.y;
-          const d = Math.hypot(dx, dy);
-          if (d < 6) player.target = null;
-          else { vx = dx / d; vy = dy / d; }
+        if (vx || vy) {
+          player.target = null;
+          player.path = [];
+        }
+        if (!vx && !vy) {
+          if (!player.target && player.path && player.path.length) player.target = player.path.shift();
+          if (player.target) {
+            const dx = player.target.x - player.x;
+            const dy = player.target.y - player.y;
+            const d = Math.hypot(dx, dy);
+            if (d < 7) {
+              player.target = null;
+              if (player.path && player.path.length) player.target = player.path.shift();
+            } else {
+              vx = dx / d;
+              vy = dy / d;
+            }
+          }
         }
         if (vx || vy) {
           const len = Math.hypot(vx, vy);
@@ -935,14 +1848,20 @@
         player.x = W / 2;
         player.y = H - 125;
         player.target = null;
+        player.path = [];
         updateUI();
       }
 
       function exitRoom() {
         const b = BUILDINGS.find(x => x.id === state.scene);
         state.scene = 'overworld';
-        if (b) { player.x = b.door.x + b.door.w / 2; player.y = b.door.y + 58; }
+        if (b) {
+          const door = doorApproachPoint(b);
+          player.x = door.x;
+          player.y = door.y;
+        }
         player.target = null;
+        player.path = [];
         updateUI();
       }
 
@@ -1446,9 +2365,9 @@
 
       function canvasToGameXY(evt) {
         const rect = canvas.getBoundingClientRect();
-        const x = (evt.clientX - rect.left) * (canvas.width / rect.width);
-        const y = (evt.clientY - rect.top) * (canvas.height / rect.height);
-        return { x: clamp(x, 0, W), y: clamp(y, 0, H) };
+        const x = (evt.clientX - rect.left) * (W / rect.width);
+        const y = (evt.clientY - rect.top) * (H / rect.height);
+        return { x, y };
       }
 
       let activePointerId = null;
@@ -1458,12 +2377,13 @@
         activePointerId = evt.pointerId;
         const pos = canvasToGameXY(evt);
         if (state.mini) state.mini.pointer = pos;
-        else player.target = pos;
+        else setPlayerTarget(pos);
       });
       canvas.addEventListener('pointermove', evt => {
         if (activePointerId !== evt.pointerId || !state.running || state.dialogOpen) return;
         const pos = canvasToGameXY(evt);
         if (state.mini) state.mini.pointer = pos;
+        else if (player.target || (player.path && player.path.length)) setPlayerTarget(pos);
       });
       canvas.addEventListener('pointerup', evt => {
         if (activePointerId === evt.pointerId) {
@@ -1511,8 +2431,27 @@
       ui.quickBtn.addEventListener('click', () => startGame('quick'));
       ui.extendedBtn.addEventListener('click', () => startGame('extended'));
 
+      window.__oqDebug = { state, player, enterBuilding, exitRoom, draw, updateUI, setScene(room) { state.scene = room; player.x = W / 2; player.y = H - 125; player.target = null; player.path = []; updateUI(); } };
       initBars();
-      updateUI();
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('autostart')) {
+        const mode = params.get('autostart') === 'extended' ? 'extended' : 'quick';
+        startGame(mode);
+        const forcedScene = params.get('scene');
+        if (forcedScene && (forcedScene === 'overworld' || ROOM_INFO[forcedScene])) {
+          state.scene = forcedScene;
+          if (forcedScene !== 'overworld') {
+            const idx = STAGES.findIndex(s => s.id === forcedScene);
+            if (idx >= 0) state.stageIndex = idx;
+            player.x = W / 2;
+            player.y = H - 125;
+            if (forcedScene === 'platform' && !state.platformQueue.length) state.platformQueue = buildPlatformQueue(mode);
+          }
+          updateUI();
+        }
+      } else {
+        updateUI();
+      }
       loop();
     })();
   </script>
