@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Organoid Quest: Pixel RPG v4</title>
+  <title>Organoid Quest: Night Shift at the Facility</title>
   <style>
     :root {
       --bg: #050914;
@@ -170,6 +170,26 @@
     }
     .objective strong { display: block; margin-bottom: 5px; color: #fff; font-size: 13px; }
     .objective span { color: #c1d0e2; font-size: 12px; line-height: 1.45; }
+    .signal-box {
+      padding: 12px;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at top right, rgba(124,58,237,.28), transparent 42%),
+        linear-gradient(180deg, rgba(21,34,56,.96), rgba(10,17,30,.96));
+      border: 2px solid #66758e;
+      box-shadow: inset 0 0 0 2px #08111e;
+      margin-bottom: 12px;
+    }
+    .signal-box strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #f8fafc;
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .signal-box span { display: block; color: #d8e5f5; font-size: 12px; line-height: 1.5; }
     .bar-group { display: grid; gap: 9px; margin: 12px 0; }
     .bar-row { display: grid; gap: 5px; }
     .bar-label { display: flex; justify-content: space-between; color: #e3eeff; font-size: 11.5px; font-weight: 900; }
@@ -178,7 +198,17 @@
     .inventory { display: flex; flex-wrap: wrap; gap: 7px; min-height: 32px; }
     .item { background: #152238; border: 2px solid #53657c; padding: 7px 9px; border-radius: 999px; font-size: 11px; font-weight: 900; color: #edf6ff; }
     .journal { margin: 12px 0 0; display: grid; gap: 7px; max-height: 176px; overflow: auto; padding-right: 3px; }
-    .log { font-size: 11px; color: #c4d3e4; background: rgba(8,17,30,.86); border-left: 4px solid #38bdf8; padding: 8px; border-radius: 9px; line-height: 1.4; }
+    .log {
+      font-size: 11px;
+      color: #d5e5f7;
+      background:
+        linear-gradient(180deg, rgba(13,24,40,.94), rgba(7,14,25,.94));
+      border-left: 4px solid #38bdf8;
+      padding: 8px;
+      border-radius: 9px;
+      line-height: 1.45;
+      box-shadow: inset 0 0 0 1px rgba(148,163,184,.15);
+    }
     .side-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
     .small-btn, .ghost-btn {
       padding: 9px 11px;
@@ -266,7 +296,7 @@
     <header>
       <div class="title-block">
         <h1>Organoid Quest: Pixel RPG</h1>
-        <p>A polished mobile-friendly RPG stand game for matching gut-on-chip platforms to biological questions.</p>
+        <p>A dreamlike educational RPG about gut-on-chip choices, fragile living models, and translational judgement.</p>
       </div>
       <div class="pill" id="modePill">🎮 QR-ready · mobile friendly</div>
     </header>
@@ -300,15 +330,20 @@
           <strong id="objectiveTitle">Clinical intake</strong>
           <span id="objectiveText">Enter the Hospital and complete a simplified colonoscopy sample-collection mini-game.</span>
         </div>
+        <div class="signal-box">
+          <strong id="signalTitle">Facility signal // night shift</strong>
+          <span id="signalText">A quiet campus, seven doors, one client question, and a facility waiting to see what kind of scientist you become.</span>
+        </div>
         <div class="bar-group" id="scoreBars"></div>
-        <h2>Collected items</h2>
+        <h2>Collected artifacts</h2>
         <div class="inventory" id="inventory"></div>
         <div class="side-actions">
           <button class="small-btn" id="codexBtn">Platform codex</button>
           <button class="small-btn" id="restartBtn">Restart</button>
         </div>
+        <h2>Field notes</h2>
         <div class="journal" id="journal"></div>
-        <p class="footer-note">Tip for visitors: on mobile, tap a building to auto-walk to its door, or use the D-pad and the big Talk / Use button.</p>
+        <p class="footer-note">Tip: the facility feels better if you treat it like a small adventure, not a quiz. On mobile, tap a building to auto-walk to its door, or use the D-pad and the big Talk / Use button.</p>
       </aside>
     </section>
   </main>
@@ -316,15 +351,16 @@
   <div class="overlay show" id="startOverlay">
     <div class="modal wide">
       <span class="speaker">🧫 Organoid Facility briefing</span>
-      <h2>Can you match a biological question to the right gut-on-chip platform?</h2>
-      <p>You are the Facility recruit. A client brings a biological question. Walk into buildings, collect a gut sample, choose a platform, build the model, analyse it, and make a translational recommendation.</p>
+      <h2>The night shift is awake. Can you turn a fragile biological question into a living model?</h2>
+      <p>You are the newest recruit in a dreamlike translational facility where every room answers a different part of the same scientific riddle. Walk the campus, gather the first tissue clue, choose the platform, grow the model, interrogate the data, and decide what deserves to reach the clinic.</p>
+      <p>Each stage is still educational, but the game now leans harder into atmosphere: the facility should feel like a place with secrets, routines, and consequences rather than a flat questionnaire.</p>
       <p class="kbd"><strong>Desktop:</strong> WASD / arrow keys + E, Space or Enter. <strong>Mobile:</strong> tap-to-walk or use the D-pad, then press Talk / Use.</p>
       <div class="mode-grid">
         <button class="choice" id="quickBtn">Quick stand demo
-          <small>One client case, one platform choice, shorter minigames. Best for busy exhibition traffic.</small>
+          <small>One client case, one platform choice, shorter minigames. Best for a short mysterious tour through the facility.</small>
         </button>
         <button class="choice" id="extendedBtn">Extended RPG
-          <small>Five client cases, harder platform trade-offs, more scoring feedback. Best on an iPad or when visitors have more time.</small>
+          <small>Five client cases, harder platform trade-offs, more scoring feedback, and a fuller chapter arc. Best on an iPad or when visitors have more time.</small>
         </button>
       </div>
     </div>
@@ -355,6 +391,8 @@
         dialogBox: document.getElementById('dialogBox'),
         objectiveTitle: document.getElementById('objectiveTitle'),
         objectiveText: document.getElementById('objectiveText'),
+        signalTitle: document.getElementById('signalTitle'),
+        signalText: document.getElementById('signalText'),
         scoreBars: document.getElementById('scoreBars'),
         inventory: document.getElementById('inventory'),
         journal: document.getElementById('journal'),
@@ -377,6 +415,58 @@
         { id: 'data', label: 'Data interpretation', objective: 'Choose a reproducible analysis plan and avoid over-claiming.' },
         { id: 'translation', label: 'Translation handoff', objective: 'Make the final recommendation for the client.' }
       ];
+
+      const STAGE_META = {
+        hospital: {
+          chapter: 'Chapter I // Borrowed Tissue',
+          banner: 'Consent, context, then the first living clue.',
+          signal: 'The hospital wing is quiet, but this is where the entire quest becomes real. Preserve the human story before you chase the data.',
+          roomSignal: 'Charts hum softly. The first true skill here is restraint: take only what the biology and the patient have willingly offered.',
+          log: 'Clinical intake unlocked. The facility only trusts downstream science when the sample arrives with context intact.'
+        },
+        platform: {
+          chapter: 'Chapter II // Hall of Models',
+          banner: 'A dozen beautiful systems. Only one should answer this case first.',
+          signal: 'The Platform Hall is the facility at its most seductive: polished hardware, bold claims, and just enough truth in each booth to mislead the impatient.',
+          roomSignal: 'The booths sparkle like promises. Ask which features serve the biology, not which brochure sounds smartest.',
+          log: 'Platform triage opened. This is the chapter where curiosity must become judgement.'
+        },
+        culture: {
+          chapter: 'Chapter III // Warm Glass, Slow Growth',
+          banner: 'Not every living model deserves the same recipe.',
+          signal: 'In the Culture Lab, the question shifts from selection to care. The model starts to inherit the personality of the choices you make here.',
+          roomSignal: 'Incubated possibility hangs in the air. Conditions are not background details; they are part of the experiment’s argument.',
+          log: 'Culture protocols online. Growth is no longer abstract; the model begins to remember what you asked it to become.'
+        },
+        incubator: {
+          chapter: 'Chapter IV // Stable Heat',
+          banner: 'Fragility becomes the lesson.',
+          signal: 'The incubator suite asks for patience rather than brilliance. A promising model can still fail if the routine is careless.',
+          roomSignal: 'Warm orange light, sterile rhythm, small mistakes with expensive consequences.',
+          log: 'Incubator run prepared. Viability is now a daily practice, not a theoretical score.'
+        },
+        imaging: {
+          chapter: 'Chapter V // What The Cells Reveal',
+          banner: 'A model is only useful if it can answer back.',
+          signal: 'Microscopes, TEER traces, and assay panels wait in the Imaging room. Pretty pictures are easy. Convincing evidence is harder.',
+          roomSignal: 'Screens flicker with almost-answers. The facility prefers readouts that can survive a skeptical meeting.',
+          log: 'Readouts and QC unlocked. Now the model must prove it is alive, stable, and relevant.'
+        },
+        data: {
+          chapter: 'Chapter VI // Signal Against Noise',
+          banner: 'Interpretation is where confidence becomes dangerous.',
+          signal: 'The Data Room is where the facility sheds its glamour. Numbers do not care what you hoped the platform would prove.',
+          roomSignal: 'Server fans whisper the oldest warning in research: a strong narrative can still sit on weak evidence.',
+          log: 'Data interpretation opened. The quest now depends on intellectual honesty more than momentum.'
+        },
+        translation: {
+          chapter: 'Chapter VII // What Reaches The Clinic',
+          banner: 'Recommendation is a moral act as much as a technical one.',
+          signal: 'The final room is not about sounding visionary. It is about deciding what this model can responsibly promise to another human being.',
+          roomSignal: 'The conference lights are bright, the language gets sharper, and uncertainty becomes part of the final deliverable.',
+          log: 'Translation handoff prepared. The facility is waiting to see whether you recommend with precision or with theater.'
+        }
+      };
 
       const PLATFORMS = [
         {
@@ -550,13 +640,75 @@
       ];
 
       const ROOM_INFO = {
-        hospital: { title: 'Hospital: clinical intake', npc: { x: 250, y: 280, name: 'Clinical Lead', emoji: '🩺' }, theme: '#1d4ed8' },
-        platform: { title: 'Platform Hall: client triage', npc: { x: 240, y: 280, name: 'Client Liaison', emoji: '🤝' }, theme: '#7c3aed' },
+        hospital: { title: 'Hospital: clinical intake', npc: { x: 250, y: 280, name: 'Clinical Lead', emoji: '🩺', approachY: 332 }, theme: '#1d4ed8' },
+        platform: { title: 'Platform Hall: client triage', npc: { x: 238, y: 318, name: 'Client', emoji: '🤝' }, theme: '#7c3aed' },
         culture: { title: 'Culture Lab: model build', npc: { x: 240, y: 270, name: 'Organoid Scientist', emoji: '🧫' }, theme: '#16a34a' },
         incubator: { title: 'Incubator Suite: maintenance', npc: { x: 250, y: 270, name: 'Incubator Guardian', emoji: '🧤' }, theme: '#ea580c' },
         imaging: { title: 'Imaging & QC Room', npc: { x: 245, y: 278, name: 'QC Lead', emoji: '🔬' }, theme: '#0891b2' },
         data: { title: 'Data Room', npc: { x: 250, y: 280, name: 'Data Scientist', emoji: '📊' }, theme: '#4f46e5' },
         translation: { title: 'Translation Hub', npc: { x: 250, y: 280, name: 'Translation Lead', emoji: '🚀' }, theme: '#db2777' }
+      };
+
+      const ROOM_OBSTACLES = {
+        hospital: [
+          { x: 78, y: 168, w: 76, h: 142 },
+          { x: 132, y: 184, w: 170, h: 58 },
+          { x: 92, y: 360, w: 220, h: 60 },
+          { x: 404, y: 166, w: 112, h: 78 },
+          { x: 555, y: 160, w: 305, h: 104 },
+          { x: 606, y: 326, w: 150, h: 54 },
+          { x: 610, y: 366, w: 230, h: 70 }
+        ],
+        platform: [
+          { x: 62, y: 168, w: 134, h: 102 },
+          { x: 86, y: 156, w: 128, h: 100 },
+          { x: 255, y: 156, w: 128, h: 100 },
+          { x: 424, y: 156, w: 128, h: 100 },
+          { x: 593, y: 156, w: 128, h: 100 },
+          { x: 86, y: 350, w: 128, h: 100 },
+          { x: 424, y: 372, w: 128, h: 100 },
+          { x: 593, y: 350, w: 128, h: 100 },
+          { x: 745, y: 146, w: 185, h: 350 }
+        ],
+        culture: [
+          { x: 94, y: 168, w: 180, h: 86 },
+          { x: 560, y: 160, w: 275, h: 112 },
+          { x: 375, y: 348, w: 150, h: 54 },
+          { x: 535, y: 330, w: 290, h: 76 },
+          { x: 790, y: 300, w: 76, h: 142 }
+        ],
+        incubator: [
+          { x: 88, y: 166, w: 76, h: 142 },
+          { x: 348, y: 166, w: 134, h: 102 },
+          { x: 535, y: 162, w: 180, h: 86 },
+          { x: 690, y: 162, w: 180, h: 86 },
+          { x: 380, y: 356, w: 150, h: 54 },
+          { x: 532, y: 326, w: 315, h: 80 }
+        ],
+        imaging: [
+          { x: 86, y: 168, w: 210, h: 112 },
+          { x: 360, y: 364, w: 150, h: 54 },
+          { x: 552, y: 160, w: 112, h: 112 },
+          { x: 642, y: 162, w: 220, h: 96 },
+          { x: 596, y: 330, w: 230, h: 68 },
+          { x: 608, y: 404, w: 250, h: 64 }
+        ],
+        data: [
+          { x: 78, y: 166, w: 42, h: 136 },
+          { x: 126, y: 166, w: 42, h: 136 },
+          { x: 174, y: 166, w: 42, h: 136 },
+          { x: 350, y: 162, w: 150, h: 94 },
+          { x: 520, y: 160, w: 335, h: 96 },
+          { x: 536, y: 330, w: 300, h: 72 },
+          { x: 650, y: 402, w: 210, h: 58 }
+        ],
+        translation: [
+          { x: 86, y: 166, w: 150, h: 94 },
+          { x: 112, y: 340, w: 245, h: 92 },
+          { x: 414, y: 362, w: 150, h: 54 },
+          { x: 520, y: 154, w: 335, h: 108 },
+          { x: 560, y: 350, w: 255, h: 76 }
+        ]
       };
 
       const player = { x: W / 2, y: 300, w: 28, h: 34, speed: 3.35, dir: 'down', target: null, path: [], step: 0 };
@@ -569,6 +721,7 @@
         mode: 'quick',
         stageIndex: 0,
         scores: { sample: 45, viability: 55, reproducibility: 50, platform: 0, translation: 35 },
+        revealedScores: { sample: false, viability: false, reproducibility: false, platform: false, translation: false },
         inventory: [],
         journal: [],
         completed: {},
@@ -580,6 +733,7 @@
         focusWeights: {},
         mini: null,
         pulse: 0,
+        chapterCard: null,
         gameComplete: false,
         lastHint: ''
       };
@@ -600,6 +754,70 @@
       function sample(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
       function shuffle(arr) { return arr.map(v => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(v => v[1]); }
       function platformById(id) { return PLATFORM_MAP[id]; }
+      function npcApproachPoint(info) { return { x: info.npc.x, y: info.npc.approachY || (info.npc.y + 58) }; }
+      function currentScenario() { return state.platformQueue[state.platformRound] || null; }
+      function stageMeta(id) { return STAGE_META[id] || STAGE_META.hospital; }
+      function rgba(hex, alpha) {
+        const clean = hex.replace('#', '');
+        const full = clean.length === 3 ? clean.split('').map(ch => ch + ch).join('') : clean;
+        const value = parseInt(full, 16);
+        const r = (value >> 16) & 255;
+        const g = (value >> 8) & 255;
+        const b = value & 255;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+      function getSignalPayload() {
+        if (!state.running) {
+          return {
+            title: 'Facility signal // night shift',
+            text: 'Seven doors are waiting. The campus looks peaceful, but every room hides a different scientific trade-off.'
+          };
+        }
+        if (state.gameComplete) {
+          return {
+            title: 'Facility signal // debrief',
+            text: 'The run is complete. What matters now is whether your recommendation stayed curious, honest, and proportionate to the evidence.'
+          };
+        }
+        if (state.mini && state.mini.type === 'colonoscopy') {
+          return {
+            title: 'Live feed // intake suite',
+            text: 'Guide the scope like a calm operator. Tissue quality begins long before any platform score is calculated.'
+          };
+        }
+        if (state.mini && state.mini.type === 'incubator') {
+          return {
+            title: 'Live feed // incubator run',
+            text: 'Maintenance is part of the science. Small contamination mistakes echo across every later interpretation.'
+          };
+        }
+        const stageId = currentStageId();
+        const meta = stageMeta(stageId);
+        if (stageId === 'platform') {
+          const scenario = currentScenario();
+          if (scenario && !state.completed.platform) {
+            return {
+              title: `Case file // ${scenario.client}`,
+              text: `${scenario.title}. ${scenario.question}`
+            };
+          }
+        }
+        if (state.scene !== 'overworld' && ROOM_INFO[state.scene]) {
+          return {
+            title: `Room tone // ${ROOM_INFO[state.scene].npc.name}`,
+            text: meta.roomSignal
+          };
+        }
+        return {
+          title: meta.chapter,
+          text: meta.signal
+        };
+      }
+      function triggerChapterCard(stageId, silent = false) {
+        const meta = stageMeta(stageId);
+        state.chapterCard = { title: meta.chapter, text: meta.banner, timer: 170 };
+        if (!silent) addLog(`${meta.chapter}: ${meta.log}`);
+      }
 
       function initBars() {
         ui.scoreBars.innerHTML = scoreDefs.map(def => `
@@ -614,12 +832,16 @@
         const st = STAGES[state.stageIndex] || STAGES[STAGES.length - 1];
         ui.objectiveTitle.textContent = state.gameComplete ? 'Quest complete' : st.label;
         ui.objectiveText.textContent = state.gameComplete ? 'Show the final score to the stand team or restart for another client scenario.' : st.objective;
+        const signal = getSignalPayload();
+        ui.signalTitle.textContent = signal.title;
+        ui.signalText.textContent = signal.text;
         scoreDefs.forEach(def => {
           const value = Math.round(clamp(state.scores[def.key] || 0));
           const bar = document.getElementById(def.key + 'Bar');
           const txt = document.getElementById(def.key + 'Text');
-          if (bar) bar.style.width = value + '%';
-          if (txt) txt.textContent = value + '%';
+          const revealed = !!state.revealedScores[def.key];
+          if (bar) bar.style.width = revealed ? value + '%' : '0%';
+          if (txt) txt.textContent = revealed ? value + '%' : 'Pending';
         });
         ui.inventory.innerHTML = state.inventory.length ? state.inventory.map(item => `<span class="item">${item}</span>`).join('') : '<span class="item">No items yet</span>';
         ui.journal.innerHTML = state.journal.slice(-8).reverse().map(log => `<div class="log">${log}</div>`).join('');
@@ -628,9 +850,9 @@
 
       function updateHudOnly() {
         ui.hudScene.textContent = state.mini ? miniTitle() : (state.scene === 'overworld' ? 'Campus Courtyard' : ROOM_INFO[state.scene].title);
-        ui.hudStage.textContent = state.gameComplete ? 'Complete' : `Stage ${state.stageIndex + 1}/7`;
+        ui.hudStage.textContent = state.gameComplete ? 'Final dossier' : `Chapter ${state.stageIndex + 1}/7`;
         ui.hudHint.textContent = getHint();
-        ui.modePill.textContent = state.running ? (state.mode === 'extended' ? '🧭 Extended RPG mode' : '⚡ Quick stand demo') : '🎮 QR-ready · mobile friendly';
+        ui.modePill.textContent = state.running ? (state.mode === 'extended' ? '🧭 Extended night-shift run' : '⚡ Quick dream-lab demo') : '🎮 QR-ready · mobile friendly';
       }
 
       function addInventory(item) {
@@ -647,12 +869,14 @@
       function adjustScores(delta) {
         Object.entries(delta).forEach(([key, val]) => {
           state.scores[key] = clamp((state.scores[key] || 0) + val);
+          state.revealedScores[key] = true;
         });
         updateUI();
       }
 
       function setScore(key, value) {
         state.scores[key] = clamp(value);
+        state.revealedScores[key] = true;
         updateUI();
       }
 
@@ -661,7 +885,10 @@
       function completeStage(id) {
         state.completed[id] = true;
         const idx = STAGES.findIndex(s => s.id === id);
-        if (idx === state.stageIndex && state.stageIndex < STAGES.length - 1) state.stageIndex += 1;
+        if (idx === state.stageIndex && state.stageIndex < STAGES.length - 1) {
+          state.stageIndex += 1;
+          triggerChapterCard(STAGES[state.stageIndex].id);
+        }
         updateUI();
       }
 
@@ -679,8 +906,13 @@
         state.platformResults = [];
         state.selectedPlatforms = [];
         state.focusWeights = {};
+        state.revealedScores = { sample: false, viability: false, reproducibility: false, platform: false, translation: false };
         ui.startOverlay.classList.remove('show');
-        addLog(mode === 'extended' ? 'Extended RPG started: five client scenarios will test platform trade-offs.' : 'Quick stand demo started: one client scenario will determine your platform match.');
+        addLog(mode === 'extended'
+          ? 'Night shift initiated: five client cases will push the facility through harder platform trade-offs.'
+          : 'Night shift initiated: one client case is waiting in the Platform Hall.');
+        triggerChapterCard(currentStageId());
+        updateUI();
       }
 
       function buildPlatformQueue(mode) {
@@ -794,14 +1026,76 @@
         if (line) ctx.fillText(line, x, yy);
       }
 
+      function drawAuroraBands() {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        for (let i = 0; i < 4; i++) {
+          const cx = 110 + i * 235;
+          const cy = 76 + Math.sin(state.pulse * 0.018 + i * 0.7) * 12;
+          const rx = 190 + i * 12;
+          const ry = 38 + (i % 2) * 10;
+          ctx.fillStyle = i % 2 ? 'rgba(56,189,248,.08)' : 'rgba(167,139,250,.09)';
+          ctx.beginPath();
+          ctx.ellipse(cx, cy, rx, ry, -0.28 + i * 0.05, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      function drawMotes(colorA, colorB, count, top, bottom) {
+        const span = Math.max(1, bottom - top);
+        for (let i = 0; i < count; i++) {
+          const drift = state.pulse * (0.25 + (i % 5) * 0.03);
+          const x = ((i * 97) + drift * 13) % (W + 48) - 24;
+          const y = top + (((i * 61) + drift * 9) % span);
+          const size = 2 + (i % 3);
+          ctx.fillStyle = i % 2 ? colorA : colorB;
+          ctx.fillRect(Math.round(x), Math.round(y), size, size);
+        }
+      }
+
+      function drawRoomAtmosphere(theme) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        for (let x = 83; x < W - 90; x += 148) {
+          ctx.fillStyle = rgba(theme, 0.09);
+          ctx.beginPath();
+          ctx.moveTo(x, 102);
+          ctx.lineTo(x + 26, 102);
+          ctx.lineTo(x + 58, H - 96);
+          ctx.lineTo(x - 30, H - 96);
+          ctx.closePath();
+          ctx.fill();
+        }
+        drawMotes(rgba(theme, 0.26), 'rgba(255,255,255,.12)', 22, 150, H - 70);
+        ctx.restore();
+      }
+
+      function drawChapterCard() {
+        if (!state.chapterCard) return;
+        const age = 170 - state.chapterCard.timer;
+        const fade = Math.min(1, age / 18, state.chapterCard.timer / 26);
+        const w = 520, h = 72, x = (W - w) / 2, y = 18;
+        ctx.save();
+        ctx.globalAlpha = fade;
+        ctx.fillStyle = 'rgba(3,10,20,.70)'; drawRoundRect(x + 6, y + 6, w, h, 12); ctx.fill();
+        ctx.fillStyle = 'rgba(14,23,36,.95)'; drawRoundRect(x, y, w, h, 12); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,216,77,.85)'; ctx.lineWidth = 3; ctx.stroke();
+        drawText(state.chapterCard.title, W / 2, y + 24, 18, '#fff7df', 'center', 950);
+        drawText(state.chapterCard.text, W / 2, y + 49, 11, '#cddaf0', 'center', 850);
+        ctx.restore();
+      }
+
       function drawOverworld() {
         drawGrassField();
+        drawAuroraBands();
         drawWaterline();
         drawCampusPaths();
         drawPerimeterWalls();
         drawForestBackground();
         BUILDINGS.forEach(b => drawBuildingBaseShadow(b));
         BUILDINGS.slice().sort((a, b) => (a.y + a.h) - (b.y + b.h)).forEach(drawBuilding);
+        drawMotes('rgba(255,216,77,.35)', 'rgba(125,211,252,.26)', 28, 38, H - 92);
         drawDecorations();
         drawFountain(480, 300);
         drawNoticeBoard(310, 520, 'Mission Board');
@@ -974,6 +1268,15 @@
         const isTarget = currentStageId() === b.id && !state.gameComplete;
         ctx.save();
         if (isTarget) {
+          const cx = b.x + b.w / 2;
+          ctx.fillStyle = 'rgba(255,227,91,.14)';
+          ctx.beginPath();
+          ctx.moveTo(cx - 34, b.y - 18);
+          ctx.lineTo(cx + 34, b.y - 18);
+          ctx.lineTo(cx + 112, 0);
+          ctx.lineTo(cx - 112, 0);
+          ctx.closePath();
+          ctx.fill();
           ctx.shadowColor = '#fff16a';
           ctx.shadowBlur = 22 + Math.sin(state.pulse * 0.07) * 8;
           ctx.strokeStyle = '#ffe35b';
@@ -1134,6 +1437,7 @@
         for (let y = 144; y <= H - 52; y += 34) ctx.fillRect(44, y, W - 88, 2);
         ctx.fillStyle = 'rgba(50,35,20,.16)';
         for (let y = 164; y < H - 66; y += 68) for (let x = 64; x < W - 70; x += 68) ctx.fillRect(x, y, 4, 4);
+        drawRoomAtmosphere(theme);
       }
 
       function drawWallPoster(x, y, text) {
@@ -1679,6 +1983,7 @@
         drawPlayer();
         drawPrompt();
         drawGameHud();
+        drawChapterCard();
       }
 
       function getObstacles() {
@@ -1692,7 +1997,7 @@
           { x: 0, y: 0, w: 38, h: H },
           { x: W - 38, y: 0, w: 38, h: H }
         ];
-        return walls;
+        return walls.concat(ROOM_OBSTACLES[state.scene] || []);
       }
 
       function doorPassage(ob) {
@@ -1786,7 +2091,7 @@
             return;
           }
           if (info && dist(pos, info.npc) < 130) {
-            player.target = { x: info.npc.x, y: info.npc.y + 58 };
+            player.target = npcApproachPoint(info);
             return;
           }
         }
@@ -2348,6 +2653,10 @@
       }
 
       function update() {
+        if (state.chapterCard) {
+          state.chapterCard.timer -= 1;
+          if (state.chapterCard.timer <= 0) state.chapterCard = null;
+        }
         if (state.mini) {
           if (state.mini.type === 'colonoscopy') updateColonoscopy();
           if (state.mini && state.mini.type === 'incubator') updateIncubator();
